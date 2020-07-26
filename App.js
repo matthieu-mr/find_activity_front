@@ -1,21 +1,87 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, View } from 'react-native';
+import {createAppContainer } from 'react-navigation';
+import { NavigationContainer } from '@react-navigation/native';
 
-export default function App() {
+// Ajout des modules de navigation 
+
+import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+
+import Home from './screens/Home';
+import ListForActivty from './screens/ListForActivity';
+
+
+
+
+const HomeStack = createStackNavigator();
+const ActivityStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+
+function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        onPress={() => navigation.navigate('Notifications')}
+        title="Go to notifications"
+      />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function NotificationsScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button onPress={() => navigation.goBack()} title="Go back home" />
+    </View>
+  );
+}
+
+
+  
+
+const HomeStackScreen =({navigation})=> (
+  <HomeStack.Navigator screenOptions ={{
+    headerStyle: {
+      backgroundColor: '#009387',
+    },
+  }}>
+
+    <HomeStack.Screen name="Home" component={Home} />
+
+  </HomeStack.Navigator>
+  )
+
+
+  const ActivityStackScreen =({navigation})=> (
+    <ActivityStack.Navigator screenOptions ={{
+      headerStyle: {
+        backgroundColor: '#009387',
+      },
+    }}>
+
+      <ActivityStack.Screen name="Home" component={ListForActivty} />
+    </ActivityStack.Navigator>
+    )
+  
+  
+
+
+
+export default function App(){
+  return(
+     
+       <NavigationContainer>
+          
+          <Drawer.Navigator initialRouteName="Home">
+            <Drawer.Screen name="Home" component={HomeStackScreen} />
+            <Drawer.Screen name="Autour de moi" component={ActivityStackScreen} />
+          </Drawer.Navigator>
+
+      </NavigationContainer>  
+
+
+  )
+} ;
