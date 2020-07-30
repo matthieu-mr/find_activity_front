@@ -2,7 +2,7 @@ import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text  } from 'react-native';
 import MapView from 'react-native-maps';
 
-import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body  } from 'native-base';
+import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body,ListItem,CheckBox  } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
@@ -10,14 +10,7 @@ import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 import * as Location from 'expo-location';
 
-
-//import components
-import ListType from './component/ListType';
-import MapType from './component/MapType';
-
-
-
-function  Home(props) {
+function AdvancedSearch(props) {
   const [natureList, setListNature] = useState()
 
   const [adress,setAdress] = useState("Saisissez votre adresse")
@@ -100,23 +93,75 @@ let test = ()=> {
 
 
   return (
-
   <View style={styles.containerAll}>
 
-    <View style={styles.containerMap}>
-      <Tabs>
-            <Tab heading={ <TabHeading><Icon name="camera" /><Text>Camera</Text></TabHeading>}>
-              <MapType />
-            </Tab>
-            <Tab heading={ <TabHeading><Text>No Icon</Text></TabHeading>}>
-              <ListType />
-            </Tab>
-      </Tabs>
+
+      <Text>Recherche avancée</Text>
+
+
+    <View style={styles.containerType}>
+      <Content padder>
+        <Card>
+          <CardItem header bordered>
+            <Text>Type d'activité</Text>
+              </CardItem>
+                <CardItem bordered>
+                   <Body>
+                      <Text>Adresse</Text>
+                        <Item floatingLabel>
+                          <Icon active type="FontAwesome" name="map-marker" />
+                          <Input placeholder={adress}/>
+                        </Item>
+
+                      <Text>Rayon de recherche</Text>
+                        <Item floatingLabel >    
+                          <Icon active type="MaterialCommunityIcons" name="map-marker-distance" />
+                          <Input keyboardType="numeric"  placeholder={distance}/>
+                        </Item>
+                  </Body>
+                </CardItem>
+        </Card>
+      </Content>
     </View>
 
-          <Button rounded light onPress ={()=> props.navigation.navigate("AdvancedParam")}>
-            <Text>Light</Text>
-          </Button>
+
+   <View style={styles.containerType}>
+      <Content padder>
+        <Card>
+          <CardItem header bordered>
+            <Text>Type d'activité</Text>
+              </CardItem>
+                <CardItem bordered>
+                  <Body>
+                  <ListItem>
+                      <CheckBox checked={true} />
+                        <Text>     Daily Stand Up</Text>
+                    </ListItem>
+                  
+                  <ListItem>
+                      <CheckBox checked={true} />
+                        <Text>    Daily Stand Up</Text>
+                    </ListItem>
+                    <ListItem>
+                      <CheckBox checked={false} />
+                        <Text>    Daily Stand Up</Text>
+                    </ListItem>
+                    <ListItem>
+                      <CheckBox checked={true} />
+                        <Text>  Daily Stand Up</Text>
+                    </ListItem>
+                  </Body>
+                </CardItem>
+        </Card>
+      </Content>
+    </View>
+
+
+      <Button full onPress={()=>test()}>
+        <Text>Valider</Text>
+      </Button>
+
+
 </View>
 
   );
@@ -130,40 +175,13 @@ const styles = StyleSheet.create({
   },
   containerAdress:{
     flex:1,
-    height:500,
-  },
-  searchAdress: {
-    alignItems: 'stretch',
-    width:250,
   },
 
   containerType: {
     flex:1,
     backgroundColor: '#fff',
-
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-
-  containerMap: {
-    flex:4,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-  containerAdress :{
-    flex: 1, 
-    flexDirection: 'row',
-    alignItems: 'stretch',
   },
 
 })
 
-
-export default Home
+export default AdvancedSearch

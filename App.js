@@ -18,6 +18,7 @@ import { Icon } from 'react-native-elements'
 // import screen
 import Home from './screens/Home';
 import ListForActivty from './screens/ListForActivity';
+import AdvancedParam from './screens/ListForActivity'
 
 // import redux 
 import {createStore, combineReducers} from 'redux';
@@ -29,9 +30,12 @@ const store = createStore(combineReducers({activitySelected}))
 
 const HomeStack = createStackNavigator();
 const ActivityStack = createStackNavigator();
+const ParamStack = createStackNavigator();
+
+
 const Drawer = createDrawerNavigator();
 
-
+/*
 function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -49,10 +53,10 @@ function NotificationsScreen({ navigation }) {
       <Button onPress={() => navigation.goBack()} title="Go back home" />
     </View>
   );
+
 }
+*/
 
-
-  
 
 const HomeStackScreen =({navigation})=> (
   <HomeStack.Navigator screenOptions ={{
@@ -92,7 +96,24 @@ const HomeStackScreen =({navigation})=> (
     )
   
   
-
+    const ParamStackScreen =({navigation})=> (
+      <ParamStack.Navigator screenOptions ={{
+        headerStyle: {
+          backgroundColor: '#009387',
+        },
+        headerTintColor:'#fff',
+      }}>
+    
+        <ParamStack.Screen name="Paramètres avancés de recherche" component={AdvancedParam} options={{
+          headerLeft:()=>(
+            <Icon reverse name='ios-menu' type='ionicon'  color="#009387" size={25} onPress={()=>{navigation.openDrawer();}}   />
+          )
+        }}
+        />
+    
+      </ParamStack.Navigator>
+      )
+    
 
 
 export default function App(){
@@ -103,8 +124,9 @@ export default function App(){
           <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={HomeStackScreen} />
             <Drawer.Screen name="Autour de moi" component={ActivityStackScreen} />
+            <Drawer.Screen name="Paramètres avancés" component={ParamStackScreen} />
           </Drawer.Navigator>
-
+     
       </NavigationContainer>  
     </Provider>
 

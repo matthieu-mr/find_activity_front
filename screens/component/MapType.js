@@ -1,8 +1,8 @@
 import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View,Dimensions,Text  } from 'react-native';
+import { StyleSheet, View, AsyncStorage,Container,TextInput,Dimensions,ScrollView,Text  } from 'react-native';
 import MapView from 'react-native-maps';
 
-import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body  } from 'native-base';
+import { Button,Item, Input, Icon,Label } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
@@ -11,13 +11,7 @@ import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 import * as Location from 'expo-location';
 
 
-//import components
-import ListType from './component/ListType';
-import MapType from './component/MapType';
-
-
-
-function  Home(props) {
+function MapType(props) {
   const [natureList, setListNature] = useState()
 
   const [adress,setAdress] = useState("Saisissez votre adresse")
@@ -100,25 +94,26 @@ let test = ()=> {
 
 
   return (
-
-  <View style={styles.containerAll}>
-
+   
     <View style={styles.containerMap}>
-      <Tabs>
-            <Tab heading={ <TabHeading><Icon name="camera" /><Text>Camera</Text></TabHeading>}>
-              <MapType />
-            </Tab>
-            <Tab heading={ <TabHeading><Text>No Icon</Text></TabHeading>}>
-              <ListType />
-            </Tab>
-      </Tabs>
+            <Button full onPress={()=>test()}>
+              <Text>Primary</Text>
+            </Button>
+
+        <MapView style={styles.mapStyle} 
+
+          initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+          }}
+
+        />
+
     </View>
 
-          <Button rounded light onPress ={()=> props.navigation.navigate("AdvancedParam")}>
-            <Text>Light</Text>
-          </Button>
-</View>
-
+               
   );
 }
 
@@ -136,19 +131,8 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     width:250,
   },
-
-  containerType: {
-    flex:1,
-    backgroundColor: '#fff',
-
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-
   containerMap: {
-    flex:4,
+    flex:1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -165,5 +149,4 @@ const styles = StyleSheet.create({
 
 })
 
-
-export default Home
+export default MapType
