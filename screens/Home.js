@@ -80,9 +80,7 @@ let getAdressCoords =async (lon,lat)=> {
   let lat2 = 48.357
 
 var rawResponse =await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=2.37&lat=48.357&type=street`)
-
-
-
+ 
 var response = await rawResponse.json();
 // var response = JSON.parse(list.getBody())
 
@@ -90,8 +88,6 @@ let adress = response.features[0].properties.label
 setAdress(adress)
   console.log("retour api gouv =======>",adress)
 }
-
-
 
 
 let test = ()=> {
@@ -114,7 +110,7 @@ let test = ()=> {
       </Tabs>
     </View>
 
-          <Button rounded light onPress ={()=> props.navigation.navigate("AdvancedParam")}>
+          <Button rounded light onPress ={()=> props.navigation.navigate('Parametre')}>
             <Text>Light</Text>
           </Button>
 </View>
