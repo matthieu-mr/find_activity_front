@@ -104,13 +104,13 @@ let test = ()=> {
             <Tab heading={ <TabHeading><Icon name="camera" /><Text>Camera</Text></TabHeading>}>
               <MapType />
             </Tab>
-            <Tab heading={ <TabHeading><Text>No Icon</Text></TabHeading>}>
+            <Tab heading={ <TabHeading><Icon name="camera" /><Text>Camera</Text></TabHeading>}>
               <ListType />
             </Tab>
       </Tabs>
     </View>
 
-          <Button rounded light onPress ={()=> props.navigation.navigate('Parametre')}>
+          <Button rounded light onPress ={()=> props.navigation.navigate('Parametres')}>
             <Text>Light</Text>
           </Button>
 </View>
