@@ -18,23 +18,11 @@ import MapType from './component/MapType';
 
 
 function  Home(props) {
-  const [natureList, setListNature] = useState()
+  const [listActivity, setListActivity]= useState()
 
   const [adress,setAdress] = useState("Saisissez votre adresse")
-  const [distance,setdisctance] = useState("10 km")
+  const [distance,setdisctance] = useState(1000)
 
-
-// requete BDD
-    useEffect(()=>{
-      recupDonnée()
-    //  console.log("hello",reponse);
-    })
-
-    async function recupDonnée(){
-      var requestBDD = await fetch(`http://192.168.56.1:3000/nature`)
-      var reponse = await requestBDD.json()
-    }
-    
 // recuperation de la location
 const [location, setLocation] = useState(null);
 
@@ -54,13 +42,12 @@ useEffect(() => {
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
 
-    //console.log(location)
 
     setLatitude(location.coords.latitude)
     setLongitude(location.coords.longitude)
     getAdressCoords(location.coords.longitude,location.coords.latitude)
 
-    props.position("test")
+    props.position(location)
 
 
   })();
@@ -76,10 +63,6 @@ if (errorMsg) {
 
 
 // Ajout des inputs & saisie adresse
-
-
-
- 
 let getAdressCoords =async (lon,lat)=> {
   let lon2 = 2.37
   let lat2 = 48.357
@@ -87,20 +70,62 @@ let getAdressCoords =async (lon,lat)=> {
 var rawResponse =await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=2.37&lat=48.357&type=street`)
  
 var response = await rawResponse.json();
-// var response = JSON.parse(list.getBody())
 
 let adress = response.features[0].properties.label
 setAdress(adress)
-//  console.log("retour api gouv =======>",adress)
 }
 
+// requete BDD http://192.168.56.1:3000/nature`
+
+/* useEffect(()=>{
+
+  async function recupDonnée(){
+   
+    var requestBDD = await fetch('http://192.168.1.8:3000/sportlist',{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${latitude}&long=${longitude}&distance=${distance}`
+    })
+    var reponse = await requestBDD.json()
+    setListActivity(reponse)
+    console.log(reponse)
+   
+  }
+ 
+  recupDonnée()
+ 
+},[latitude]) */
+
+//  console.log("hello",reponse);
+
+
+let test =() => {
+  
+  async function recupDonnée(){
+   
+    var requestBDD = await fetch('http://192.168.1.8:3000/sportlist',{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${latitude}&long=${longitude}&distance=${distance}`
+    })
+    var reponse = await requestBDD.json()
+    setListActivity(reponse)
+    console.log(reponse)
+   
+  }
+ 
+  recupDonnée()
+}
 
 
 
   return (
 
   <View style={styles.containerAll}>
-
+       
+        <Button large dark onPress ={() => test()}>
+            <Text>Dark Large</Text>
+          </Button>
         <Card>
           <CardItem bordered>
               </CardItem>
@@ -123,7 +148,7 @@ setAdress(adress)
   
 
       <Tabs>
-          <Tab heading={ <TabHeading><Icon name="camera" /><Text>Camera</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="home" /><Text>Camera</Text></TabHeading>}>
           <MapType />
           </Tab>
           <Tab heading={ <TabHeading><Text>No Icon</Text></TabHeading>}>
