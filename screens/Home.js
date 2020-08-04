@@ -99,16 +99,31 @@ let test = ()=> {
 
   <View style={styles.containerAll}>
 
-    <View style={styles.containerMap}>
-      <Tabs>
-            <Tab heading={ <TabHeading><Icon name="camera" /><Text>Camera</Text></TabHeading>}>
+    <Content padder>
+        <Card>
+          <CardItem header bordered>
+            <Text>Type d'activité</Text>
+              </CardItem>
+                <CardItem bordered>
+                   <Body>
+                      <Text>Adresse</Text>
+                        <Item floatingLabel>
+                          <Icon active type="FontAwesome" name="map-marker" />
+                          <Input placeholder={adress}/>
+                        </Item>
+
+                      <Text>Rayon de recherche</Text>
+                        <Item floatingLabel >    
+                          <Icon active type="MaterialCommunityIcons" name="map-marker-distance" />
+                          <Input keyboardType="numeric"  placeholder={distance}/>
+                        </Item>
+                  </Body>
+                </CardItem>
+        </Card>
+      </Content>
               <MapType />
-            </Tab>
-            <Tab heading={ <TabHeading><Icon name="camera" /><Text>Camera</Text></TabHeading>}>
-              <ListType />
-            </Tab>
-      </Tabs>
-    </View>
+
+
 
           <Button rounded light onPress ={()=> props.navigation.navigate('Parametres')}>
             <Text>Light</Text>

@@ -16,9 +16,7 @@ import { Icon } from 'react-native-elements'
 
 
 // import screen
-import Home from './screens/Home';
-import ListForActivty from './screens/ListForActivity';
-import AdvancedParam from './screens/ListForActivity'
+
 import DrawerScreen from './screens/DrawerContent'
 
 // import redux 
@@ -28,28 +26,17 @@ import {Provider} from 'react-redux';
 import activitySelected from './reducers/Activity'
 
 const store = createStore(combineReducers({activitySelected}))
-const Drawer = createDrawerNavigator();
-
-
-
-const Stack = createStackNavigator();
-const HomeStack = createStackNavigator();
-const ActivityStack = createStackNavigator();
-const ParamStack = createStackNavigator();
-
-
-
-
 
 export default function App(navigation){
   
   return(
 
-    
+    <Provider store={store}>
     <NavigationContainer>
       <DrawerScreen/>
     
     </NavigationContainer>  
+    </Provider>
 
 
 

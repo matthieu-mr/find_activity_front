@@ -16,13 +16,15 @@ import connectScreen from '../Connect'
 
 
 function DrawerConnect(props) {
+ 
 
-const ConnectScreen =(props)=> {
-    const  [connected,setConnected] = useState(false)
+  const  [connected,setConnected] = useState(true)
+const ConnectScreen =({navigation}) => {
+
   if (connected) {
     return (
       <Content>
-        <List onPress ={()=> props.navigation.navigate('Parametres')}>
+        <List>
           <ListItem avatar>
             <Left>
               <Thumbnail source={{ uri: 'Image URL' }} />
@@ -39,9 +41,10 @@ const ConnectScreen =(props)=> {
     else{
       return (          
       
-      <Button rounded light onPress ={()=> props.navigation.navigate('Parametres')}>
-      <Text>Light</Text>
-    </Button>
+    
+      <Text>Kumar Pratik</Text>
+      
+
         )
     }
   }
@@ -50,7 +53,7 @@ const ConnectScreen =(props)=> {
   
 
 return (
-<DrawerConnect />
+<ConnectScreen />
 )
 
 }

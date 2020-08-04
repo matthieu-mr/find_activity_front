@@ -15,9 +15,8 @@ import Home from './Home'
 import ConnectScreen from './Connect'
 import ListForActivty from './ListForActivity';
 import AdvancedParam from './AdvancedSearch'
-import connectComponent from './component/ConnectComponent'
+import ConnectComponent from './component/ConnectComponent'
 
-import DrawerConnect from './component/ConnectComponent'
 
 
 
@@ -36,7 +35,7 @@ export default function DrawerContent(props){
         <Icon reverse name='ios-menu' type='ionicon'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
       ),
       headerRight:()=>(
-        <Icon reverse name='ios-settings' type='ionicon'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }}onPress ={()=> props.navigation.navigate('Parametres')}  />
+        <Icon reverse name='ios-settings' type='ionicon'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
       ), 
       headerStyle: {
         backgroundColor: '#009387',
@@ -47,7 +46,8 @@ export default function DrawerContent(props){
       <Stack.Screen name="Liste" component={ListForActivty} />
       <Stack.Screen name="Parametres" component={AdvancedParam} />
       <Stack.Screen name="Connection" component={ConnectScreen} />
-      <Stack.Screen name="ConnectionItem" component={connectComponent} />
+
+      <Stack.Screen name="ConnectionItem" component={ConnectComponent} />
      
     </Stack.Navigator>
     )
@@ -62,9 +62,16 @@ const CustomDrawerContent = (props) => {
  
     <DrawerContentScrollView {...props} >
 
-       <DrawerConnect />
 
       <DrawerItem 
+      label =""
+      labelStyle={{marginLeft:-16}}
+      onPress={()=>{props.navigation.navigate("Connection");}}
+      icon ={()=> <ConnectComponent/>}
+      />
+
+
+    <DrawerItem 
       label ="Accueil"
       labelStyle={{marginLeft:-16}}
       onPress={()=>{props.navigation.navigate("Home");}}
@@ -84,9 +91,6 @@ const CustomDrawerContent = (props) => {
       onPress={()=>{props.navigation.navigate("Parametres");}}
       icon ={()=> <Icon reverse name='ios-settings' type='ionicon' style={{fontSize: 30, color:"#009387" }} />}
       />
-
-
-
 
     </DrawerContentScrollView>
 
