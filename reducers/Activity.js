@@ -1,7 +1,10 @@
-export default function(radioId = "", action) {
-    if(action.type == 'sendRadioId') {
-      return action.radioId;
+export default function(listActivity = "", action) {
+
+    if(action.type == 'addList') {
+      console.log('reducer activity')
+      return listActivity;
+    
     } else {
-      return radioId;
+      return listActivity;
     }
 }

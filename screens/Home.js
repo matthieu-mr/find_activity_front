@@ -1,7 +1,7 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text  } from 'react-native';
 import MapView from 'react-native-maps';
-
+import {connect} from 'react-redux';
 import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body  } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
@@ -53,11 +53,15 @@ useEffect(() => {
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
 
-    console.log(location)
+    //console.log(location)
 
     setLatitude(location.coords.latitude)
     setLongitude(location.coords.longitude)
     getAdressCoords(location.coords.longitude,location.coords.latitude)
+
+    props.position("test")
+
+
   })();
 },[]);
 
@@ -86,23 +90,18 @@ var response = await rawResponse.json();
 
 let adress = response.features[0].properties.label
 setAdress(adress)
-  console.log("retour api gouv =======>",adress)
+//  console.log("retour api gouv =======>",adress)
 }
 
 
-let test = ()=> {
-  getAdressCoords() ;
-}
 
 
   return (
 
   <View style={styles.containerAll}>
 
-    <Content padder>
         <Card>
-          <CardItem header bordered>
-            <Text>Type d'activité</Text>
+          <CardItem bordered>
               </CardItem>
                 <CardItem bordered>
                    <Body>
@@ -120,14 +119,18 @@ let test = ()=> {
                   </Body>
                 </CardItem>
         </Card>
-      </Content>
-              <MapType />
+  
 
+      <Tabs>
+          <Tab heading={ <TabHeading><Icon name="camera" /><Text>Camera</Text></TabHeading>}>
+          <MapType />
+          </Tab>
+          <Tab heading={ <TabHeading><Text>No Icon</Text></TabHeading>}>
+          <ListType />
+          </Tab>
 
+        </Tabs>
 
-          <Button rounded light onPress ={()=> props.navigation.navigate('Parametres')}>
-            <Text>Light</Text>
-          </Button>
 </View>
 
   );
@@ -177,4 +180,23 @@ const styles = StyleSheet.create({
 })
 
 
-export default Home
+function mapStateToProps(state) {
+  return { position: state.position }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    position: function(radioId) {
+        dispatch( {type: 'addPosition',location:location} )
+    }
+  }
+}
+
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(Home);
+
+
+//export default Home

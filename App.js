@@ -23,9 +23,13 @@ import DrawerScreen from './screens/DrawerContent'
 import {createStore, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 
-import activitySelected from './reducers/Activity'
+// import reducer 
+import listActivity from './reducers/Activity'
+import position from './reducers/Position'
 
-const store = createStore(combineReducers({activitySelected}))
+
+
+const store = createStore(combineReducers({listActivity, position}))
 
 export default function App(navigation){
   
@@ -33,9 +37,8 @@ export default function App(navigation){
 
     <Provider store={store}>
     <NavigationContainer>
-      <DrawerScreen/>
-    
-    </NavigationContainer>  
+        <DrawerScreen/>
+      </NavigationContainer>  
     </Provider>
 
 
