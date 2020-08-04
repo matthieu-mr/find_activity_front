@@ -37,6 +37,7 @@ function  Home(props) {
     
 // recuperation de la location
 const [location, setLocation] = useState(null);
+
 const [errorMsg, setErrorMsg] = useState(null);
 
 const [latitude,setLatitude] = useState();
@@ -186,7 +187,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    position: function(radioId) {
+    position: function(location) {
         dispatch( {type: 'addPosition',location:location} )
     }
   }
