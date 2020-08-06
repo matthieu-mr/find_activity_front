@@ -46,7 +46,6 @@ useEffect(() => {
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
 
-    console.log(location)
 
     setLatitude(location.coords.latitude)
     setLongitude(location.coords.longitude)
@@ -81,7 +80,7 @@ var response = await rawResponse.json();
 
 let adress = response.features[0].properties.label
 setAdress(adress)
-  console.log("retour api gouv =======>",adress)
+ 
 }
 
 

@@ -1,11 +1,9 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text  } from 'react-native';
-import MapView from 'react-native-maps';
-import {connect} from 'react-redux';
-import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body  } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid';
 
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
+import {connect} from 'react-redux';
+import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body, Row,Form,Picker,Header,Left,Title,Right  } from 'native-base';
+
 
 
 import * as Location from 'expo-location';
@@ -18,20 +16,25 @@ import MapType from './component/MapType';
 
 
 function  Home(props) {
-  const [listActivity, setListActivity]= useState()
+
 
   const [adress,setAdress] = useState("Saisissez votre adresse")
-  const [distance,setdisctance] = useState(1000)
+  const [distance,setdisctance] = useState("1000")
 
 // recuperation de la location
 const [location, setLocation] = useState(null);
-
 const [errorMsg, setErrorMsg] = useState(null);
-
 const [latitude,setLatitude] = useState();
 const [longitude,setLongitude] = useState();
 
+// Type d'activité
 
+const [listActivityType, setListActivityType]= useState([]) // type activity, ex indoor recup from back
+const [typeActivite,setTypeActivite] = useState ("Toutes") // selected by user
+
+
+
+// Recuperation de la localisation de l'user
 useEffect(() => {
   (async () => {
     let { status } = await Location.requestPermissionsAsync();
@@ -62,59 +65,66 @@ if (errorMsg) {
 }
 
 
-// Ajout des inputs & saisie adresse
-let getAdressCoords =async (lon,lat)=> {
-  let lon2 = 2.37
-  let lat2 = 48.357
 
-var rawResponse =await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=2.37&lat=48.357&type=street`)
- 
-var response = await rawResponse.json();
-
-let adress = response.features[0].properties.label
-setAdress(adress)
-}
-
-// requete BDD http://192.168.56.1:3000/nature`
-
-/* useEffect(()=>{
-
-  async function recupDonnée(){
-   
-    var requestBDD = await fetch('http://192.168.1.8:3000/sportlist',{
-      method:"POST",
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${latitude}&long=${longitude}&distance=${distance}`
-    })
-    var reponse = await requestBDD.json()
-    setListActivity(reponse)
-    console.log(reponse)
-   
-  }
- 
-  recupDonnée()
- 
-},[latitude]) */
-
-//  console.log("hello",reponse);
-
-
-let test =() => {
+// recuperation des types d'activite 
+useEffect(()=>{
   
   async function recupDonnée(){
-   
-    var requestBDD = await fetch('http://192.168.1.8:3000/sportlist',{
+
+    var requestBDD = await fetch(`http://192.168.1.8:3000/nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${latitude}&long=${longitude}&distance=${distance}`
+      body:`lat=${latitude}&long=${longitude}&dist=${distance}`
     })
-    var reponse = await requestBDD.json()
-    setListActivity(reponse)
-    console.log(reponse)
-   
+    var listActivityRaw = await requestBDD.json()
+     
+      setListActivityType(listActivityRaw.result.facets)
+      
   }
- 
   recupDonnée()
+  
+},[])
+
+
+
+
+ let typeActivityArray = listActivityType.map((item,i)=>{
+
+    let type = item.name
+    let count = item.count
+  
+    let wordingLabel = `${type} - ${count} sites`
+  
+    return (<Picker.Item label={wordingLabel} value={wordingLabel} key={i}/>)
+  })
+  
+
+
+
+// recuperation des types d'activite 
+useEffect(()=>{
+  
+  async function recupDonnée(){
+
+    var requestBDD = await fetch(`http://192.168.1.8:3000/listpoint`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${typeActivite}`
+    })
+    var listActivityRaw = await requestBDD.json()
+    console.log("nouvelle requete")
+    props.listActivity(listActivityRaw)
+  
+  }
+  recupDonnée()
+  
+})
+
+
+
+let test = (value)=> {
+  console.log("input",value)
+  setTypeActivite(value)
 }
 
 
@@ -123,35 +133,47 @@ let test =() => {
 
   <View style={styles.containerAll}>
        
-        <Button large dark onPress ={() => test()}>
-            <Text>Dark Large</Text>
-          </Button>
-        <Card>
-          <CardItem bordered>
-              </CardItem>
-                <CardItem bordered>
-                   <Body>
-                      <Text>Adresse</Text>
-                        <Item floatingLabel>
-                          <Icon active type="FontAwesome" name="map-marker" />
-                          <Input placeholder={adress}/>
-                        </Item>
 
-                      <Text>Rayon de recherche</Text>
-                        <Item floatingLabel >    
-                          <Icon active type="MaterialCommunityIcons" name="map-marker-distance" />
-                          <Input keyboardType="numeric"  placeholder={distance}/>
-                        </Item>
+        <Card>
+        <Form>
+            <Item floatingLabel>
+              <Label>Recherche d'activité</Label>
+              <Input onChangeText={(value)=>test(value)}/>
+            </Item>
+
+            <Picker
+              renderHeader={backAction =>
+                <Header style={{ backgroundColor: "#f44242" }}>
+                  <Left>
+                    <Button transparent onPress={backAction}>
+                      <Icon name="arrow-back" style={{ color: "#fff" }} />
+                    </Button>
+                  </Left>
+                  <Body style={{ flex: 3 }}>
+                    <Title style={{ color: "#fff" }}>Selectionner une activité</Title>
                   </Body>
-                </CardItem>
+                  <Right />
+                </Header>}
+
+              mode="dropdown"
+              iosIcon={<Icon name="arrow-down" />}
+              selectedValue={typeActivite}
+              onValueChange={(value)=>test(value)}
+            >
+              <Picker.Item label="Toutes" value="Toutes" />
+              {typeActivityArray}
+            </Picker>
+    
+
+          </Form>
         </Card>
   
 
       <Tabs>
-          <Tab heading={ <TabHeading><Icon name="home" /><Text>Camera</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="map" /><Text> Carte</Text></TabHeading>}>
           <MapType />
           </Tab>
-          <Tab heading={ <TabHeading><Text>No Icon</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="list" /><Text> Liste</Text></TabHeading>}>
           <ListType />
           </Tab>
 
@@ -168,41 +190,17 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#fff', 
   },
-  containerAdress:{
+  searchField:{
     flex:1,
-    height:500,
+    flexDirection:"row",
+    justifyContent:"center",
   },
-  searchAdress: {
-    alignItems: 'stretch',
-    width:250,
+  adressField:{
+    flex:1
   },
-
-  containerType: {
-    flex:1,
-    backgroundColor: '#fff',
-
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-
-  containerMap: {
-    flex:4,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-  containerAdress :{
-    flex: 1, 
-    flexDirection: 'row',
-    alignItems: 'stretch',
-  },
-
+  distanceField:{
+    flex:1
+  }
 })
 
 
@@ -214,9 +212,13 @@ function mapDispatchToProps(dispatch) {
   return {
     position: function(location) {
         dispatch( {type: 'addPosition',location:location} )
-    }
+    },
+    listActivity: function(list) {
+      dispatch( {type: 'addList',list:list} )
+  }
   }
 }
+
 
 
 export default connect(

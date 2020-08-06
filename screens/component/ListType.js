@@ -1,7 +1,8 @@
 import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View, AsyncStorage} from 'react-native';
+import { StyleSheet, View, AsyncStorage, ScrollView} from 'react-native';
 import { Container, Header,Text, Item, Input, Icon, Content, Card, CardItem, Right } from 'native-base';
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
+import {connect} from 'react-redux';
 
 import * as Location from 'expo-location';
 
@@ -10,18 +11,41 @@ import * as Location from 'expo-location';
 
 function ListType(props) {
 
+  let listRaw =props.listActivity.list.result
+//console.log("--------------------------- >>>>>>>>>",listRaw)
+
+let listArray = listRaw.map((item,i)=>{
+
+  let type = item.fields.equipementtypelib
+  let dist = item.fields.dist
+  let distance = Math.round(dist)
+  let nature =item.fields.naturelibelle
+  let nom = item.fields.insnom
+  return (
+    <Card key={i}>
+    <CardItem  onPress={() => {alert('You tapped the button!');}}>
+      <View>
+      <Text>{nom}</Text>
+        <View> 
+          <Text>{type} - {distance} Metres</Text>
+       
+        </View>
+      </View>
+      <Right>
+        <Icon name="arrow-forward" />
+      </Right>
+     </CardItem>
+   </Card>
+  ) 
+});
+
 
   return (
     <View>
-          <Card>
-            <CardItem  onPress={() => {alert('You tapped the button!');}}>
-              <Icon active name="logo-googleplus" />
-              <Text>Indoor qui tue</Text>
-              <Right>
-                <Icon name="arrow-forward" />
-              </Right>
-             </CardItem>
-           </Card>
+      <ScrollView>
+      {listArray}
+      </ScrollView>
+
 
     </View>
   
@@ -36,4 +60,29 @@ const styles = StyleSheet.create({
 
 })
 
-export default ListType
+
+function mapStateToProps(state) {
+  return { listActivity: state.listActivity }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    position: function(location) {
+        dispatch( {type: 'addPosition',location:location} )
+    },
+
+  }
+}
+
+
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(ListType);
+
+
+
+
+
+//export default ListType

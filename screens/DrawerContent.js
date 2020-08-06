@@ -32,10 +32,10 @@ export default function DrawerContent(props){
     return (
     <Stack.Navigator screenOptions={{
       headerLeft:()=>(
-        <Icon reverse name='ios-menu' type='ionicon'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
+        <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
       ),
       headerRight:()=>(
-        <Icon reverse name='ios-settings' type='ionicon'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
+        <Icon reverse name='ios-settings' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
       ), 
       headerStyle: {
         backgroundColor: '#009387',
@@ -75,21 +75,21 @@ const CustomDrawerContent = (props) => {
       label ="Accueil"
       labelStyle={{marginLeft:-16}}
       onPress={()=>{props.navigation.navigate("Home");}}
-      icon ={()=> <Icon reverse name='ios-settings' type='ionicon' style={{fontSize: 30, color:"#009387" }} />}
+      icon ={()=> <Icon reverse name='ios-settings' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
 
     <DrawerItem 
       label ="Liste complète des activités"
       labelStyle={{marginLeft:-16}}
       onPress={()=>{props.navigation.navigate("Liste");}}
-      icon ={()=> <Icon reverse name='ios-settings' type='ionicon' style={{fontSize: 30, color:"#009387" }} />}
+      icon ={()=> <Icon reverse name='ios-settings' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
     
     <DrawerItem 
       label ="Parametres"
       labelStyle={{marginLeft:-16}}
       onPress={()=>{props.navigation.navigate("Parametres");}}
-      icon ={()=> <Icon reverse name='ios-settings' type='ionicon' style={{fontSize: 30, color:"#009387" }} />}
+      icon ={()=> <Icon reverse name='ios-settings' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
 
     </DrawerContentScrollView>
