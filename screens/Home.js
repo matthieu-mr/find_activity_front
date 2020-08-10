@@ -86,15 +86,20 @@ useEffect(()=>{
 },[])
 
 
+const [totalActivite,setTotalActivity] = useState(0)
+
+let totalLabel = `Toutes - ${totalActivite} sites`
 
 
  let typeActivityArray = listActivityType.map((item,i)=>{
-
+    
     let type = item.name
     let count = item.count
   
     let wordingLabel = `${type} - ${count} sites`
-  
+
+   // let total = totalActivite + count
+   // setTotalActivity(total)
     return (<Picker.Item label={wordingLabel} value={wordingLabel} key={i}/>)
   })
   
@@ -160,7 +165,7 @@ let test = (value)=> {
               selectedValue={typeActivite}
               onValueChange={(value)=>test(value)}
             >
-              <Picker.Item label="Toutes" value="Toutes" />
+              <Picker.Item label={totalLabel} value="Toutes" />
               {typeActivityArray}
             </Picker>
     

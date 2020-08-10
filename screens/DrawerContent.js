@@ -16,7 +16,7 @@ import ConnectScreen from './Connect'
 import ListForActivty from './ListForActivity';
 import AdvancedParam from './AdvancedSearch'
 import ConnectComponent from './component/ConnectComponent'
-
+import PlaceDetail from './PlaceDetail'
 
 
 
@@ -29,6 +29,7 @@ export default function DrawerContent(props){
   const Stack = createStackNavigator();
 
   const Screens = ({navigation}) => {
+    console.log(navigation)
     return (
     <Stack.Navigator screenOptions={{
       headerLeft:()=>(
@@ -42,11 +43,37 @@ export default function DrawerContent(props){
       },
       headerTintColor:'#fff',
     }}>
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Accueil" component={Home} />
+      <Stack.Screen name="Place details" component={PlaceDetail}
+      options={{
+        headerLeft:()=>(
+          <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
+        ),
+        headerRight:()=>(
+          <Icon reverse name='ios-play' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
+        ), 
+        headerStyle: {
+          backgroundColor: '#009387',
+        },
+        headerTintColor:'#fff',
+            }}
+       />
       <Stack.Screen name="Liste" component={ListForActivty} />
-      <Stack.Screen name="Parametres" component={AdvancedParam} />
-      <Stack.Screen name="Connection" component={ConnectScreen} />
-
+      <Stack.Screen name="Parametres" component={AdvancedParam} 
+      options={{
+        headerLeft:()=>(
+          <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
+        ),
+        headerRight:()=>(
+          <Icon reverse name='ios-play' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
+        ), 
+        headerStyle: {
+          backgroundColor: '#009387',
+        },
+        headerTintColor:'#fff',
+            }}/>
+      <Stack.Screen name="Connection" component={ConnectScreen}  />
+      <Stack.Screen name="PlaceDetail" component={PlaceDetail} />
       <Stack.Screen name="ConnectionItem" component={ConnectComponent} />
      
     </Stack.Navigator>
@@ -74,7 +101,7 @@ const CustomDrawerContent = (props) => {
     <DrawerItem 
       label ="Accueil"
       labelStyle={{marginLeft:-16}}
-      onPress={()=>{props.navigation.navigate("Home");}}
+      onPress={()=>{props.navigation.navigate("Accueil");}}
       icon ={()=> <Icon reverse name='ios-settings' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
 
@@ -102,7 +129,7 @@ const CustomDrawerContent = (props) => {
 
   return(
     <View style ={{flex:1}}>
-        <Drawer.Navigator initialRouteName="Home"  drawerContent={props=> <CustomDrawerContent {...props} /> }   >
+        <Drawer.Navigator initialRouteName="PlaceDetail"  drawerContent={props=> <CustomDrawerContent {...props} /> }   >
         <Drawer.Screen name="Screens" component={Screens} />
       </Drawer.Navigator>
     </View>

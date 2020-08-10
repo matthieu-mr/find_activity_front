@@ -2,7 +2,7 @@ import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text  } from 'react-native';
 import MapView from 'react-native-maps';
 
-import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body,ListItem,CheckBox  } from 'native-base';
+import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body,ListItem,CheckBox,Header,Left,Right,Title  } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
@@ -88,12 +88,12 @@ setAdress(adress)
 
 let test = ()=> {
   getAdressCoords() ;
+  props.navigation.navigate("Liste")
 }
 
 
   return (
   <View style={styles.containerAll}>
-
 
       <Text>Recherche avancée</Text>
 
