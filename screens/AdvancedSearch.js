@@ -95,48 +95,42 @@ let test = ()=> {
   return (
   <View style={styles.containerAll}>
 
-      <Text>Recherche avancée</Text>
-
-
-    <View style={styles.containerType}>
-      <Content padder>
+    <View >
         <Card>
-          <CardItem header bordered>
-            <Text>Type d'activité</Text>
-              </CardItem>
                 <CardItem bordered>
                    <Body>
-                      <Text>Adresse</Text>
+                     <View style={styles.searchInput}>
+                     <Text style={styles.labelSearch}>Adresse</Text>
                         <Item floatingLabel>
                           <Icon active type="FontAwesome" name="map-marker" />
                           <Input placeholder={adress}/>
                         </Item>
+                     </View>
 
-                      <Text>Rayon de recherche</Text>
+                     <View style={styles.searchInput}>
+                      <Text style={styles.labelSearch}>Rayon de recherche</Text>
                         <Item floatingLabel >    
                           <Icon active type="MaterialCommunityIcons" name="map-marker-distance" />
                           <Input keyboardType="numeric"  placeholder={distance}/>
                         </Item>
+                      </View>
                   </Body>
                 </CardItem>
         </Card>
-      </Content>
     </View>
 
 
-   <View style={styles.containerType}>
-      <Content padder>
+   <View>
         <Card>
           <CardItem header bordered>
-            <Text>Type d'activité</Text>
+            <Text style={styles.labelSearch}>Type d'activité</Text>
               </CardItem>
-                <CardItem bordered>
+                <CardItem>
                   <Body>
-                  <ListItem>
+                  <ListItem style ={styles.searchInput}>
                       <CheckBox checked={true} />
                         <Text>     Daily Stand Up</Text>
                     </ListItem>
-                  
                   <ListItem>
                       <CheckBox checked={true} />
                         <Text>    Daily Stand Up</Text>
@@ -152,9 +146,7 @@ let test = ()=> {
                   </Body>
                 </CardItem>
         </Card>
-      </Content>
     </View>
-
 
       <Button full onPress={()=>test()}>
         <Text>Valider</Text>
@@ -169,18 +161,15 @@ let test = ()=> {
 // STYLES
 const styles = StyleSheet.create({
   containerAll: {
-    flex: 1, 
     backgroundColor: '#fff', 
   },
-  containerAdress:{
-    flex:1,
+searchInput :{
+width:Dimensions.get('window').width-40,
+marginTop:20
   },
-
-  containerType: {
-    flex:1,
-    backgroundColor: '#fff',
-  },
-
+labelSearch:{
+  fontSize:20
+}
 })
 
 export default AdvancedSearch

@@ -166,7 +166,7 @@ let idPlace = infoPlaces.responseDetail.result.place_id
 
 let photoPlace = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoId}&key=AIzaSyCXI24AWr0Cv2AXnbh29nVA9Ge7SPIvYBo`
 
-console.log(idPlace)
+
 
 let commentArray = commentPlace.map((item,i)=>{
 

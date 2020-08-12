@@ -17,8 +17,6 @@ import MapType from './component/MapType';
 
 function  Home(props) {
 
-
-  const [adress,setAdress] = useState("Saisissez votre adresse")
   const [distance,setdisctance] = useState("1000")
 
 // recuperation de la location
@@ -44,15 +42,10 @@ useEffect(() => {
 
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
-
-
     setLatitude(location.coords.latitude)
     setLongitude(location.coords.longitude)
-    getAdressCoords(location.coords.longitude,location.coords.latitude)
-
-    props.position(location)
-
-
+   // props.position(location)
+console.log("demande")
   })();
 },[]);
 
@@ -63,7 +56,6 @@ if (errorMsg) {
 } else if (location) {
   text = JSON.stringify(location);
 }
-
 
 
 // recuperation des types d'activite 
@@ -86,24 +78,7 @@ useEffect(()=>{
 },[])
 
 
-const [totalActivite,setTotalActivity] = useState(0)
-
-let totalLabel = `Toutes - ${totalActivite} sites`
-
-
- let typeActivityArray = listActivityType.map((item,i)=>{
-    
-    let type = item.name
-    let count = item.count
-  
-    let wordingLabel = `${type} - ${count} sites`
-
-   // let total = totalActivite + count
-   // setTotalActivity(total)
-    return (<Picker.Item label={wordingLabel} value={wordingLabel} key={i}/>)
-  })
-  
-
+const [listActivity, setListActivity] = useState()
 
 
 // recuperation des types d'activite 
@@ -117,13 +92,54 @@ useEffect(()=>{
       body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${typeActivite}`
     })
     var listActivityRaw = await requestBDD.json()
-    console.log("nouvelle requete")
     props.listActivity(listActivityRaw)
+    console.log("list",listActivityRaw)
+    setListActivity(listActivityRaw.fields)
   
   }
   recupDonnée()
   
-})
+},[])
+
+let total =0
+let totalLabel = `Toutes - ${total} sites`
+
+ let typeActivityArray = listActivityType.map((item,i)=>{
+    let type = item.name
+    let count = item.count
+  
+    let wordingLabel = `${type} - ${count} sites`
+    total = total +count
+   // console.log("mon total =",total)
+   
+    return (<Picker.Item label={wordingLabel} value={wordingLabel} key={i}/>)
+  })
+  
+// FILTRAGE DES RESULTATS
+let lettreComparaison ="";
+
+const[search,setSearch]=useState("D")
+
+let filteredList=[] ;
+
+/*  waiting for array playlist initialisation */
+   if(listActivity){
+       filteredList= listActivity.filter(function(item) {
+        //applying filter for the inserted text in search bar
+        
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = search.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        });
+
+   }else{
+       console.log("waiting ")
+   }
+   console.log("first playliste",listActivity)
+console.log("giltered playliste",filteredList)
+
+
+
 
 
 
@@ -132,20 +148,11 @@ let test = (value)=> {
   setTypeActivite(value)
 }
 
-
-
   return (
 
   <View style={styles.containerAll}>
-       
-
-        <Card>
+       <Card>
         <Form>
-            <Item floatingLabel>
-              <Label>Recherche d'activité</Label>
-              <Input onChangeText={(value)=>test(value)}/>
-            </Item>
-
             <Picker
               renderHeader={backAction =>
                 <Header style={{ backgroundColor: "#f44242" }}>

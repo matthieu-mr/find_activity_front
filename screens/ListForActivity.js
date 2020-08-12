@@ -1,8 +1,8 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text  } from 'react-native';
-import MapView from 'react-native-maps';
+import {connect} from 'react-redux';
 
-import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body  } from 'native-base';
+import { List,Item,itemDivider,ListItem,Right,Icon,Header,Input,Button, Fab } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
@@ -12,96 +12,167 @@ import * as Location from 'expo-location';
 
 
 //import components
-import ListType from './component/ListType';
-import MapType from './component/MapType';
+import ListFirstLetter from './component/ListFisrtLetter';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
 function  ListForActivity(props) {
-  const [natureList, setListNature] = useState()
 
-  const [adress,setAdress] = useState("Saisissez votre adresse")
-  const [distance,setdisctance] = useState("10 km")
+const [listActivity,setListActivity] = useState([])
+const [searchHeader, setSearchHeader] = useState(false)
 
 
-// requete BDD
-    useEffect(()=>{
-      recupDonnée()
-    //  console.log("hello",reponse);
+let latitude = 48.866667
+let longitude = 2.333333
+let distance = 10000
+// recuperation des types d'activite 
+useEffect(()=>{
+  
+  async function recupDonnée(){
+
+    var requestBDD = await fetch(`http://192.168.1.8:3000/sportlist`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${latitude}&long=${longitude}&dist=${distance}`
     })
-
-    async function recupDonnée(){
-      var requestBDD = await fetch(`http://192.168.56.1:3000/nature`)
-      var reponse = await requestBDD.json()
-    }
-    
-// recuperation de la location
-const [location, setLocation] = useState(null);
-const [errorMsg, setErrorMsg] = useState(null);
-
-const [latitude,setLatitude] = useState();
-const [longitude,setLongitude] = useState();
+    var listSportRaw = await requestBDD.json()
+    var listSport =listSportRaw.result
+    setListActivity(listSport)   
+  }
+  recupDonnée()
+  
+},[])
 
 
-useEffect(() => {
-  (async () => {
-    let { status } = await Location.requestPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-    }
+// FILTRAGE DES RESULTATS
+let lettreComparaison ="";
 
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
+const[search,setSearch]=useState("")
 
+let filteredList=[] ;
 
+/*  waiting for array playlist initialisation */
+   if(listActivity){
+       filteredList= listActivity.filter(function(item) {
+        //applying filter for the inserted text in search bar
+        
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = search.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        });
 
-    setLatitude(location.coords.latitude)
-    setLongitude(location.coords.longitude)
-    getAdressCoords(location.coords.longitude,location.coords.latitude)
-  })();
-},[]);
-
-
-let text = 'Waiting..';
-if (errorMsg) {
-  text = errorMsg;
-} else if (location) {
-  text = JSON.stringify(location);
-}
-
-
-// Ajout des inputs & saisie adresse
-
-
-
+   }else{
+       console.log("waiting ")
+   }
  
-let getAdressCoords =async (lon,lat)=> {
-  let lon2 = 2.37
-  let lat2 = 48.357
+  // Reset filtered search
+ let resetSearch =()=>{
+  setSearch("")
+  filteredList = listActivity ;
+ }  
 
-var rawResponse =await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=2.37&lat=48.357&type=street`)
 
-
-
-var response = await rawResponse.json();
-// var response = JSON.parse(list.getBody())
-
-let adress = response.features[0].properties.label
-setAdress(adress)
- 
+let affichageHeader=()=>{
+  if(searchHeader){
+    headerSearchInput = (
+      <Header searchBar rounded>
+        <Item>
+          <Icon name="ios-search" />
+          <Input placeholder="Rechercher" 
+          onChangeText={(value) => setSearch(value)}
+          />
+          <Icon name="ios-close" onPress={() => resetSearch()}/>
+        </Item>
+      </Header>
+    )
+  }
 }
 
+let headerSearchInput
+
+affichageHeader()
+//Afichage de la liste comparaison premiere lettre
+let typeActivityArray = filteredList.map((item,i)=>{
+  let wordingNb = `Nombre de lieux trouvés : ${item.count}`
+  if(item.count == 1 ){
+    wordingNb = `Nombre de lieu trouvé : ${item.count}`
+  }
+
+  if (lettreComparaison === item.first_letter){
+    return (  
+    <ListItem onPress={() => alert("This is Card Header")}>
+         <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
+              <View style={{flex:1}}>
+                  <Text style={styles.textTitle}>{item.name}</Text>
+                  <Text>{wordingNb}</Text>
+              </View>
+          <View> 
+              <Right>
+                  <Icon name="arrow-forward" />
+              </Right>
+           </View>
+        </View>
+    </ListItem>
+    )
+  }else {
+    lettreComparaison = item.first_letter
+    return ( 
+      <View>
+
+      <ListItem itemDivider style={{ borderBottomWidth:2 }}>
+        <Text style={{ fontWeight: "600",fontSize:22}}>{item.first_letter}</Text>
+      </ListItem>
+
+      <ListItem onPress={() => alert("This is Card Header")}>
+
+      <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
+              <View style={{flex:1}}>
+                  <Text style={styles.textTitle}>{item.name}</Text>
+                  <Text>{wordingNb}</Text>
+
+              </View>
+          <View> 
+              <Right>
+                  <Icon name="arrow-forward" />
+              </Right>
+           </View>
+        </View>
+      </ListItem>
+      </View>
+
+    )
+  }
+
+
+});
 
 
 
-let test = ()=> {
-  getAdressCoords() ;
-}
 
 
   return (
   <View style={styles.containerAll}>
-    <ListType />
+    <View>
+      {headerSearchInput}
+    </View>
+
+    <ScrollView>
+      <List>
+        {typeActivityArray}
+      </List>
+    </ScrollView>
+
+    <Fab
+            
+            direction="up"
+            containerStyle={{ }}
+            style={{ backgroundColor: '#5067FF' }}
+            position="bottomRight"
+            onPress={() => setSearchHeader(!searchHeader)}>
+            <Icon name="search" />
+          </Fab>
+
 </View>
 
   );
@@ -113,40 +184,10 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#fff', 
   },
-  containerAdress:{
-    flex:1,
-    height:500,
-  },
-  searchAdress: {
-    alignItems: 'stretch',
-    width:250,
-  },
-
-  containerType: {
-    flex:1,
-    backgroundColor: '#fff',
-
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-
-  containerMap: {
-    flex:4,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-  containerAdress :{
-    flex: 1, 
-    flexDirection: 'row',
-    alignItems: 'stretch',
-  },
+  textTitle:{
+     
+    fontSize:20
+  }
 
 })
 

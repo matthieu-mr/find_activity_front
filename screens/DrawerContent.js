@@ -20,7 +20,7 @@ import PlaceDetail from './PlaceDetail'
 
 
 
-export default function DrawerContent(props){
+function DrawerContent(props){
 
   const  [connected,setConnected] = useState(false)
 
@@ -29,7 +29,7 @@ export default function DrawerContent(props){
   const Stack = createStackNavigator();
 
   const Screens = ({navigation}) => {
-    console.log(navigation)
+    
     return (
     <Stack.Navigator screenOptions={{
       headerLeft:()=>(
@@ -44,6 +44,7 @@ export default function DrawerContent(props){
       headerTintColor:'#fff',
     }}>
       <Stack.Screen name="Accueil" component={Home} />
+
       <Stack.Screen name="Place details" component={PlaceDetail}
       options={{
         headerLeft:()=>(
@@ -58,6 +59,7 @@ export default function DrawerContent(props){
         headerTintColor:'#fff',
             }}
        />
+
       <Stack.Screen name="Liste" component={ListForActivty} />
       <Stack.Screen name="Parametres" component={AdvancedParam} 
       options={{
@@ -137,3 +139,27 @@ const CustomDrawerContent = (props) => {
 
   )
 } ;
+
+
+
+function mapStateToProps(state) {
+  return { position: state.position }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    position: function(location) {
+        dispatch( {type: 'addPosition',location:location} )
+    },
+    listActivity: function(list) {
+      dispatch( {type: 'addList',list:list} )
+  }
+  }
+}
+
+
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(DrawerContent);

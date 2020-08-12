@@ -11,7 +11,7 @@ import * as Location from 'expo-location';
 
 function ListType(props) {
 
-  let listRaw =props.listActivity.list.result
+let listRaw =props.listActivity.list.result
 //console.log("--------------------------- >>>>>>>>>",listRaw)
 
 let listArray = listRaw.map((item,i)=>{
@@ -41,13 +41,15 @@ let listArray = listRaw.map((item,i)=>{
 
 
   return (
+    
+
+
     <View>
       <ScrollView>
       {listArray}
       </ScrollView>
-
-
     </View>
+  
   
   );
 }
