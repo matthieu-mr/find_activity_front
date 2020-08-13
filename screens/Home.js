@@ -44,7 +44,7 @@ useEffect(() => {
     setLocation(location);
     setLatitude(location.coords.latitude)
     setLongitude(location.coords.longitude)
-   // props.position(location)
+    props.position(location)
 console.log("demande")
   })();
 },[]);
@@ -69,8 +69,9 @@ useEffect(()=>{
       body:`lat=${latitude}&long=${longitude}&dist=${distance}`
     })
     var listActivityRaw = await requestBDD.json()
-     
-      setListActivityType(listActivityRaw.result.facets)
+
+      setTotal(listActivityRaw.total)
+      setListActivityType(listActivityRaw.resultFiltered)
       
   }
   recupDonnée()
@@ -80,8 +81,7 @@ useEffect(()=>{
 
 const [listActivity, setListActivity] = useState()
 
-
-// recuperation des types d'activite 
+// recuperation des POI 
 useEffect(()=>{
   
   async function recupDonnée(){
@@ -92,21 +92,16 @@ useEffect(()=>{
       body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${typeActivite}`
     })
     var listActivityRaw = await requestBDD.json()
-    
-   console.log("test")
+    setListActivity(listActivityRaw)
+    props.listActivity(listActivityRaw)
 
-   setListActivity(listActivityRaw)
-  
-   // console.log("list",listActivityRaw)
-    
-  
   }
   recupDonnée()
   
 },[])
 
+const [total,setTotal] = useState()
 
-let total =0
 let totalLabel = `Toutes - ${total} sites`
 
  let typeActivityArray = listActivityType.map((item,i)=>{
@@ -114,47 +109,33 @@ let totalLabel = `Toutes - ${total} sites`
     let count = item.count
   
     let wordingLabel = `${type} - ${count} sites`
-    total = total +count
    // console.log("mon total =",total)
    
-    return (<Picker.Item label={wordingLabel} value={wordingLabel} key={i}/>)
+    return (<Picker.Item label={wordingLabel} value={type} key={i}/>)
   })
   
 // FILTRAGE DES RESULTATS
 let lettreComparaison ="";
 
-const[search,setSearch]=useState("danse")
-let listRecup = listActivity.resultSend;
 let filteredList=[] ;
 
-/*  waiting for array playlist initialisation */
-   if(listRecup){
-       filteredList= listRecup.filter(function(item) {
-        //applying filter for the inserted text in search bar
-        
-        const itemData = item.fields.equipementtypelib ? item.fields.equipementtypelib.toUpperCase() : ''.toUpperCase();
-        const textData = search.toUpperCase();
-        props.listActivity(filteredList)
-        return itemData.indexOf(textData) > -1;
-        });
+let select = (filterType)=> {
+  console.log(filterType)
 
-   }else{
-       console.log("waiting ")
-   }
-   
+  async function recupDonnée(){
+    var requestBDD = await fetch(`http://192.168.1.8:3000/filteredType`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${filterType}`
+    })
+    var listActivityRaw = await requestBDD.json()
+    props.listActivity(listActivityRaw)
+    setListActivity(listActivityRaw)
 
-console.log("recup",listActivity.resultSend[0].fields.equipementtypelib)  
- console.log("le array",filteredList)
-
-
-
-
-
-
-let test = (value)=> {
-  console.log("input",value)
-  setTypeActivite(value)
+  }
+  recupDonnée()
 }
+
 
   return (
 
@@ -179,7 +160,7 @@ let test = (value)=> {
               mode="dropdown"
               iosIcon={<Icon name="arrow-down" />}
               selectedValue={typeActivite}
-              onValueChange={(value)=>test(value)}
+              onValueChange={(value)=>select(value)}
             >
               <Picker.Item label={totalLabel} value="Toutes" />
               {typeActivityArray}
@@ -236,10 +217,9 @@ function mapDispatchToProps(dispatch) {
     },
     listActivity: function(list) {
       dispatch( {type: 'addList',list:list} )
-  }
+  },
   }
 }
-
 
 
 export default connect(
