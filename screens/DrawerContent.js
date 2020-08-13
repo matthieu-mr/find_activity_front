@@ -142,24 +142,6 @@ const CustomDrawerContent = (props) => {
 
 
 
-function mapStateToProps(state) {
-  return { position: state.position }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    position: function(location) {
-        dispatch( {type: 'addPosition',location:location} )
-    },
-    listActivity: function(list) {
-      dispatch( {type: 'addList',list:list} )
-  }
-  }
-}
 
 
-
-export default connect(
-  mapStateToProps, 
-  mapDispatchToProps
-)(DrawerContent);
+export default DrawerContent

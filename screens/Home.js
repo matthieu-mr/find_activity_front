@@ -92,14 +92,19 @@ useEffect(()=>{
       body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${typeActivite}`
     })
     var listActivityRaw = await requestBDD.json()
-    props.listActivity(listActivityRaw)
-    console.log("list",listActivityRaw)
-    setListActivity(listActivityRaw.fields)
+    
+   console.log("test")
+
+   setListActivity(listActivityRaw)
+  
+   // console.log("list",listActivityRaw)
+    
   
   }
   recupDonnée()
   
 },[])
+
 
 let total =0
 let totalLabel = `Toutes - ${total} sites`
@@ -118,25 +123,28 @@ let totalLabel = `Toutes - ${total} sites`
 // FILTRAGE DES RESULTATS
 let lettreComparaison ="";
 
-const[search,setSearch]=useState("D")
-
+const[search,setSearch]=useState("danse")
+let listRecup = listActivity.resultSend;
 let filteredList=[] ;
 
 /*  waiting for array playlist initialisation */
-   if(listActivity){
-       filteredList= listActivity.filter(function(item) {
+   if(listRecup){
+       filteredList= listRecup.filter(function(item) {
         //applying filter for the inserted text in search bar
         
-        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const itemData = item.fields.equipementtypelib ? item.fields.equipementtypelib.toUpperCase() : ''.toUpperCase();
         const textData = search.toUpperCase();
+        props.listActivity(filteredList)
         return itemData.indexOf(textData) > -1;
         });
 
    }else{
        console.log("waiting ")
    }
-   console.log("first playliste",listActivity)
-console.log("giltered playliste",filteredList)
+   
+
+console.log("recup",listActivity.resultSend[0].fields.equipementtypelib)  
+ console.log("le array",filteredList)
 
 
 
@@ -153,6 +161,7 @@ let test = (value)=> {
   <View style={styles.containerAll}>
        <Card>
         <Form>
+          <Text> Type d'activité</Text>
             <Picker
               renderHeader={backAction =>
                 <Header style={{ backgroundColor: "#f44242" }}>
