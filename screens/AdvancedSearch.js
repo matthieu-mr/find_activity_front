@@ -1,11 +1,9 @@
 import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View,Dimensions,Text  } from 'react-native';
-import MapView from 'react-native-maps';
+import { StyleSheet, View,Dimensions,Text, ScrollView, Alert  } from 'react-native';
+import {connect} from 'react-redux';
 
 import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body,ListItem,CheckBox,Header,Left,Right,Title  } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid';
 
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 
 import * as Location from 'expo-location';
@@ -17,63 +15,12 @@ function AdvancedSearch(props) {
   const [distance,setdisctance] = useState("10 km")
 
 
-// requete BDD
-    useEffect(()=>{
-      recupDonnée()
-    //  console.log("hello",reponse);
-    })
-
-    async function recupDonnée(){
-      var requestBDD = await fetch(`http://192.168.56.1:3000/nature`)
-      var reponse = await requestBDD.json()
-    }
-    
-// recuperation de la location
-const [location, setLocation] = useState(null);
-const [errorMsg, setErrorMsg] = useState(null);
-
-const [latitude,setLatitude] = useState();
-const [longitude,setLongitude] = useState();
-
-
-useEffect(() => {
-  (async () => {
-    let { status } = await Location.requestPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-
-
-    setLatitude(location.coords.latitude)
-    setLongitude(location.coords.longitude)
-    getAdressCoords(location.coords.longitude,location.coords.latitude)
-  })();
-},[]);
-
-
-let text = 'Waiting..';
-if (errorMsg) {
-  text = errorMsg;
-} else if (location) {
-  text = JSON.stringify(location);
-}
-
-
 // Ajout des inputs & saisie adresse
-
-
-
- 
 let getAdressCoords =async (lon,lat)=> {
   let lon2 = 2.37
   let lat2 = 48.357
 
 var rawResponse =await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=2.37&lat=48.357&type=street`)
-
-
 
 var response = await rawResponse.json();
 // var response = JSON.parse(list.getBody())
@@ -82,6 +29,58 @@ let adress = response.features[0].properties.label
 setAdress(adress)
  
 }
+
+
+
+let listTypeFromProps =props.type
+
+let typeActivityArray = listTypeFromProps.map((item,i)=>{
+
+  return (
+    <ListItem style ={styles.searchInput} onPress={()=>select(item.name)}>
+    <CheckBox checked={item.state} color="green" />
+          <Text>  {item.name}</Text>
+  </ListItem>
+  )
+})
+
+
+// FILTRAGE DES RESULTATS
+let lettreComparaison ="";
+let filteredList=[] ;
+
+let select = (filterType)=> {
+  
+
+let listTypeFromProps = props.type
+
+
+let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
+  if (item.name===filterType){
+      item.state=true
+      return item
+  }else {
+    item.state=false
+      return item
+  }
+})
+
+
+props.listType(typeActivityNewArray)
+  async function recupDonnée(){
+    var requestBDD = await fetch(`http://192.168.1.8:3000/filteredType`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${filterType}`
+    })
+
+    var listActivityRaw = await requestBDD.json()
+    props.listActivity(listActivityRaw)
+ 
+  }
+  recupDonnée()
+}
+
 
 
 
@@ -94,7 +93,7 @@ let test = ()=> {
 
   return (
   <View style={styles.containerAll}>
-
+<ScrollView>
     <View >
         <Card>
                 <CardItem bordered>
@@ -127,22 +126,7 @@ let test = ()=> {
               </CardItem>
                 <CardItem>
                   <Body>
-                  <ListItem style ={styles.searchInput}>
-                      <CheckBox checked={true} />
-                        <Text>     Daily Stand Up</Text>
-                    </ListItem>
-                  <ListItem>
-                      <CheckBox checked={true} />
-                        <Text>    Daily Stand Up</Text>
-                    </ListItem>
-                    <ListItem>
-                      <CheckBox checked={false} />
-                        <Text>    Daily Stand Up</Text>
-                    </ListItem>
-                    <ListItem>
-                      <CheckBox checked={true} />
-                        <Text>  Daily Stand Up</Text>
-                    </ListItem>
+                  {typeActivityArray}
                   </Body>
                 </CardItem>
         </Card>
@@ -151,7 +135,7 @@ let test = ()=> {
       <Button full onPress={()=>test()}>
         <Text>Valider</Text>
       </Button>
-
+</ScrollView>
 
 </View>
 
@@ -172,4 +156,26 @@ labelSearch:{
 }
 })
 
-export default AdvancedSearch
+function mapStateToProps(state) {
+  return { position: state.position,type:state.listType }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    position: function(location) {
+        dispatch( {type: 'addPosition',location:location} )
+    },
+  listType: function(listType) {
+    dispatch( {type: 'changeTypeActivity',listType:listType} )
+},
+  }
+}
+
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(AdvancedSearch);
+
+
+//export default AdvancedSearch

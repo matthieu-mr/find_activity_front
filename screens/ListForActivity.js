@@ -12,7 +12,6 @@ import * as Location from 'expo-location';
 
 
 //import components
-import ListFirstLetter from './component/ListFisrtLetter';
 import { ScrollView } from 'react-native-gesture-handler';
 
 

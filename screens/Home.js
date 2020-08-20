@@ -17,6 +17,12 @@ import MapType from './component/MapType';
 
 function  Home(props) {
 
+let ip = "192.168.1.102:3000" // ip ext
+// let ip = "http://192.168.1.8:3000/ // ip nt"
+
+
+
+
   const [distance,setdisctance] = useState("1000")
 
 // recuperation de la location
@@ -29,7 +35,6 @@ const [longitude,setLongitude] = useState();
 
 const [listActivityType, setListActivityType]= useState([]) // type activity, ex indoor recup from back
 const [typeActivite,setTypeActivite] = useState ("Toutes") // selected by user
-
 
 
 // Recuperation de la localisation de l'user
@@ -45,7 +50,6 @@ useEffect(() => {
     setLatitude(location.coords.latitude)
     setLongitude(location.coords.longitude)
     props.position(location)
-console.log("demande")
   })();
 },[]);
 
@@ -63,7 +67,7 @@ useEffect(()=>{
   
   async function recupDonnée(){
 
-    var requestBDD = await fetch(`http://192.168.1.8:3000/nature`,{
+    var requestBDD = await fetch(`${ip}/nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${latitude}&long=${longitude}&dist=${distance}`
@@ -72,7 +76,7 @@ useEffect(()=>{
 
       setTotal(listActivityRaw.total)
       setListActivityType(listActivityRaw.resultFiltered)
-      
+      props.listType(listActivityRaw.resultFiltered)
   }
   recupDonnée()
   
@@ -109,18 +113,31 @@ let totalLabel = `Toutes - ${total} sites`
     let count = item.count
   
     let wordingLabel = `${type} - ${count} sites`
-   // console.log("mon total =",total)
-   
     return (<Picker.Item label={wordingLabel} value={type} key={i}/>)
   })
   
 // FILTRAGE DES RESULTATS
 let lettreComparaison ="";
-
 let filteredList=[] ;
 
 let select = (filterType)=> {
-  console.log(filterType)
+  
+
+let listTypeFromProps = props.activity
+
+
+let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
+  if (item.name===filterType){
+      item.state=true
+      return item
+  }else {
+    item.state=false
+      return item
+  }
+})
+
+
+props.listType(typeActivityNewArray)
 
   async function recupDonnée(){
     var requestBDD = await fetch(`http://192.168.1.8:3000/filteredType`,{
@@ -128,10 +145,10 @@ let select = (filterType)=> {
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${filterType}`
     })
+
     var listActivityRaw = await requestBDD.json()
     props.listActivity(listActivityRaw)
     setListActivity(listActivityRaw)
-
   }
   recupDonnée()
 }
@@ -207,7 +224,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { position: state.position }
+  return { position: state.position,activity:state.listType }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -218,6 +235,9 @@ function mapDispatchToProps(dispatch) {
     listActivity: function(list) {
       dispatch( {type: 'addList',list:list} )
   },
+  listType: function(listType) {
+    dispatch( {type: 'changeTypeActivity',listType:listType} )
+},
   }
 }
 

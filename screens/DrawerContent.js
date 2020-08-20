@@ -64,10 +64,9 @@ function DrawerContent(props){
       <Stack.Screen name="Parametres" component={AdvancedParam} 
       options={{
         headerLeft:()=>(
-          <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
-        ),
+          <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeftt: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
         headerRight:()=>(
-          <Icon reverse name='ios-play' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
+          <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />
         ), 
         headerStyle: {
           backgroundColor: '#009387',
