@@ -164,7 +164,6 @@ let typeActivityArray = filteredList.map((item,i)=>{
     </ScrollView>
 
     <Fab
-            
             direction="up"
             containerStyle={{ }}
             style={{ backgroundColor: '#5067FF' }}

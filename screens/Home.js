@@ -1,9 +1,10 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text  } from 'react-native';
-
+import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
 import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body, Row,Form,Picker,Header,Left,Title,Right  } from 'native-base';
 
+import {Marker} from 'react-native-maps';
 
 
 import * as Location from 'expo-location';
@@ -11,7 +12,6 @@ import * as Location from 'expo-location';
 
 //import components
 import ListType from './component/ListType';
-import MapType from './component/MapType';
 
 
 
@@ -29,7 +29,9 @@ const [longitude,setLongitude] = useState();
 
 const [listActivityType, setListActivityType]= useState([]) // type activity, ex indoor recup from back
 const [typeActivite,setTypeActivite] = useState ("Toutes") // selected by user
+ // Liste activité
 
+const [listActivity, setListActivity] = useState({})
 
 
 // Recuperation de la localisation de l'user
@@ -45,7 +47,6 @@ useEffect(() => {
     setLatitude(location.coords.latitude)
     setLongitude(location.coords.longitude)
     props.position(location)
-console.log("demande")
   })();
 },[]);
 
@@ -79,7 +80,6 @@ useEffect(()=>{
 },[])
 
 
-const [listActivity, setListActivity] = useState()
 
 // recuperation des POI 
 useEffect(()=>{
@@ -136,6 +136,36 @@ let select = (filterType)=> {
   recupDonnée()
 }
 
+// Affichage des markers
+
+//console.log(listActivity.result[0].fields.gps)
+
+
+let markerList
+
+if ( listActivity.result== undefined){
+  console.log("first")
+}
+else {
+  markerList = listActivity.result.map((item,i)=>{
+    console.log(item.fields)
+
+    let actlib = item.fields.actlib
+    let name = item.fields.insnom
+    let lat = item.fields.gps[0]
+    let lon = item.fields.gps[1]
+    return (
+      <Marker
+      key={i}
+      coordinate={{latitude: lat,
+      longitude: lon}}
+      title={actlib}
+      description={name}
+  />
+    )
+  })
+}
+
 
   return (
 
@@ -173,8 +203,20 @@ let select = (filterType)=> {
 
       <Tabs>
           <Tab heading={ <TabHeading><Icon name="map" /><Text> Carte</Text></TabHeading>}>
-          <MapType />
-          </Tab>
+            
+          <MapView style={styles.mapStyle} 
+
+                initialRegion={{
+                latitude: 48.866667,
+                longitude:  2.333333,
+                latitudeDelta: 1,
+                longitudeDelta: 1,
+                }}
+
+                >
+                {markerList}
+                </MapView>          
+</Tab>
           <Tab heading={ <TabHeading><Icon name="list" /><Text> Liste</Text></TabHeading>}>
           <ListType />
           </Tab>
@@ -202,7 +244,16 @@ const styles = StyleSheet.create({
   },
   distanceField:{
     flex:1
-  }
+  },  containerMap: {
+    flex:1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  mapStyle: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
 })
 
 
