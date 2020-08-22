@@ -1,7 +1,7 @@
 export default function(typeActivity = "Toutes", action) {
     if(action.type == 'changeTypeActivity') {
-      console.log('reducer activity',action)
-      return typeActivity;
+      let newList = action.listType
+      return newList;
     
     } else {
       return typeActivity;

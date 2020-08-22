@@ -18,10 +18,19 @@
     ],
     "ios": {
       "supportsTablet": true
+      
     },
     
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "apiKey": "AIzaSyCXI24AWr0Cv2AXnbh29nVA9Ge7SPIvYBo",
+      "authDomain": "find-activity-284506.firebaseapp.com",
+      "databaseURL": "https://find-activity-284506.firebaseio.com",
+      "projectId": "find-activity-284506",
+      "storageBucket": "find-activity-284506.appspot.com",
+      "messagingSenderId": "148701720137",
+      "appId": "1:148701720137:web:288f8e8c4888367b85d998",
+      "measurementId": "G-KMQ5WQHQPV"
     }
   }
 }
