@@ -1,8 +1,9 @@
 export default function(infoPlace = "", action) {
-    if(action.type == 'addplace') {
-        console.log("reducer place")
+    if(action.type == 'callPlace') {
+        console.log("reducer place",action)
+
       let newList = action.listType
-      return newList;
+      return infoPlace;
     
     } else {
       return infoPlace;

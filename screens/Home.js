@@ -18,7 +18,7 @@ import ListType from './component/ListType';
 function  Home(props) {
 
 //let ip = "192.168.1.102:3000" // ip ext
- let ip = `http://192.168.1.43:3000/`
+ let ip = `http://192.168.1.183:3000/`
 
 const [distance,setdisctance] = useState("1000")
 
@@ -183,7 +183,7 @@ else {
   <View style={styles.containerAll}>
        <Card>
         <Form>
-          <Text> Type d'activité</Text>
+          <Text style={styles.textTitle}> Type d'activité</Text>
             <Picker
               renderHeader={backAction =>
                 <Header style={{ backgroundColor: "#009387"  }}>
@@ -212,8 +212,8 @@ else {
         </Card>
   
 
-      <Tabs>
-          <Tab heading={ <TabHeading><Icon name="map" /><Text> Carte</Text></TabHeading>}>
+      <Tabs tabBarUnderlineStyle={{borderBottomColor:'#009387',borderBottomWidth:5}} activeTextStyle={{color: 'red'}} >
+          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}} activeTextStyle={{color: 'yellow'}} ><Icon name="map" style={{color: 'dark'}} /><Text style={{color: 'dark'}}  > Carte</Text></TabHeading>} >
             
           <MapView style={styles.mapStyle} 
 
@@ -228,7 +228,7 @@ else {
                 {markerList}
                 </MapView>          
 </Tab>
-          <Tab heading={ <TabHeading><Icon name="list" /><Text> Liste</Text></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}}><Icon name="list"  style={{color: 'dark'}} /><Text style={{color: 'dark'}}  >  Liste</Text></TabHeading>}>
           <ListType />
           </Tab>
 
@@ -264,7 +264,12 @@ const styles = StyleSheet.create({
   mapStyle: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-  },
+  }, 
+  textTitle:{
+    marginTop:15,
+    fontSize:20
+  }
+
 })
 
 

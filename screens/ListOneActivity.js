@@ -18,22 +18,29 @@ import ListType from './component/ListType';
 function  ListOneActivity(props) {
 
 //let ip = "192.168.1.102:3000" // ip ext
- let ip = `http://192.168.1.43:3000/`
+let ip = `http://192.168.1.183:3000/`
 
+ console.log(props.sport.name)
+
+ let sportName = props.sport.name
+ props.navigation.setOptions({ title:sportName })
 
 // recuperation des types d'activite 
 useEffect(()=>{
+let lat ="test"
+let long ="test"
+let dist="test"
 
   async function recupDonnée(){
 
     var requestBDD = await fetch(`${ip}sport`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      //body:`lat=${latitude}&long=${longitude}&dist=${distance}`
+      body:`lat=${lat}&long=${long}&dist=${dist}&sport=${sportName}`
     })
     var listSportRaw = await requestBDD.json()
     props.listActivity(listSportRaw)
-    console.log("list sport",listSportRaw)
+  //  console.log("list sport",listSportRaw)
   }
   recupDonnée()
   
@@ -78,11 +85,13 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { position: state.position,activity:state.listType }
+  return { position: state.position,sport:state.sportName }
 }
-
 function mapDispatchToProps(dispatch) {
   return {
+    position: function(location) {
+        dispatch( {type: 'addPosition',location:location} )
+    },
     listActivity: function(list) {
       dispatch( {type: 'addList',list:list} )
   },
@@ -93,7 +102,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapStateToProps, 
-  mapDispatchToProps
+    mapDispatchToProps
 )(ListOneActivity);
 
 

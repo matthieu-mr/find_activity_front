@@ -1,8 +1,9 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View, AsyncStorage, ScrollView} from 'react-native';
-import { Container, Header,Text, Item, Input, Icon, Content, Card, CardItem, Right } from 'native-base';
+import { Container, Header,Text, Item, Input, Icon, Content, Card, CardItem, Right,ListItem } from 'native-base';
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 import {connect} from 'react-redux';
+import { Divider } from 'react-native-elements';
 
 import * as Location from 'expo-location';
 
@@ -20,29 +21,38 @@ let listArray = listRaw.map((item,i)=>{
   let dist = item.fields.dist
   let distance = Math.round(dist)
   let nature =item.fields.naturelibelle
-  let nom = item.fields.insnom
+  let name = item.fields.insnom
+  
   
 
 let goPlaceDetails = () => {
-  navigation.navigate('Parametres')
+  alert("test")
+  let infoToSend = {
+    name:name,
+    lat:46.55,
+    long:3.00
+
+  }
+  props.infoPlace(infoToSend)
+  //props.navigation.navigate('Parametres')
 }
 
 
   return (
-    <Card key={i}>
-    <CardItem  onPress={() => {goPlaceDetails('You tapped the button!');}}>
-      <View>
-      <Text>{nom}</Text>
-        <View> 
-          <Text>{type} - {distance} Mètres</Text>
-       
-        </View>
-      </View>
-      <Right>
-        <Icon name="arrow-forward" />
-      </Right>
-     </CardItem>
-   </Card>
+    <View >
+      <Card transparent key={i} >
+        <CardItem button onPress={() => {goPlaceDetails('You tapped the button!');}}>
+          <View>
+              <Text style={styles.textTitle}>{name}</Text>
+              <Text>{type} - {distance} Mètres</Text>
+          </View>
+          <Right>
+            <Icon name="arrow-forward" />
+          </Right>
+        </CardItem>
+      </Card>
+      <Divider/>
+   </View>
   ) 
 });
 
@@ -66,7 +76,13 @@ const styles = StyleSheet.create({
   categoryTitle: {
     color:"#383838", 
   },
-
+  textTitle:{
+    fontSize:20
+  },
+  textUnder:{
+    fontSize:15,
+   
+  }
 })
 
 
@@ -79,6 +95,10 @@ function mapDispatchToProps(dispatch) {
     position: function(location) {
         dispatch( {type: 'addPosition',location:location} )
     },
+    infoPlace: function(info) {
+      dispatch( {type: 'callPlace',info:info} )
+  },
+
 
   }
 }

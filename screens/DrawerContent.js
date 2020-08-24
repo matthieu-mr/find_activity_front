@@ -43,7 +43,8 @@ function DrawerContent(props){
       headerTintColor:'#fff',
     }}>
       <Stack.Screen name="Accueil" component={Home} />
-      <Stack.Screen name="Liste complète" component={ListOneActivity} />
+      <Stack.Screen name="ListOneActivity" component={ListOneActivity} />
+
       <Stack.Screen name="Place details" component={PlaceDetail}
       options={{
         headerLeft:()=>(
@@ -59,7 +60,7 @@ function DrawerContent(props){
             }}
        />
 
-      <Stack.Screen name="Liste" component={ListForActivty} />
+      <Stack.Screen name="Liste" component={ListForActivty}  />
       <Stack.Screen name="Parametres" component={AdvancedParam} 
       options={{
         headerLeft:()=>(
@@ -89,7 +90,6 @@ const CustomDrawerContent = (props) => {
  
     <DrawerContentScrollView {...props} >
 
-
       <DrawerItem 
       label =""
       labelStyle={{marginLeft:-16}}
@@ -102,14 +102,14 @@ const CustomDrawerContent = (props) => {
       label ="Accueil"
       labelStyle={{marginLeft:-16}}
       onPress={()=>{props.navigation.navigate("Accueil");}}
-      icon ={()=> <Icon reverse name='ios-settings' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
+      icon ={()=> <Icon reverse name='ios-home' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
 
     <DrawerItem 
       label ="Liste complète des activités"
       labelStyle={{marginLeft:-16}}
       onPress={()=>{props.navigation.navigate("Liste");}}
-      icon ={()=> <Icon reverse name='ios-settings' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
+      icon ={()=> <Icon reverse name='ios-list' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
     
     <DrawerItem 

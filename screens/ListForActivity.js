@@ -18,10 +18,11 @@ import ListType from './component/ListType'
 
 function  ListForActivity(props) {
 
+ //let navigation=props.navigation
 
+ 
 //let ip = "192.168.1.102:3000" // ip ext
-let ip = `http://192.168.1.43:3000/` 
-
+let ip = `http://192.168.1.183:3000/`
 
 const [listActivity,setListActivity] = useState([])
 const [searchHeader, setSearchHeader] = useState(false)
@@ -68,6 +69,9 @@ let filteredList=[] ;
 
    }else{
        console.log("waiting ")
+       return (
+         <Text>Waitting</Text>
+       )
    }
  
   // Reset filtered search
@@ -105,7 +109,7 @@ let typeActivityArray = filteredList.map((item,i)=>{
 
   if (lettreComparaison === item.first_letter){
     return (  
-    <ListItem onPress={() => redirect({item})}>
+    <ListItem onPress={() => redirect({item})} key={i}>
          <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
               <View style={{flex:1}}>
                   <Text style={styles.textTitle}>{item.name}</Text>
@@ -123,8 +127,7 @@ let typeActivityArray = filteredList.map((item,i)=>{
     lettreComparaison = item.first_letter
     return ( 
       <View>
-
-      <ListItem itemDivider style={{ borderBottomWidth:2 }}>
+      <ListItem itemDivider style={{ borderBottomWidth:2 }} key={i}>
         <Text style={{ fontWeight: "600",fontSize:22}}>{item.first_letter}</Text>
       </ListItem>
 
@@ -134,7 +137,6 @@ let typeActivityArray = filteredList.map((item,i)=>{
               <View style={{flex:1}}>
                   <Text style={styles.textTitle}>{item.name}</Text>
                   <Text>{wordingNb}</Text>
-
               </View>
           <View> 
               <Right>
@@ -153,9 +155,9 @@ let typeActivityArray = filteredList.map((item,i)=>{
 let redirect = (item) => {
  // console.log("redirect",item.item.name)
    props.sportName(item.item.name)
-   props.navigation.navigate('Liste complète')
-}
-
+   let title = item.item.name
+   props.navigation.navigate('ListOneActivity')}
+  
   return (
   <View style={styles.containerAll}>
     <View>
@@ -189,7 +191,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', 
   },
   textTitle:{
-     
     fontSize:20
   }
 
