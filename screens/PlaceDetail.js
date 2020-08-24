@@ -210,7 +210,7 @@ let mapItineraire = async()=>{
     let latitude = 48.86701
     let longitude = 2.35399
     let encodedName = encodeURI(namePlace)
-let test="https://www.google.com/maps/dir/?api=1&destination_place_id=ChIJISz8NjyuEmsRFTQ9Iw7Ear8&travelmode=walking"
+    let test="https://www.google.com/maps/dir/?api=1&destination_place_id=ChIJISz8NjyuEmsRFTQ9Iw7Ear8&travelmode=walking"
     
     let url =`https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${encodedName}&destination_place_id=${idPlace}8&travelmode=walking`
 

@@ -21,13 +21,20 @@ let listArray = listRaw.map((item,i)=>{
   let distance = Math.round(dist)
   let nature =item.fields.naturelibelle
   let nom = item.fields.insnom
+  
+
+let goPlaceDetails = () => {
+  navigation.navigate('Parametres')
+}
+
+
   return (
     <Card key={i}>
-    <CardItem  onPress={() => {alert('You tapped the button!');}}>
+    <CardItem  onPress={() => {goPlaceDetails('You tapped the button!');}}>
       <View>
       <Text>{nom}</Text>
         <View> 
-          <Text>{type} - {distance} Metres</Text>
+          <Text>{type} - {distance} Mètres</Text>
        
         </View>
       </View>

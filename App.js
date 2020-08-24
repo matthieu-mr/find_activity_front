@@ -7,8 +7,7 @@ import { Button, View } from 'react-native';
 // Ajout des modules de navigation 
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+
 
 //import icon and Style
 import { Icon } from 'react-native-elements'
@@ -27,9 +26,10 @@ import {Provider} from 'react-redux';
 import listActivity from './reducers/Activity'
 import position from './reducers/Position'
 import listType from './reducers/TypeActivity'
+import infoPlace from './reducers/InfoPlace'
+import sportName from './reducers/SportName'
 
-
-const store = createStore(combineReducers({listActivity, position,listType}))
+const store = createStore(combineReducers({listActivity, position,listType,infoPlace,sportName}))
 
 export default function App(navigation){
   

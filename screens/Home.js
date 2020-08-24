@@ -17,13 +17,10 @@ import ListType from './component/ListType';
 
 function  Home(props) {
 
-let ip = "192.168.1.102:3000" // ip ext
-// let ip = "http://192.168.1.8:3000/ // ip nt"
+//let ip = "192.168.1.102:3000" // ip ext
+ let ip = `http://192.168.1.43:3000/`
 
-
-
-
-  const [distance,setdisctance] = useState("1000")
+const [distance,setdisctance] = useState("1000")
 
 // recuperation de la location
 const [location, setLocation] = useState(null);
@@ -66,10 +63,10 @@ if (errorMsg) {
 
 // recuperation des types d'activite 
 useEffect(()=>{
-  
+
   async function recupDonnée(){
 
-    var requestBDD = await fetch(`${ip}/nature`,{
+    var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${latitude}&long=${longitude}&dist=${distance}`
@@ -91,7 +88,7 @@ useEffect(()=>{
   
   async function recupDonnée(){
 
-    var requestBDD = await fetch(`http://192.168.1.8:3000/listpoint`,{
+    var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${typeActivite}`
@@ -141,7 +138,7 @@ let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
 props.listType(typeActivityNewArray)
 
   async function recupDonnée(){
-    var requestBDD = await fetch(`http://192.168.1.8:3000/filteredType`,{
+    var requestBDD = await fetch(`${ip}filteredType`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${filterType}`
@@ -155,18 +152,14 @@ props.listType(typeActivityNewArray)
 }
 
 // Affichage des markers
-
-//console.log(listActivity.result[0].fields.gps)
-
-
 let markerList
 
 if ( listActivity.result== undefined){
-  console.log("first")
+
 }
 else {
   markerList = listActivity.result.map((item,i)=>{
-    console.log(item.fields)
+
 
     let actlib = item.fields.actlib
     let name = item.fields.insnom
@@ -193,7 +186,7 @@ else {
           <Text> Type d'activité</Text>
             <Picker
               renderHeader={backAction =>
-                <Header style={{ backgroundColor: "#f44242" }}>
+                <Header style={{ backgroundColor: "#009387"  }}>
                   <Left>
                     <Button transparent onPress={backAction}>
                       <Icon name="arrow-back" style={{ color: "#fff" }} />

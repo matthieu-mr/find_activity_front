@@ -13,10 +13,15 @@ import * as Location from 'expo-location';
 
 //import components
 import { ScrollView } from 'react-native-gesture-handler';
-
+import ListType from './component/ListType'
 
 
 function  ListForActivity(props) {
+
+
+//let ip = "192.168.1.102:3000" // ip ext
+let ip = `http://192.168.1.43:3000/` 
+
 
 const [listActivity,setListActivity] = useState([])
 const [searchHeader, setSearchHeader] = useState(false)
@@ -30,7 +35,7 @@ useEffect(()=>{
   
   async function recupDonnée(){
 
-    var requestBDD = await fetch(`http://192.168.1.8:3000/sportlist`,{
+    var requestBDD = await fetch(`${ip}sportlist`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${latitude}&long=${longitude}&dist=${distance}`
@@ -75,7 +80,7 @@ let filteredList=[] ;
 let affichageHeader=()=>{
   if(searchHeader){
     headerSearchInput = (
-      <Header searchBar rounded>
+      <Header searchBar rounded style={{backgroundColor:"#009387" }}>
         <Item>
           <Icon name="ios-search" />
           <Input placeholder="Rechercher" 
@@ -100,7 +105,7 @@ let typeActivityArray = filteredList.map((item,i)=>{
 
   if (lettreComparaison === item.first_letter){
     return (  
-    <ListItem onPress={() => alert("This is Card Header")}>
+    <ListItem onPress={() => redirect({item})}>
          <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
               <View style={{flex:1}}>
                   <Text style={styles.textTitle}>{item.name}</Text>
@@ -123,7 +128,7 @@ let typeActivityArray = filteredList.map((item,i)=>{
         <Text style={{ fontWeight: "600",fontSize:22}}>{item.first_letter}</Text>
       </ListItem>
 
-      <ListItem onPress={() => alert("This is Card Header")}>
+      <ListItem onPress={() => redirect({item})}>
 
       <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
               <View style={{flex:1}}>
@@ -142,13 +147,14 @@ let typeActivityArray = filteredList.map((item,i)=>{
 
     )
   }
-
-
 });
 
 
-
-
+let redirect = (item) => {
+ // console.log("redirect",item.item.name)
+   props.sportName(item.item.name)
+   props.navigation.navigate('Liste complète')
+}
 
   return (
   <View style={styles.containerAll}>
@@ -165,7 +171,7 @@ let typeActivityArray = filteredList.map((item,i)=>{
     <Fab
             direction="up"
             containerStyle={{ }}
-            style={{ backgroundColor: '#5067FF' }}
+            style={{ backgroundColor: "#009387"  }}
             position="bottomRight"
             onPress={() => setSearchHeader(!searchHeader)}>
             <Icon name="search" />
@@ -190,4 +196,22 @@ const styles = StyleSheet.create({
 })
 
 
-export default ListForActivity
+function mapDispatchToProps(dispatch) {
+  return {
+    sportName: function(name) {
+        dispatch( {type: 'addName',name:name} )
+    },
+  }
+}
+
+
+export default connect(
+  null, 
+  mapDispatchToProps
+)(ListForActivity);
+
+
+
+
+
+//export default ListForActivity

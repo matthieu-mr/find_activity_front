@@ -6,14 +6,13 @@ import { View,Text } from 'react-native';
 import { List,ListItem,Body,Left,Thumbnail,Right,Button,Icon,Content  } from 'native-base';
 
 // Ajout des modules de navigation 
-
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator,DrawerContentScrollView,DrawerItem,CustomDrawerContent } from '@react-navigation/drawer';
 
 import Home from './Home'
 import ConnectScreen from './Connect'
 import ListForActivty from './ListForActivity';
+import ListOneActivity from './ListOneActivity'
 import AdvancedParam from './AdvancedSearch'
 import ConnectComponent from './component/ConnectComponent'
 import PlaceDetail from './PlaceDetail'
@@ -44,7 +43,7 @@ function DrawerContent(props){
       headerTintColor:'#fff',
     }}>
       <Stack.Screen name="Accueil" component={Home} />
-
+      <Stack.Screen name="Liste complète" component={ListOneActivity} />
       <Stack.Screen name="Place details" component={PlaceDetail}
       options={{
         headerLeft:()=>(
