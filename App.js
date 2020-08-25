@@ -24,12 +24,12 @@ import {Provider} from 'react-redux';
 
 // import reducer 
 import listActivity from './reducers/Activity'
-import position from './reducers/Position'
+import positionInfo from './reducers/Position'
 import listType from './reducers/TypeActivity'
 import infoPlace from './reducers/InfoPlace'
 import sportName from './reducers/SportName'
 
-const store = createStore(combineReducers({listActivity, position,listType,infoPlace,sportName}))
+const store = createStore(combineReducers({listActivity, positionInfo,listType,infoPlace,sportName}))
 
 export default function App(navigation){
   

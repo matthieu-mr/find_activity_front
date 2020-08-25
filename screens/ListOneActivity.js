@@ -17,8 +17,8 @@ import ListType from './component/ListType';
 
 function  ListOneActivity(props) {
 
-//let ip = "192.168.1.102:3000" // ip ext
-let ip = `http://192.168.1.183:3000/`
+// let ip = `http://192.168.1.183:3000/` //IP wifi windows
+let ip = `http://192.168.56.1:3000/` // ip lan windows
 
  console.log(props.sport.name)
 

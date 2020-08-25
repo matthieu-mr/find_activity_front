@@ -17,8 +17,9 @@ import ListType from './component/ListType';
 
 function  Home(props) {
 
-//let ip = "192.168.1.102:3000" // ip ext
- let ip = `http://192.168.1.183:3000/`
+
+// let ip = `http://192.168.1.183:3000/` //IP wifi windows
+ let ip = `http://192.168.56.1:3000/` // ip lan windows
 
 const [distance,setdisctance] = useState("1000")
 
@@ -48,7 +49,14 @@ useEffect(() => {
     setLocation(location);
     setLatitude(location.coords.latitude)
     setLongitude(location.coords.longitude)
-    props.position(location)
+
+    let coords = {
+      lat:location.coords.latitude,
+      long:location.coords.longitude
+    }
+
+    props.position(coords)
+
   })();
 },[]);
 
@@ -87,7 +95,6 @@ useEffect(()=>{
 useEffect(()=>{
   
   async function recupDonnée(){
-
     var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -102,6 +109,8 @@ useEffect(()=>{
   
 },[])
 
+
+/// count nb activity
 const [total,setTotal] = useState()
 
 let totalLabel = `Toutes - ${total} sites`
@@ -114,15 +123,12 @@ let totalLabel = `Toutes - ${total} sites`
     return (<Picker.Item label={wordingLabel} value={type} key={i}/>)
   })
   
-// FILTRAGE DES RESULTATS
+// FILTRAGE DES RESULTATS By TYPE
 let lettreComparaison ="";
 let filteredList=[] ;
 
 let select = (filterType)=> {
-  
-
 let listTypeFromProps = props.activity
-
 
 let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
   if (item.name===filterType){
@@ -159,8 +165,6 @@ if ( listActivity.result== undefined){
 }
 else {
   markerList = listActivity.result.map((item,i)=>{
-
-
     let actlib = item.fields.actlib
     let name = item.fields.insnom
     let lat = item.fields.gps[0]
@@ -213,7 +217,7 @@ else {
   
 
       <Tabs tabBarUnderlineStyle={{borderBottomColor:'#009387',borderBottomWidth:5}} activeTextStyle={{color: 'red'}} >
-          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}} activeTextStyle={{color: 'yellow'}} ><Icon name="map" style={{color: 'dark'}} /><Text style={{color: 'dark'}}  > Carte</Text></TabHeading>} >
+          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}} activeTextStyle={{color: 'yellow'}} ><Icon name="map" style={{color: 'dark'}} /><Text  > Carte</Text></TabHeading>} >
             
           <MapView style={styles.mapStyle} 
 
@@ -228,7 +232,7 @@ else {
                 {markerList}
                 </MapView>          
 </Tab>
-          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}}><Icon name="list"  style={{color: 'dark'}} /><Text style={{color: 'dark'}}  >  Liste</Text></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}}><Icon name="list"  style={{color: 'dark'}} /><Text  >  Liste</Text></TabHeading>}>
           <ListType />
           </Tab>
 

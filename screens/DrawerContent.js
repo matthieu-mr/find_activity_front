@@ -64,7 +64,7 @@ function DrawerContent(props){
       <Stack.Screen name="Parametres" component={AdvancedParam} 
       options={{
         headerLeft:()=>(
-          <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeftt: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
+          <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
         headerRight:()=>(
           <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />
         ), 

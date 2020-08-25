@@ -7,141 +7,160 @@ import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, 
 
 
 import * as Location from 'expo-location';
-
-function AdvancedSearch(props) {
-  const [natureList, setListNature] = useState()
+function  AdvancedSearch(props) {
+// let ip = `http://192.168.1.183:3000/` //IP wifi windows
+let ip = `http://192.168.56.1:3000/` // ip lan windows
 
   const [adress,setAdress] = useState("Saisissez votre adresse")
-  const [distance,setdisctance] = useState("10 km")
-
-
-// Ajout des inputs & saisie adresse
-let getAdressCoords =async (lon,lat)=> {
-  let lon2 = 2.37
-  let lat2 = 48.357
-
-var rawResponse =await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=2.37&lat=48.357&type=street`)
-
-var response = await rawResponse.json();
-// var response = JSON.parse(list.getBody())
-
-let adress = response.features[0].properties.label
-setAdress(adress)
- 
-}
-
-
+  const [distance,setdistance] = useState("10 km")
+  const [changeType,setChangeType] = useState(false)
 
 let listTypeFromProps =props.type
+ 
 
-let typeActivityArray = listTypeFromProps.map((item,i)=>{
-
+let AffichageList = ()=>{
   return (
-    <ListItem style ={styles.searchInput} onPress={()=>select(item.name)}>
-    <CheckBox checked={item.state} color="green" />
-          <Text>  {item.name}</Text>
-  </ListItem>
-  )
-})
-
-
-// FILTRAGE DES RESULTATS
-let lettreComparaison ="";
-let filteredList=[] ;
-
-let select = (filterType)=> {
-  
-
-let listTypeFromProps = props.type
-
-
-let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
-  if (item.name===filterType){
-      item.state=true
-      return item
-  }else {
-    item.state=false
-      return item
-  }
-})
-
-
-props.listType(typeActivityNewArray)
-  async function recupDonnée(){
-    var requestBDD = await fetch(`http://192.168.1.8:3000/filteredType`,{
-      method:"POST",
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${filterType}`
+    listTypeFromProps.map((item,i)=>{
+      return (
+        <ListItem style ={styles.searchInput} onPress={()=>select(item.name)} key={i}>
+           <CheckBox checked={item.state} color="green" />
+          <Text>  {item.name} - {item.count} Sites</Text>
+      </ListItem>
+      )
     })
 
+  )
+
+}
+
+  useEffect(()=>{
+    AffichageList()
+  },[])
+
+  //gestion de la liste
+  let select = (filterType)=> {
+
+    listTypeFromProps.map((item,i)=>{
+       if (item.name==filterType){
+           item.state=item.state
+           listTypeFromProps[i].state = true
+       }else {
+         listTypeFromProps[i].state =false
+       }
+     })
+     props.listType(listTypeFromProps)
+     setChangeType(!changeType)
+   }
+
+
+
+// gestion des inputs
+
+  let changeAdress = (value) => {
+    console.log("change adress", value)
+  }
+  
+  let changeDistance = (value) => {
+      let valuetext = value + " Km"
+      setdistance(valuetext)
+      props.distance(value)
+  }
+
+
+// Gestion adress depuis coords
+
+console.log("param",props)
+/*
+
+useEffect(()=>{
+
+  async function recupDonnée(){
+
+    var requestBDD = await fetch(`${ip}nature`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${latitude}&long=${longitude}&dist=${distance}`
+    })
     var listActivityRaw = await requestBDD.json()
-    props.listActivity(listActivityRaw)
- 
+
   }
   recupDonnée()
-}
+  
+},[])
 
 
 
+// recup address from input
+useEffect(()=>{
+
+  async function recupDonnée(){
+
+    var requestBDD = await fetch(`${ip}nature`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${latitude}&long=${longitude}&dist=${distance}`
+    })
+    var listActivityRaw = await requestBDD.json()
+
+  }
+  recupDonnée()
+  
+},[])
 
 
-let test = ()=> {
-  getAdressCoords() ;
-  props.navigation.navigate("Liste")
-}
+*/
 
-
-  return (
-  <View style={styles.containerAll}>
-<ScrollView>
-    <View >
-        <Card>
-                <CardItem bordered>
-                   <Body>
-                     <View style={styles.searchInput}>
-                     <Text style={styles.labelSearch}>Adresse</Text>
-                        <Item floatingLabel>
-                          <Icon active type="FontAwesome" name="map-marker" />
-                          <Input placeholder={adress}/>
-                        </Item>
-                     </View>
-
-                     <View style={styles.searchInput}>
-                      <Text style={styles.labelSearch}>Rayon de recherche</Text>
-                        <Item floatingLabel >    
-                          <Icon active type="MaterialCommunityIcons" name="map-marker-distance" />
-                          <Input keyboardType="numeric"  placeholder={distance}/>
-                        </Item>
-                      </View>
-                  </Body>
+    
+    return (
+      <View style={styles.containerAll}>
+      <ScrollView>
+      <View >
+          <Card>
+                  <CardItem bordered>
+                     <Body>
+                       <View style={styles.searchInput}>
+                       <Text style={styles.labelSearch}>Adresse</Text>
+                          <Item floatingLabel>
+                            <Icon active type="FontAwesome" name="map-marker" />
+                            <Input placeholder={adress}  onChangeText={(value) => changeAdress(value)}/>
+                          </Item>
+                       </View>
+  
+                       <View style={styles.searchInput}>
+                        <Text style={styles.labelSearch}>Rayon de recherche (km) </Text>
+                          <Item floatingLabel >    
+                            <Icon active type="MaterialCommunityIcons" name="map-marker-distance" />
+                            <Input keyboardType="numeric"  placeholder={distance} onChangeText={(value) => changeDistance(value)}/>
+                          </Item>
+                        </View>
+                    </Body>
+                  </CardItem>
+          </Card>
+      </View>
+  
+  
+     <View>
+          <Card>
+            <CardItem header bordered>
+              <Text style={styles.labelSearch}>Type d'activité</Text>
                 </CardItem>
-        </Card>
-    </View>
-
-
-   <View>
-        <Card>
-          <CardItem header bordered>
-            <Text style={styles.labelSearch}>Type d'activité</Text>
-              </CardItem>
-                <CardItem>
-                  <Body>
-                  {typeActivityArray}
-                  </Body>
-                </CardItem>
-        </Card>
-    </View>
-
-      <Button full onPress={()=>test()}>
-        <Text>Valider</Text>
-      </Button>
-</ScrollView>
-
-</View>
-
-  );
-}
-
+                  <CardItem>
+                    <Body>
+                      <AffichageList/>
+                    </Body>
+                  </CardItem>
+          </Card>
+      </View>
+  
+        <Button full onPress={()=>test()}>
+          <Text>Valider</Text>
+        </Button>
+    </ScrollView>
+  
+  </View>
+    );
+  }
+  
 // STYLES
 const styles = StyleSheet.create({
   containerAll: {
@@ -153,29 +172,31 @@ marginTop:20
   },
 labelSearch:{
   fontSize:20
-}
-})
-
-function mapStateToProps(state) {
-  return { position: state.position,type:state.listType }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    position: function(location) {
-        dispatch( {type: 'addPosition',location:location} )
-    },
-  listType: function(listType) {
-    dispatch( {type: 'changeTypeActivity',listType:listType} )
 },
+})
+  
+  function mapStateToProps(state) {
+    return { position: state.position,type:state.listType }
   }
-}
-
-
-export default connect(
-  mapStateToProps, 
-  mapDispatchToProps
-)(AdvancedSearch);
-
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+      position: function(location) {
+          dispatch( {type: 'addPosition',location:location} )
+      },
+      distance: function(location) {
+        dispatch( {type: 'addDistance',location:location} )
+    },
+    listType: function(listType) {
+      dispatch( {type: 'changeTypeActivity',listType:listType} )
+      },
+    }
+  }
+  
+  
+  export default connect(
+    mapStateToProps, 
+    mapDispatchToProps
+  )(AdvancedSearch);
 
 //export default AdvancedSearch
