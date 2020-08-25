@@ -61,6 +61,7 @@ useEffect(() => {
 },[]);
 
 
+
 let text = 'Waiting..';
 if (errorMsg) {
   text = errorMsg;

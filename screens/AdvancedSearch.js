@@ -11,7 +11,7 @@ function  AdvancedSearch(props) {
 // let ip = `http://192.168.1.183:3000/` //IP wifi windows
 let ip = `http://192.168.56.1:3000/` // ip lan windows
 
-  const [adress,setAdress] = useState("Saisissez votre adresse")
+  const [adress,setAdress] = useState(props.positionInfo)
   const [distance,setdistance] = useState("10 km")
   const [changeType,setChangeType] = useState(false)
 
@@ -69,25 +69,24 @@ let AffichageList = ()=>{
 
 // Gestion adress depuis coords
 
-console.log("param",props)
-/*
-
 useEffect(()=>{
+let lat = props.position.lat
+let lon = props.position.lon
+let distance = 10000
 
   async function recupDonnée(){
-
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${latitude}&long=${longitude}&dist=${distance}`
+      body:`lat=${lat}&long=${lon}&dist=${distance}`
     })
-    var listActivityRaw = await requestBDD.json()
-
+    var adressRaw = await requestBDD.json()
+    console.log("adress",adressRaw)
   }
   recupDonnée()
   
 },[])
-
+/*
 
 
 // recup address from input
@@ -176,13 +175,13 @@ labelSearch:{
 })
   
   function mapStateToProps(state) {
-    return { position: state.position,type:state.listType }
+    return { position: state.positionInfo,type:state.listType }
   }
   
   function mapDispatchToProps(dispatch) {
     return {
-      position: function(location) {
-          dispatch( {type: 'addPosition',location:location} )
+      positionModif: function(newLocation) {
+          dispatch( {type: 'addPosition',newLocation:newLocation} )
       },
       distance: function(location) {
         dispatch( {type: 'addDistance',location:location} )

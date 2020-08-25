@@ -1,9 +1,12 @@
 export default function(position = "", action) {
   
     if(action.type == 'addPosition') {  
-      position =action.location
-      console.log("props add position",position)
-      return position;
+      newPosition =action.location
+      console.log("props add position",action.location)
+
+      position = newPosition
+
+      return newPosition;
     
     } else if (action.type == "addDistance"){
       position.distance = action.location
