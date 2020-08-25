@@ -9,7 +9,8 @@ import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, 
 import * as Location from 'expo-location';
 function  AdvancedSearch(props) {
 // let ip = `http://192.168.1.183:3000/` //IP wifi windows
-let ip = `http://192.168.56.1:3000/` // ip lan windows
+ // let ip = `http://192.168.56.1:3000/` // ip lan windows
+ let ip = `http://192.168.1.174:3000/`
 
   const [adress,setAdress] = useState(props.positionInfo)
   const [distance,setdistance] = useState("10 km")
