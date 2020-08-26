@@ -12,7 +12,7 @@ function  AdvancedSearch(props) {
  // let ip = `http://192.168.56.1:3000/` // ip lan windows
  let ip = `http://192.168.1.174:3000/`
 
-  const [adress,setAdress] = useState(props.positionInfo)
+  const [adress,setAdress] = useState()
   const [distance,setdistance] = useState("10 km")
   const [changeType,setChangeType] = useState(false)
 
@@ -70,26 +70,32 @@ let AffichageList = ()=>{
 
 // Gestion adress depuis coords
 
+
 useEffect(()=>{
-let lat = props.position.lat
-let lon = props.position.lon
+
+let lat = props.positionInfo.lat
+let lon = props.positionInfo.lon
+
 let distance = 10000
 
   async function recupDonnée(){
-    var requestBDD = await fetch(`${ip}nature`,{
+    var requestBDD = await fetch(`${ip}adressesListCoord`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${lat}&long=${lon}&dist=${distance}`
     })
+
     var adressRaw = await requestBDD.json()
-    console.log("adress",adressRaw)
+    console.log("adresseeeeee",adressRaw.adress)
+    setAdress(adressRaw.adress)
   }
   recupDonnée()
   
 },[])
+
+
+
 /*
-
-
 // recup address from input
 useEffect(()=>{
 
@@ -122,7 +128,7 @@ useEffect(()=>{
                        <Text style={styles.labelSearch}>Adresse</Text>
                           <Item floatingLabel>
                             <Icon active type="FontAwesome" name="map-marker" />
-                            <Input placeholder={adress}  onChangeText={(value) => changeAdress(value)}/>
+                            <Input value={adress}  onChangeText={(value) => changeAdress(value)}/>
                           </Item>
                        </View>
   
@@ -130,7 +136,7 @@ useEffect(()=>{
                         <Text style={styles.labelSearch}>Rayon de recherche (km) </Text>
                           <Item floatingLabel >    
                             <Icon active type="MaterialCommunityIcons" name="map-marker-distance" />
-                            <Input keyboardType="numeric"  placeholder={distance} onChangeText={(value) => changeDistance(value)}/>
+                            <Input keyboardType="numeric"  value={distance} onChangeText={(value) => changeDistance(value)}/>
                           </Item>
                         </View>
                     </Body>
@@ -176,14 +182,11 @@ labelSearch:{
 })
   
   function mapStateToProps(state) {
-    return { position: state.positionInfo,type:state.listType }
+    return { positionInfo: state.positionInfo,type:state.listType }
   }
   
   function mapDispatchToProps(dispatch) {
     return {
-      positionModif: function(newLocation) {
-          dispatch( {type: 'addPosition',newLocation:newLocation} )
-      },
       distance: function(location) {
         dispatch( {type: 'addDistance',location:location} )
     },

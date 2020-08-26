@@ -52,11 +52,11 @@ useEffect(() => {
     setLongitude(location.coords.longitude)
 
     let coords = {
-      lat:location.coords.latitude,
-      long:location.coords.longitude
+      lat :location.coords.latitude,
+      lon :location.coords.longitude
     }
 
-    props.position(coords)
+    props.positionInfo(coords)
 
   })();
 },[]);
@@ -219,7 +219,7 @@ else {
   
 
       <Tabs tabBarUnderlineStyle={{borderBottomColor:'#009387',borderBottomWidth:5}} activeTextStyle={{color: 'red'}} >
-          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}} activeTextStyle={{color: 'yellow'}} ><Icon name="map" style={{color: 'dark'}} /><Text  > Carte</Text></TabHeading>} >
+          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}} activeTextStyle={{color: 'yellow'}} ><Icon name="map" style={{color: '#000000'}} /><Text  > Carte</Text></TabHeading>} >
             
           <MapView style={styles.mapStyle} 
 
@@ -234,7 +234,7 @@ else {
                 {markerList}
                 </MapView>          
 </Tab>
-          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}}><Icon name="list"  style={{color: 'dark'}} /><Text  >  Liste</Text></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}}><Icon name="list"  style={{color: '#000000'}} /><Text  >  Liste</Text></TabHeading>}>
           <ListType />
           </Tab>
 
@@ -285,7 +285,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    position: function(location) {
+    positionInfo: function(location) {
         dispatch( {type: 'addPosition',location:location} )
     },
     listActivity: function(list) {

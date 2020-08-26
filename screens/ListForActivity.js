@@ -154,7 +154,6 @@ let typeActivityArray = filteredList.map((item,i)=>{
 
 
 let redirect = (item) => {
- // console.log("redirect",item.item.name)
    props.sportName(item.item.name)
    let title = item.item.name
    props.navigation.navigate('ListOneActivity')}
