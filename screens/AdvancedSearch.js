@@ -1,42 +1,23 @@
 import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View,Dimensions,Text, ScrollView, Alert  } from 'react-native';
+import { StyleSheet, View,Dimensions,Text, ScrollView, Alert,Keyboard, TextInput  } from 'react-native';
 import {connect} from 'react-redux';
 
-import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body,ListItem,CheckBox,Header,Left,Right,Title  } from 'native-base';
+import { Button,Item,  Icon,Card,CardItem,Body,ListItem,CheckBox,Input  } from 'native-base';
 
 
 
 import * as Location from 'expo-location';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 function  AdvancedSearch(props) {
-// let ip = `http://192.168.1.183:3000/` //IP wifi windows
- // let ip = `http://192.168.56.1:3000/` // ip lan windows
- let ip = `http://192.168.1.174:3000/`
+ let ip = `http://192.168.1.183:3000/` //IP wifi windows
+//  let ip = `http://192.168.56.1:3000/` // ip lan windows
+// let ip = `http://192.168.1.174:3000/`
 
   const [adress,setAdress] = useState()
-  const [distance,setdistance] = useState("10 km")
+  const [distance,setdistance] = useState('zefzf')
   const [changeType,setChangeType] = useState(false)
 
-let listTypeFromProps =props.type
- 
 
-let AffichageList = ()=>{
-  return (
-    listTypeFromProps.map((item,i)=>{
-      return (
-        <ListItem style ={styles.searchInput} onPress={()=>select(item.name)} key={i}>
-           <CheckBox checked={item.state} color="green" />
-          <Text>  {item.name} - {item.count} Sites</Text>
-      </ListItem>
-      )
-    })
-
-  )
-
-}
-
-  useEffect(()=>{
-    AffichageList()
-  },[])
 
   //gestion de la liste
   let select = (filterType)=> {
@@ -49,22 +30,52 @@ let AffichageList = ()=>{
          listTypeFromProps[i].state =false
        }
      })
+   
      props.listType(listTypeFromProps)
      setChangeType(!changeType)
    }
 
 
 
+
+   let listTypeFromProps =props.type
+ 
+   let AffichageList = ()=>{
+     return (
+       listTypeFromProps.map((item,i)=>{
+         return (
+           <ListItem style ={styles.searchInput} onPress={()=>select(item.name)} key={i}>
+              <CheckBox checked={item.state} color="green" />
+             <Text>  {item.name} - {item.count} Sites</Text>
+         </ListItem>
+         )
+       })
+     )
+   }
+   
+     useEffect(()=>{
+       AffichageList()
+     },[])
+
+
 // gestion des inputs
 
   let changeAdress = (value) => {
     console.log("change adress", value)
+   
+  }
+
+  let validAdress = (value) => {
+    console.log("valid adress", value)
+
   }
   
   let changeDistance = (value) => {
-      let valuetext = value + " Km"
-      setdistance(valuetext)
-      props.distance(value)
+    
+    console.log("distance",value.nativeEvent.text)
+    props.distance(value.nativeEvent.text *1000)
+  //  setdistance(value.nativeEvent.text + " Km")
+
   }
 
 
@@ -72,6 +83,7 @@ let AffichageList = ()=>{
 
 
 useEffect(()=>{
+console.log("recup props",props.positionInfo)
 
 let lat = props.positionInfo.lat
 let lon = props.positionInfo.lon
@@ -86,12 +98,44 @@ let distance = 10000
     })
 
     var adressRaw = await requestBDD.json()
-    console.log("adresseeeeee",adressRaw.adress)
+    console.log("adresseeeeee",adressRaw)
     setAdress(adressRaw.adress)
   }
   recupDonnée()
   
 },[])
+
+
+let AffichageHeader = () => {
+return (
+  <CardItem bordered>
+                     <Body>
+                  
+                       <View style={styles.searchInput}>
+                       <Text style={styles.labelSearch}>Adresse</Text>
+                       <TouchableOpacity onPress ={()=> {props.navigation.navigate('SearchAdress');}}>
+                       <ListItem>
+                       <Icon active type="FontAwesome" name="map-marker" />
+                          <Text>{adress}</Text>
+                        </ListItem>
+                       </TouchableOpacity>
+
+                       </View>
+  
+                       <View style={styles.searchInput}>
+                        <Text style={styles.labelSearch}>Rayon de recherche (km) </Text>
+                      
+                         <Item stackedLabel>
+                              <Icon  active type="MaterialCommunityIcons" name="map-marker-distance"  />
+                              <Input value ={distance} keyboardType='decimal-pad' onChangeText ={(value) => changeDistance(value)}/>
+                          </Item>
+                      
+                        </View>
+                    </Body>
+                  </CardItem>
+            )
+}
+
 
 
 
@@ -122,25 +166,7 @@ useEffect(()=>{
       <ScrollView>
       <View >
           <Card>
-                  <CardItem bordered>
-                     <Body>
-                       <View style={styles.searchInput}>
-                       <Text style={styles.labelSearch}>Adresse</Text>
-                          <Item floatingLabel>
-                            <Icon active type="FontAwesome" name="map-marker" />
-                            <Input value={adress}  onChangeText={(value) => changeAdress(value)}/>
-                          </Item>
-                       </View>
-  
-                       <View style={styles.searchInput}>
-                        <Text style={styles.labelSearch}>Rayon de recherche (km) </Text>
-                          <Item floatingLabel >    
-                            <Icon active type="MaterialCommunityIcons" name="map-marker-distance" />
-                            <Input keyboardType="numeric"  value={distance} onChangeText={(value) => changeDistance(value)}/>
-                          </Item>
-                        </View>
-                    </Body>
-                  </CardItem>
+                <AffichageHeader/>
           </Card>
       </View>
   
@@ -166,6 +192,11 @@ useEffect(()=>{
   </View>
     );
   }
+
+
+
+
+
   
 // STYLES
 const styles = StyleSheet.create({

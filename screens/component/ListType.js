@@ -59,14 +59,11 @@ let goPlaceDetails = () => {
 
   return (
     
-
-
     <View>
       <ScrollView>
       {listArray}
       </ScrollView>
     </View>
-  
   
   );
 }
