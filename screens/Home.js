@@ -28,6 +28,8 @@ const [distance,setdisctance] = useState("1000")
 // recuperation de la location
 const [location, setLocation] = useState(null);
 const [errorMsg, setErrorMsg] = useState(null);
+
+
 const [latitude,setLatitude] = useState();
 const [longitude,setLongitude] = useState();
 
@@ -38,6 +40,11 @@ const [typeActivite,setTypeActivite] = useState ("Toutes") // selected by user
  // Liste activité
 
 const [listActivity, setListActivity] = useState({})
+
+
+let lat = props.positionRecupState.lat
+let lon = props.positionRecupState.lon
+
 
 // Recuperation de la localisation de l'user
 useEffect(() => {
@@ -57,13 +64,13 @@ useEffect(() => {
       lon :location.coords.longitude,
       type:"auto"
     }
-    console.log("recup GPS",coords)
     props.positionInfo(coords)
 
   })();
 },[]);
 
 
+console.log("recup position",props.positionRecupState)
 
 let text = 'Waiting..';
 if (errorMsg) {
@@ -81,8 +88,9 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${latitude}&long=${longitude}&dist=${distance}`
+      body:`lat=${lat}&long=${lon}&dist=${distance}`
     })
+
     var listActivityRaw = await requestBDD.json()
 
       setTotal(listActivityRaw.total)
@@ -102,7 +110,7 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${typeActivite}`
+      body:`lat=${lat}&long=${lon}&dist=${distance}&type=${typeActivite}`
     })
     var listActivityRaw = await requestBDD.json()
     setListActivity(listActivityRaw)
@@ -180,11 +188,69 @@ else {
       longitude: lon}}
       title={actlib}
       description={name}
+      pinColor="blue"
+   
   />
     )
   })
 }
 
+let MyMarker  = ()=>{
+    console.log("my maker",latitude,longitude)
+    return (
+      <Marker
+      key={"800"}
+      coordinate=
+      {{
+      latitude: props.positionRecupState.lat,
+      longitude: props.positionRecupState.lon}}
+      title={"moi"}
+      description={"name"}
+      pinColor="blue"
+      image={require('../assets/perso.png')}
+  />
+    )
+  }
+
+MapViewMEF()
+
+function MapViewMEF(){
+
+if (props.positionRecupState.lat == undefined){
+  return(
+    <Text> Waiting</Text>
+  )
+} else {
+  let lat = props.positionRecupState.lat
+  let lon = props.positionRecupState.lon
+    console.log("map ",lat,lon)
+  return (
+    <MapView style={styles.mapStyle} 
+  
+                  initialRegion={{
+                  latitude: lat,
+                  longitude:  lon,
+                  latitudeDelta: 1,
+                  longitudeDelta: 1,
+                  }}
+  
+                  >
+                    <Marker
+                      key={"800"}
+                      coordinate=
+                      {{
+                      latitude: lat,
+                      longitude: lon}}
+                      title={"moi"}
+                      description={"name"}
+                      pinColor="blue"
+                      image={require('../assets/perso.png')}
+                    />
+                  {markerList}
+                  </MapView>   
+      )
+    }
+}
 
   return (
 
@@ -222,20 +288,8 @@ else {
 
       <Tabs tabBarUnderlineStyle={{borderBottomColor:'#009387',borderBottomWidth:5}} activeTextStyle={{color: 'red'}} >
           <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}} activeTextStyle={{color: 'yellow'}} ><Icon name="map" style={{color: '#000000'}} /><Text  > Carte</Text></TabHeading>} >
-            
-          <MapView style={styles.mapStyle} 
-
-                initialRegion={{
-                latitude: 48.866667,
-                longitude:  2.333333,
-                latitudeDelta: 1,
-                longitudeDelta: 1,
-                }}
-
-                >
-                {markerList}
-                </MapView>          
-</Tab>
+            <MapViewMEF />
+      </Tab>
           <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}}><Icon name="list"  style={{color: '#000000'}} /><Text  >  Liste</Text></TabHeading>}>
           <ListType />
           </Tab>
@@ -282,7 +336,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { position: state.position,activity:state.listType }
+  return { positionRecupState: state.positionInfo,activity:state.listType }
 }
 
 function mapDispatchToProps(dispatch) {

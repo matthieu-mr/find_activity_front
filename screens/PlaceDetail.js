@@ -14,8 +14,6 @@ import * as Location from 'expo-location';
 
 
 //import components
-import ListType from './component/ListType';
-import MapType from './component/MapType';
 import { ScrollView } from 'react-native-gesture-handler';
 
 

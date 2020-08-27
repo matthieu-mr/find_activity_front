@@ -3,7 +3,7 @@ import { StyleSheet, View,Dimensions,Text, ScrollView, Alert,Keyboard, TextInput
 import {connect} from 'react-redux';
 import { useIsFocused } from "@react-navigation/native";
 
-import { Button,Item,  Icon,Card,CardItem,Body,ListItem,CheckBox,Input  } from 'native-base';
+import { Button, Icon,Card,CardItem,Body,ListItem,CheckBox,Input,Picker  } from 'native-base';
 
 
 
@@ -18,13 +18,20 @@ function  AdvancedSearch(props) {
 */
 
   const [adress,setAdress] = useState()
-  const [distance,setdistance] = useState('zefzf')
+  const [distance,setDistance] = useState()
+  const [baseDist, setBaseDist] = useState ("10 km")
   const [changeType,setChangeType] = useState(false)
 
 
   const isFocused = useIsFocused();
   
-  
+  console.log("recup distance ", distance)
+
+if (distance==undefined){
+  console.log("recup distance if", distance)
+  setDistance(baseDist)
+}
+
   //gestion de la liste
   let select = (filterType)=> {
 
@@ -52,7 +59,7 @@ function  AdvancedSearch(props) {
          return (
            <ListItem style ={styles.searchInput} onPress={()=>select(item.name)} key={i}>
               <CheckBox checked={item.state} color="green" />
-             <Text>  {item.name} - {item.count} Sites</Text>
+             <Text>  {item.name} - Sites</Text>
          </ListItem>
          )
        })
@@ -66,35 +73,64 @@ function  AdvancedSearch(props) {
 
 // gestion des inputs
 
-  let changeAdress = (value) => {
-    console.log("change adress", value)
-   
-  }
-
-  let validAdress = (value) => {
-    console.log("valid adress", value)
-
-  }
-  
   let changeDistance = (value) => {
-    
-    console.log("distance",value.nativeEvent.text)
-    props.distance(value.nativeEvent.text *1000)
-  //  setdistance(value.nativeEvent.text + " Km")
+ //  props.setInputDist(value.nativeEvent.text)
 
+    switch (value) {
+
+      case 5 :
+        console.log("switch 5", value)
+        props.setInputDist(value)
+
+      case 10 :
+        console.log("switch 10", value)
+        props.setInputDist(value)
+
+      case 15 :
+        console.log("switch 15", value)
+        props.setInputDist(value)
+
+      case 30 :
+        console.log("switch 30", value)
+        props.setInputDist(value)
+
+      case 50 :
+        console.log("switch 50", value)
+        props.setInputDist(value)
+
+      case 100 :
+        console.log("switch 100", value)
+        props.setInputDist(value) 
+    }
   }
+
+
+let PickerDistance = ()=> { 
+  return (
+    <Picker
+    mode="dropdown"
+    iosHeader="Select your SIM"
+    iosIcon={<Icon name="arrow-down" />}
+    style={{ width: undefined }}
+    selectedValue={(value)=>changeDistance(value) }
+    onValueChange={(value)=>changeDistance(value)}
+  >
+    <Picker.Item label="5 Km" value="5" />
+    <Picker.Item label="10 Km" value="10" />
+    <Picker.Item label="15 Km" value="15" />
+    <Picker.Item label="30 Km" value="30" />
+    <Picker.Item label="50 Km" value="50" />
+    <Picker.Item label="100 Km" value="100" />
+  </Picker>
+  )
+}
+
+
+
 
 
 // Gestion adress depuis coords
-
-console.log("recup props search",props.positionInfo)
-let type = props.positionInfo.type
-
-
 useEffect(()=>{
-
-
-
 let lat = props.positionInfo.lat
 let lon = props.positionInfo.lon
 
@@ -123,55 +159,29 @@ return (
                      <Body>
                   
                        <View style={styles.searchInput}>
-                       <Text style={styles.labelSearch}>Adresse</Text>
-                       <TouchableOpacity onPress ={()=> {props.navigation.navigate('SearchAdress');}}>
-                       <ListItem>
-                       <Icon active type="FontAwesome" name="map-marker" />
-                          <Text>{adress}</Text>
-                        </ListItem>
-                       </TouchableOpacity>
+                        <Text style={styles.labelSearch}>Adresse</Text>
+                        <TouchableOpacity onPress ={()=> {props.navigation.navigate('SearchAdress');}}>
+                        <ListItem>
+                        <Icon active type="FontAwesome" name="map-marker" />
+                            <Text style={styles.inputText}>{adress}</Text>
+                          </ListItem>
+                        </TouchableOpacity>
+                      </View>
 
-                       </View>
-  
-                       <View style={styles.searchInput}>
-                        <Text style={styles.labelSearch}>Rayon de recherche (km) </Text>
-                      
-                         <Item stackedLabel>
-                              <Icon  active type="MaterialCommunityIcons" name="map-marker-distance"  />
-                              <Input value ={distance} keyboardType='decimal-pad' onChangeText ={(value) => changeDistance(value)}/>
-                          </Item>
-                      
+                      <View style={styles.searchInput}>
+                          <Text style={styles.labelSearch}>Rayon de recherche (km) </Text>
+                          <ListItem>
+                              <PickerDistance/>
+                          </ListItem>
                         </View>
+                        
                     </Body>
                   </CardItem>
             )
 }
 
 
-
-
-/*
-// recup address from input
-useEffect(()=>{
-
-  async function recupDonnée(){
-
-    var requestBDD = await fetch(`${ip}nature`,{
-      method:"POST",
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${latitude}&long=${longitude}&dist=${distance}`
-    })
-    var listActivityRaw = await requestBDD.json()
-
-  }
-  recupDonnée()
-  
-},[])
-
-
-*/
-
-    
+   
     return (
       <View style={styles.containerAll}>
       <ScrollView>
@@ -221,6 +231,11 @@ marginTop:20
 labelSearch:{
   fontSize:20
 },
+inputText:{
+fontSize:15,
+marginLeft:20,
+},
+
 })
   
   function mapStateToProps(state) {

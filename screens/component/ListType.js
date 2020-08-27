@@ -89,9 +89,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    position: function(location) {
-        dispatch( {type: 'addPosition',location:location} )
-    },
     infoPlace: function(info) {
       dispatch( {type: 'callPlace',info:info} )
   },

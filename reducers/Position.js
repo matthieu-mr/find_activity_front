@@ -19,7 +19,6 @@ export default function(position = "", action) {
      return newAdress
    }
     else {
-      
       return position;
     }
 }

@@ -7,7 +7,7 @@ import { Button,Item,  Icon,Header,ListItem,Input,Right } from 'native-base';
 
 
 import * as Location from 'expo-location';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 function  SearchAdress(props) {
 /*
 
@@ -110,7 +110,10 @@ const [textSearch,setTextSearch]= useState("Rechercher")
             <Text>Rechercher</Text>
           </Button>
         </Header>
-  <ListResult/>
+        <ScrollView>
+             <ListResult/>
+        </ScrollView>
+ 
     
   </View>
     );
