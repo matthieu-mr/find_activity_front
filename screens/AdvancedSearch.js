@@ -1,6 +1,7 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text, ScrollView, Alert,Keyboard, TextInput  } from 'react-native';
 import {connect} from 'react-redux';
+import { useIsFocused } from "@react-navigation/native";
 
 import { Button,Item,  Icon,Card,CardItem,Body,ListItem,CheckBox,Input  } from 'native-base';
 
@@ -9,16 +10,21 @@ import { Button,Item,  Icon,Card,CardItem,Body,ListItem,CheckBox,Input  } from '
 import * as Location from 'expo-location';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 function  AdvancedSearch(props) {
+
+ /* 
  let ip = `http://192.168.1.183:3000/` //IP wifi windows
 //  let ip = `http://192.168.56.1:3000/` // ip lan windows
 // let ip = `http://192.168.1.174:3000/`
+*/
 
   const [adress,setAdress] = useState()
   const [distance,setdistance] = useState('zefzf')
   const [changeType,setChangeType] = useState(false)
 
 
-
+  const isFocused = useIsFocused();
+  
+  
   //gestion de la liste
   let select = (filterType)=> {
 
@@ -55,7 +61,7 @@ function  AdvancedSearch(props) {
    
      useEffect(()=>{
        AffichageList()
-     },[])
+     },[[props, isFocused]])
 
 
 // gestion des inputs
@@ -81,9 +87,13 @@ function  AdvancedSearch(props) {
 
 // Gestion adress depuis coords
 
+console.log("recup props search",props.positionInfo)
+let type = props.positionInfo.type
+
 
 useEffect(()=>{
-console.log("recup props",props.positionInfo)
+
+
 
 let lat = props.positionInfo.lat
 let lon = props.positionInfo.lon
@@ -91,6 +101,7 @@ let lon = props.positionInfo.lon
 let distance = 10000
 
   async function recupDonnée(){
+    console.log("envoi requete")
     var requestBDD = await fetch(`${ip}adressesListCoord`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -103,7 +114,7 @@ let distance = 10000
   }
   recupDonnée()
   
-},[])
+},[props, isFocused])
 
 
 let AffichageHeader = () => {

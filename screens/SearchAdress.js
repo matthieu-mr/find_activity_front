@@ -9,9 +9,12 @@ import { Button,Item,  Icon,Header,ListItem,Input,Right } from 'native-base';
 import * as Location from 'expo-location';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 function  SearchAdress(props) {
+/*
+
  let ip = `http://192.168.1.183:3000/` //IP wifi windows
 //  let ip = `http://192.168.56.1:3000/` // ip lan windows
 // let ip = `http://192.168.1.174:3000/`
+*/
 
   const [listAdress,setListAdress] = useState({})
   //gestion de la liste
@@ -37,7 +40,7 @@ let search = (value) => {
 
 let sendChoice = (name,lon,lat) => {
 
-let valueForProps = {
+let coords = {
     lat:lat,
     lon:lon,
     adress:name,
@@ -45,7 +48,7 @@ let valueForProps = {
 
 }
 
-props.position(valueForProps)
+props.position(coords)
 props.navigation.navigate('Parametres')
 
 }
@@ -62,8 +65,8 @@ let ListResult = () => {
         return (
             listAdress.map((item,i)=>{
 
-                let lon = item.geometry.coordinates[0]
-                let lat = item.geometry.coordinates[1]
+                let lon = item.geometry.coordinates[1]
+                let lat = item.geometry.coordinates[0]
                 let name = item.properties.name
                 
                 let city = item.properties.city

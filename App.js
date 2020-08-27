@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { Button, View } from 'react-native';
 
-
+import './global'
 // Ajout des modules de navigation 
 
 import { NavigationContainer } from '@react-navigation/native';
