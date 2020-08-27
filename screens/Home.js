@@ -2,7 +2,7 @@ import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text  } from 'react-native';
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
-import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body, Row,Form,Picker,Header,Left,Title,Right  } from 'native-base';
+import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body, Row,Form,Picker,Header,Left,Title,Right,Spinner  } from 'native-base';
 
 import {Marker} from 'react-native-maps';
 
@@ -17,11 +17,6 @@ import ListType from './component/ListType';
 
 function  Home(props) {
 
-/*
- let ip = `http://192.168.1.183:3000/` //IP wifi windows
-//  let ip = `http://192.168.56.1:3000/` // ip lan windows
-// let ip = `http://192.168.1.174:3000/`
-*/
 
 const [distance,setdisctance] = useState("1000")
 
@@ -68,9 +63,6 @@ useEffect(() => {
 
   })();
 },[]);
-
-
-console.log("recup position",props.positionRecupState)
 
 let text = 'Waiting..';
 if (errorMsg) {
@@ -196,7 +188,6 @@ else {
 }
 
 let MyMarker  = ()=>{
-    console.log("my maker",latitude,longitude)
     return (
       <Marker
       key={"800"}
@@ -218,20 +209,19 @@ function MapViewMEF(){
 
 if (props.positionRecupState.lat == undefined){
   return(
-    <Text> Waiting</Text>
+      <Spinner color='blue' />
   )
 } else {
   let lat = props.positionRecupState.lat
   let lon = props.positionRecupState.lon
-    console.log("map ",lat,lon)
   return (
     <MapView style={styles.mapStyle} 
   
                   initialRegion={{
                   latitude: lat,
                   longitude:  lon,
-                  latitudeDelta: 1,
-                  longitudeDelta: 1,
+                  latitudeDelta: 0.07,
+                  longitudeDelta: 0.07,
                   }}
   
                   >

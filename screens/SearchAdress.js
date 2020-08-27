@@ -9,12 +9,7 @@ import { Button,Item,  Icon,Header,ListItem,Input,Right } from 'native-base';
 import * as Location from 'expo-location';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 function  SearchAdress(props) {
-/*
 
- let ip = `http://192.168.1.183:3000/` //IP wifi windows
-//  let ip = `http://192.168.56.1:3000/` // ip lan windows
-// let ip = `http://192.168.1.174:3000/`
-*/
 
   const [listAdress,setListAdress] = useState({})
   //gestion de la liste

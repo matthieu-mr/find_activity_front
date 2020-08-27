@@ -17,6 +17,7 @@ import AdvancedParam from './AdvancedSearch'
 import ConnectComponent from './component/ConnectComponent'
 import PlaceDetail from './PlaceDetail'
 import SearchAdress from './SearchAdress'
+import ListComponent from './component/ListType'
 
 
 function DrawerContent(props){
@@ -44,6 +45,7 @@ function DrawerContent(props){
     }}>
       <Stack.Screen name="Accueil" component={Home} />
       <Stack.Screen name="ListOneActivity" component={ListOneActivity} />
+      <Stack.Screen name="ListComponent" component={ListComponent} />
       
       <Stack.Screen name="SearchAdress" component={SearchAdress}
           options={{

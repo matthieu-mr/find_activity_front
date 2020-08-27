@@ -19,6 +19,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 
 function  PlaceDetail(props) {
+
+  console.log("recup props place detail", props.detailPops)
+
 const [infoPlaces,setInfoPlace]= useState ({
     "responseDetail": {
         "html_attributions": [],
@@ -330,7 +333,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { position: state.position }
+  return { position: state.position,detailPops:state.infoPlace }
 }
 
 function mapDispatchToProps(dispatch) {

@@ -11,12 +11,6 @@ import * as Location from 'expo-location';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 function  AdvancedSearch(props) {
 
- /* 
- let ip = `http://192.168.1.183:3000/` //IP wifi windows
-//  let ip = `http://192.168.56.1:3000/` // ip lan windows
-// let ip = `http://192.168.1.174:3000/`
-*/
-
   const [adress,setAdress] = useState()
   const [distance,setDistance] = useState()
   const [baseDist, setBaseDist] = useState ("10 km")
@@ -25,10 +19,7 @@ function  AdvancedSearch(props) {
 
   const isFocused = useIsFocused();
   
-  console.log("recup distance ", distance)
-
 if (distance==undefined){
-  console.log("recup distance if", distance)
   setDistance(baseDist)
 }
 
@@ -79,27 +70,20 @@ if (distance==undefined){
     switch (value) {
 
       case 5 :
-        console.log("switch 5", value)
         props.setInputDist(value)
-
       case 10 :
-        console.log("switch 10", value)
         props.setInputDist(value)
 
       case 15 :
-        console.log("switch 15", value)
         props.setInputDist(value)
 
       case 30 :
-        console.log("switch 30", value)
         props.setInputDist(value)
 
       case 50 :
-        console.log("switch 50", value)
         props.setInputDist(value)
 
       case 100 :
-        console.log("switch 100", value)
         props.setInputDist(value) 
     }
   }
@@ -137,7 +121,6 @@ let lon = props.positionInfo.lon
 let distance = 10000
 
   async function recupDonnée(){
-    console.log("envoi requete")
     var requestBDD = await fetch(`${ip}adressesListCoord`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -145,7 +128,6 @@ let distance = 10000
     })
 
     var adressRaw = await requestBDD.json()
-    console.log("adresseeeeee",adressRaw)
     setAdress(adressRaw.adress)
   }
   recupDonnée()

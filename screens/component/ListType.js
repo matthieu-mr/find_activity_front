@@ -4,6 +4,8 @@ import { Container, Header,Text, Item, Input, Icon, Content, Card, CardItem, Rig
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 import {connect} from 'react-redux';
 import { Divider } from 'react-native-elements';
+import { StackNavigator } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 
 import * as Location from 'expo-location';
 
@@ -11,9 +13,11 @@ import * as Location from 'expo-location';
 //import module
 
 function ListType(props) {
-
+  const navigation = useNavigation();
 let listRaw =props.listActivity.list.result
 //console.log("--------------------------- >>>>>>>>>",listRaw)
+
+let lastName
 
 let listArray = listRaw.map((item,i)=>{
 
@@ -22,26 +26,30 @@ let listArray = listRaw.map((item,i)=>{
   let distance = Math.round(dist)
   let nature =item.fields.naturelibelle
   let name = item.fields.insnom
-  
-  
+  let lat = item.fields.gps[0]
+  let lon = item.fields.gps[1]
 
-let goPlaceDetails = () => {
+let goPlaceDetails = (name,lat,lon) => {
   alert("test")
   let infoToSend = {
     name:name,
-    lat:46.55,
-    long:3.00
-
+    lat:lat,
+    long:lon
   }
   props.infoPlace(infoToSend)
-  //props.navigation.navigate('Parametres')
+
+  navigation.navigate("Place details")
+  
 }
 
 
+if (lastName != name){
+  
+  lastName = name
   return (
     <View >
       <Card transparent key={i} >
-        <CardItem button onPress={() => {goPlaceDetails('You tapped the button!');}}>
+        <CardItem button onPress={() => {goPlaceDetails(name,lat, lon);}}>
           <View>
               <Text style={styles.textTitle}>{name}</Text>
               <Text>{type} - {distance} Mètres</Text>
@@ -54,6 +62,9 @@ let goPlaceDetails = () => {
       <Divider/>
    </View>
   ) 
+}
+
+
 });
 
 
@@ -84,7 +95,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { listActivity: state.listActivity }
+  return { listActivity: state.listActivity,}
 }
 
 function mapDispatchToProps(dispatch) {
