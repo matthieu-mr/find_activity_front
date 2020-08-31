@@ -6,11 +6,10 @@ export default function(position = "", action) {
       return newPosition;
 
     }
-    else if (action.type== 'addDistance'){
+    else if (action.type=== 'addDistance'){
      
       position.distance = action.location
       position.type="manuel"
-      console.log("add distance",position)
       return position;
     } 
     
@@ -18,6 +17,13 @@ export default function(position = "", action) {
       let newAdress = action.location
       console.log("add adress",newAdress)
      return newAdress
+   }
+
+   else if (action.type === "changeTypeActivityPosition"){
+    //  position.activityType = action
+
+      console.log("change type activite",action)
+      return position
    }
     else {
       return position;

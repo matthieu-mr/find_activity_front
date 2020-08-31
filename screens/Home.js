@@ -18,8 +18,6 @@ import ListType from './component/ListType';
 function  Home(props) {
 
 
-const [distance,setdisctance] = useState("1000")
-
 // recuperation de la location
 const [location, setLocation] = useState(null);
 const [errorMsg, setErrorMsg] = useState(null);
@@ -39,7 +37,7 @@ const [listActivity, setListActivity] = useState({})
 
 let lat = props.positionRecupState.lat
 let lon = props.positionRecupState.lon
-
+let dist = props.positionRecupState.dist
 
 // Recuperation de la localisation de l'user
 useEffect(() => {
@@ -57,7 +55,9 @@ useEffect(() => {
     let coords = {
       lat :location.coords.latitude,
       lon :location.coords.longitude,
-      type:"auto"
+      dist:5000,
+      type:"auto",
+      activityType:'Toutes'
     }
     props.positionInfo(coords)
 
@@ -80,7 +80,7 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${distance}`
+      body:`lat=${lat}&long=${lon}&dist=${dist}`
     })
 
     var listActivityRaw = await requestBDD.json()
@@ -102,7 +102,7 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${distance}&type=${typeActivite}`
+      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeActivite}`
     })
     var listActivityRaw = await requestBDD.json()
     setListActivity(listActivityRaw)
@@ -132,7 +132,12 @@ let lettreComparaison ="";
 let filteredList=[] ;
 
 let select = (filterType)=> {
+
+console.log(filterType)
+
 let listTypeFromProps = props.activity
+
+props.typeActivityToProps=filterType
 
 let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
   if (item.name===filterType){
@@ -144,14 +149,13 @@ let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
   }
 })
 
-
 props.listType(typeActivityNewArray)
 
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}filteredType`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${distance}&type=${typeActivite}`
+      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeActivite}`
     })
 
     var listActivityRaw = await requestBDD.json()
@@ -173,6 +177,7 @@ else {
     let name = item.fields.insnom
     let lat = item.fields.gps[0]
     let lon = item.fields.gps[1]
+
     return (
       <Marker
       key={i}
@@ -340,6 +345,9 @@ function mapDispatchToProps(dispatch) {
   },
   listType: function(listType) {
     dispatch( {type: 'changeTypeActivity',listType:listType} )
+},
+  changeTypeActivity: function(typeActivityToProps) {
+    dispatch( {type: 'changeTypeActivityPosition',typeActivityToProps:typeActivityToProps} )
 },
   }
 }
