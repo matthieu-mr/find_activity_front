@@ -23,17 +23,12 @@ function  ListForActivity(props) {
 const [listActivity,setListActivity] = useState([])
 const [searchHeader, setSearchHeader] = useState(false)
 
+
 console.log("props.position",props.positionRecupState)
 let latitude = props.positionRecupState.lat
 let longitude = props.positionRecupState.longitude
 
-let distance = 5000
-
-/* 
-if (props.positionRecupState.type="manuel"){
-  distance = props.positionRecupState.distance
-}
-*/
+let distance = props.positionRecupState.distance
 
 // recuperation des types d'activite 
 useEffect(()=>{
@@ -51,7 +46,7 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[])
+},[props])
 
 
 // FILTRAGE DES RESULTATS

@@ -50,7 +50,7 @@ if (distance==undefined){
          return (
            <ListItem style ={styles.searchInput} onPress={()=>select(item.name)} key={i}>
               <CheckBox checked={item.state} color="green" />
-             <Text>  {item.name} - Sites</Text>
+             <Text>  {item.name} </Text>
          </ListItem>
          )
        })
@@ -62,42 +62,40 @@ if (distance==undefined){
      },[[props, isFocused]])
 
 
+// Gestion adress depuis coords
+useEffect(()=>{
+  let lat = props.positionInfoProps.lat
+  let lon = props.positionInfoProps.lon
+  let dist = props.positionInfoProps.distance
+  
+  console.log(props.positionInfoProps)
+
+  
+    async function recupDonnée(){
+      var requestBDD = await fetch(`${ip}adressesListCoord`,{
+        method:"POST",
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body:`lat=${lat}&long=${lon}`
+      })
+  
+      var adressRaw = await requestBDD.json()
+      setAdress(adressRaw.adress)
+    }
+    recupDonnée()
+    
+  },[props, isFocused])
+
+
+
+
 // gestion des inputs
 
   let changeDistance = (value) => {
  //  props.setInputDist(value.nativeEvent.text)
  setBaseDist(value)
-
-    console.log('change',value)
-
-    switch (value) {
-      case 5 :
-        console.log(value)
-        props.newDistance(value)
-      case 10 :
-        console.log(value)
-
-        props.newDistance(value)
-
-      case 15 :
-        console.log(value)
-
-        props.newDistance(value)
-
-      case 30 :
-        console.log(value)
-
-        props.newDistance(value)
-
-      case 50 :
-        console.log(value)
-
-        props.newDistance(value)
-
-      case 100 :
-        console.log(value)
-        props.newDistance(value) 
-    }
+props.positionInfo(value*1000)
+    
+    
   }
 
 
@@ -207,12 +205,12 @@ marginLeft:20,
 })
   
   function mapStateToProps(state) {
-    return { positionInfo: state.positionInfo,type:state.listType }
+    return { positionInfoProps: state.positionInfo,type:state.listType }
   }
   
   function mapDispatchToProps(dispatch) {
     return {
-      newDistance: function(location) {
+      positionInfo: function(location) {
         dispatch( {type: 'addDistance',location:location} )
     },
     listType: function(listType) {

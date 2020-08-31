@@ -9,6 +9,7 @@ export default function(position = "", action) {
     else if (action.type== 'addDistance'){
      
       position.distance = action.location
+      position.type="manuel"
       console.log("add distance",position)
       return position;
     } 
