@@ -1,8 +1,8 @@
 export default function(infoPlace = "", action) {
     if(action.type == 'callPlace') {
+      let newList = action.info
 
-      let newList = action.listType
-      return infoPlace;
+      return newList;
     
     } else {
       return infoPlace;

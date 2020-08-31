@@ -91,13 +91,13 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[])
+},[lat])
 
 
 
 // recuperation des POI 
 useEffect(()=>{
-  
+
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
@@ -111,7 +111,7 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[])
+},[lat])
 
 
 /// count nb activity
@@ -151,7 +151,7 @@ props.listType(typeActivityNewArray)
     var requestBDD = await fetch(`${ip}filteredType`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${filterType}`
+      body:`lat=${lat}&long=${lon}&dist=${distance}&type=${typeActivite}`
     })
 
     var listActivityRaw = await requestBDD.json()
@@ -307,7 +307,8 @@ const styles = StyleSheet.create({
   },
   distanceField:{
     flex:1
-  },  containerMap: {
+  },  
+  containerMap: {
     flex:1,
     backgroundColor: '#fff',
     alignItems: 'center',

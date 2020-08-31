@@ -13,7 +13,7 @@ function  AdvancedSearch(props) {
 
   const [adress,setAdress] = useState()
   const [distance,setDistance] = useState()
-  const [baseDist, setBaseDist] = useState ("10 km")
+  const [baseDist, setBaseDist] = useState ("5 km")
   const [changeType,setChangeType] = useState(false)
 
 
@@ -66,25 +66,37 @@ if (distance==undefined){
 
   let changeDistance = (value) => {
  //  props.setInputDist(value.nativeEvent.text)
+ setBaseDist(value)
+
+    console.log('change',value)
 
     switch (value) {
-
       case 5 :
-        props.setInputDist(value)
+        console.log(value)
+        props.newDistance(value)
       case 10 :
-        props.setInputDist(value)
+        console.log(value)
+
+        props.newDistance(value)
 
       case 15 :
-        props.setInputDist(value)
+        console.log(value)
+
+        props.newDistance(value)
 
       case 30 :
-        props.setInputDist(value)
+        console.log(value)
+
+        props.newDistance(value)
 
       case 50 :
-        props.setInputDist(value)
+        console.log(value)
+
+        props.newDistance(value)
 
       case 100 :
-        props.setInputDist(value) 
+        console.log(value)
+        props.newDistance(value) 
     }
   }
 
@@ -93,10 +105,10 @@ let PickerDistance = ()=> {
   return (
     <Picker
     mode="dropdown"
-    iosHeader="Select your SIM"
+    iosHeader="Distance autour de vous"
     iosIcon={<Icon name="arrow-down" />}
     style={{ width: undefined }}
-    selectedValue={(value)=>changeDistance(value) }
+    selectedValue={baseDist}
     onValueChange={(value)=>changeDistance(value)}
   >
     <Picker.Item label="5 Km" value="5" />
@@ -108,32 +120,6 @@ let PickerDistance = ()=> {
   </Picker>
   )
 }
-
-
-
-
-
-// Gestion adress depuis coords
-useEffect(()=>{
-let lat = props.positionInfo.lat
-let lon = props.positionInfo.lon
-
-let distance = 10000
-
-  async function recupDonnée(){
-    var requestBDD = await fetch(`${ip}adressesListCoord`,{
-      method:"POST",
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${distance}`
-    })
-
-    var adressRaw = await requestBDD.json()
-    setAdress(adressRaw.adress)
-  }
-  recupDonnée()
-  
-},[props, isFocused])
-
 
 let AffichageHeader = () => {
 return (
@@ -226,7 +212,7 @@ marginLeft:20,
   
   function mapDispatchToProps(dispatch) {
     return {
-      distance: function(location) {
+      newDistance: function(location) {
         dispatch( {type: 'addDistance',location:location} )
     },
     listType: function(listType) {

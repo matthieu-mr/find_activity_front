@@ -14,10 +14,9 @@ import * as Location from 'expo-location';
 
 function ListType(props) {
   const navigation = useNavigation();
-let listRaw =props.listActivity.list.result
-//console.log("--------------------------- >>>>>>>>>",listRaw)
+  let listRaw =props.listActivity.list.result
 
-let lastName
+  let lastName
 
 let listArray = listRaw.map((item,i)=>{
 
@@ -30,11 +29,11 @@ let listArray = listRaw.map((item,i)=>{
   let lon = item.fields.gps[1]
 
 let goPlaceDetails = (name,lat,lon) => {
-  alert("test")
   let infoToSend = {
     name:name,
     lat:lat,
-    long:lon
+    long:lon,
+    item:item
   }
   props.infoPlace(infoToSend)
 
@@ -46,13 +45,14 @@ let goPlaceDetails = (name,lat,lon) => {
 if (lastName != name){
   
   lastName = name
+
   return (
     <View >
       <Card transparent key={i} >
-        <CardItem button onPress={() => {goPlaceDetails(name,lat, lon);}}>
+        <CardItem button onPress={() => {goPlaceDetails(name,lat, lon,item);}}>
           <View>
               <Text style={styles.textTitle}>{name}</Text>
-              <Text>{type} - {distance} Mètres</Text>
+              <Text>{type} </Text>
           </View>
           <Right>
             <Icon name="arrow-forward" />

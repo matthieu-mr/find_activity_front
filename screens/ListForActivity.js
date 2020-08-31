@@ -23,10 +23,18 @@ function  ListForActivity(props) {
 const [listActivity,setListActivity] = useState([])
 const [searchHeader, setSearchHeader] = useState(false)
 
+console.log("props.position",props.positionRecupState)
+let latitude = props.positionRecupState.lat
+let longitude = props.positionRecupState.longitude
 
-let latitude = 48.866667
-let longitude = 2.333333
-let distance = 10000
+let distance = 5000
+
+/* 
+if (props.positionRecupState.type="manuel"){
+  distance = props.positionRecupState.distance
+}
+*/
+
 // recuperation des types d'activite 
 useEffect(()=>{
   
@@ -191,6 +199,11 @@ const styles = StyleSheet.create({
 })
 
 
+function mapStateToProps(state) {
+  return { positionRecupState: state.positionInfo }
+}
+
+
 function mapDispatchToProps(dispatch) {
   return {
     sportName: function(name) {
@@ -201,7 +214,7 @@ function mapDispatchToProps(dispatch) {
 
 
 export default connect(
-  null, 
+  mapStateToProps, 
   mapDispatchToProps
 )(ListForActivity);
 

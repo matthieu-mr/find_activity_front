@@ -6,7 +6,7 @@ import * as Linking from 'expo-linking';
 import { Ionicons } from '@expo/vector-icons';
 
 import {connect} from 'react-redux';
-import {Card,CardItem,Left,Thumbnail,Body,Button,Icon,Right,List,ListItem,Badge} from 'native-base';
+import {Spinner,Card,CardItem,Left,Thumbnail,Body,Button,Icon,Right,List,ListItem,Badge} from 'native-base';
 
 
 
@@ -20,9 +20,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 function  PlaceDetail(props) {
 
-  console.log("recup props place detail", props.detailPops)
 
-const [infoPlaces,setInfoPlace]= useState ({
+const [infoPlacesOld,setInfoPlaceOld]= useState ({
     "responseDetail": {
         "html_attributions": [],
         "result": {
@@ -151,69 +150,131 @@ const [infoPlaces,setInfoPlace]= useState ({
     }
 })
 
-
-let adressPlace = infoPlaces.responseDetail.result.formatted_address
-let iconPlace =infoPlaces.responseDetail.result.icon
-let namePlace = infoPlaces.responseDetail.result.name
-let photoId = infoPlaces.responseDetail.result.photos[0].photo_reference
-let notePlace = infoPlaces.responseDetail.result.rating
-let commentPlace = infoPlaces.responseDetail.result.reviews
-let websitePlace =infoPlaces.responseDetail.result.website
-let latitudePlace =infoPlaces.responseDetail.result.geometry.location.lat
-let longitudePlace =infoPlaces.responseDetail.result.geometry.location.lng
-let idPlace = infoPlaces.responseDetail.result.place_id
+const [infoPlace,setInfoPlace] = useState()
 
 
-let photoPlace = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoId}&key=AIzaSyCXI24AWr0Cv2AXnbh29nVA9Ge7SPIvYBo`
+// recuperation des POI 
+useEffect(()=>{
 
 
+  let lat =  props.detailProps.lat
+  let lon = props.detailProps.long
+  let name =  props.detailProps.name
 
-let commentArray = commentPlace.map((item,i)=>{
-
-    let name=item.author_name
-    let picture =item.profile_photo_url
-    let rating = item.rating
-    let time = item.relative_time_description
-    let comment = item.text
-
- // Add comment to page
-    return (
-        <List key={i}>
-        <ListItem avatar>
-          <Left>
-            <Thumbnail source={{ uri: `${picture}` }} />
-          </Left>
-          <Body>
-        <Text>{name}</Text>
-            <Text note>{comment}</Text>
-            <Text note>{time}</Text>
-          </Body>
-          <Right>
-    <Text note> note : {rating}</Text>
-          </Right>
-        </ListItem>
-      </List>
-    ) 
-  });
+  async function recupDonnée(){
+    var requestBDD = await fetch(`${ip}pointinformation`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${lat}&long=${lon}&name=${name}`
+    })
+    var placeRaw = await requestBDD.json()
+   setInfoPlace(placeRaw)
+  }
+  recupDonnée()
   
+},[])
+
+
+let Affichage = () => {
+  if (infoPlace == undefined){
+    return (
+      <View style={{display:"flex",flex:1,backgroundColor:"red"}}>
+          <Spinner color='green' />
+      </View>
+     
+    )
+
+  }else {
+  
+    if (infoPlace.existe == false){ // pas de resultat google place
+      return (
+        <Text> pas de google place</Text>
+      )
+    }else { // resultat google place 
+       
+        let adressPlace = infoPlace.response.candidates[0].formatted_address
+        let iconPlace =infoPlace.response.candidates[0].icon
+        let namePlace = infoPlace.response.candidates[0].name
+        let photoId = infoPlace.response.candidates[0].photos
+        let notePlace = infoPlace.response.candidates[0].rating
+        let commentPlace = infoPlace.response.candidates[0].reviews
+        let websitePlace = infoPlace.responseDetail.website
+
+        let idPlace = infoPlace.response.candidates[0].place_id
+        let photoPlace =  <Image source={require('../assets/img-404.png')}  style={{height: 200, width: null, flex: 1}}/>
+        let badgeOpen =   <Badge style={{ backgroundColor: 'red' }}><Text style={{ color: 'white' }}>Fermé</Text></Badge>
+        let typePlace =  <Badge style={{ backgroundColor: 'black' }}><Text style={{ color: 'white' }}>{props.detailProps.item.fields.typeerp}</Text></Badge>
+// custom photo if find 
+        if (photoId ){
+         let photoIdGet = infoPlace.response.candidates[0].photos[0].photo_reference
+        let photoPlaceLink = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoIdGet}&key=AIzaSyCXI24AWr0Cv2AXnbh29nVA9Ge7SPIvYBo`
+        photoPlace= <Image source={{uri: `${photoPlaceLink}`}} style={{height: 200, width: null, flex: 1}}/>
+        }
+
+// get comments 
+
+
+let commentArray =  infoPlace.responseDetail.reviews.map((item,i)=>{
+
+  let name=item.author_name
+  let picture =item.profile_photo_url
+  let rating = item.rating
+  let time = item.relative_time_description
+  let comment = item.text
+
+// Add comment to page
+  return (
+      <List key={i}>
+      <ListItem avatar>
+        <Left>
+          <Thumbnail source={{ uri: `${picture}` }} />
+        </Left>
+        <Body>
+      <Text>{name}</Text>
+          <Text note>{comment}</Text>
+          <Text note>{time}</Text>
+        </Body>
+        <Right>
+  <Text note> note : {rating}</Text>
+        </Right>
+      </ListItem>
+    </List>
+  ) 
+});
+
+// function share 
+console.log(props.detailProps.item.fields.typeerp)
 
 const [navWeb,setNavWeb] = useState(null)
 
+
+if (infoPlace.responseDetail.opening_hours.open_now =true && infoPlace.responseDetail.opening_hours.open_now != undefined){
+  badgeOpen =   <Badge style={{ backgroundColor: 'green' }}><Text style={{ color: 'white' }}>Ouvert</Text></Badge>
+}
+
 //ajout webview
 let webSite = async()=>{
+  
     let result = await WebBrowser.openBrowserAsync(websitePlace);
     setNavWeb(result)
 }
 
+console.log("props.position",props.position)
+
 let mapItineraire = async()=>{
+  let lat =  props.detailProps.lat
+  let lon = props.detailProps.long
+  let name =  props.detailProps.name
+
+  let latitudePlace =infoPlace.response.candidates[0].geometry.location.lat
+  let longitudePlace =infoPlace.response.candidates[0].geometry.location.lng
 
 
-    let latitude = 48.86701
-    let longitude = 2.35399
+
     let encodedName = encodeURI(namePlace)
     let test="https://www.google.com/maps/dir/?api=1&destination_place_id=ChIJISz8NjyuEmsRFTQ9Iw7Ear8&travelmode=walking"
     
-    let url =`https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${encodedName}&destination_place_id=${idPlace}8&travelmode=walking`
+    let url =`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${encodedName}&destination_place_id=${idPlace}8&travelmode=walking`
 
     
     let result = await WebBrowser.openBrowserAsync(url);
@@ -226,7 +287,7 @@ const share = async () => {
     try {
       const result = await Share.share({
         message:
-          `${nom} situé à l'adresse : ${adressPlace} `,
+          `${namePlace} situé à l'adresse : ${adressPlace} `,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -242,38 +303,33 @@ const share = async () => {
     }
   };
 
-  return (
-
- <View style={{backgroundColor:"white"}}>
-     <ScrollView>
-    <Card>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{uri: `${iconPlace}`}} />
-                <Body>
-                    <Text>{namePlace}</Text>
-                    <Text note>{adressPlace}</Text>
-                    <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
-                        <Badge style={{ backgroundColor: 'black' }}>
-                            <Text style={{ color: 'white' }}>Salle danse</Text>
-                        </Badge>
-
-                        <Badge style={{ backgroundColor: 'black' }}>
-                            <Text style={{ color: 'white' }}>errain couvert</Text>
-                        </Badge>
-                    </View>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody>
-            <Image source={{uri: `${photoPlace}`}} style={{height: 200, width: null, flex: 1}}/>
-            </CardItem>
-            <CardItem>
+      return (
+        <ScrollView>
+        <Card>
+                <CardItem>
+                  <Left>
+                    <Thumbnail source={{uri: `${iconPlace}`}} />
+                    <Body>
+                        <Text style={styles.textTitle}>{namePlace}</Text>
+                        <Text note>{adressPlace}</Text>
+                        <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
+                          {badgeOpen}
+    
+                        {typePlace}
+                        </View>
+                    </Body>
+                  </Left>
+                </CardItem>
+                <CardItem cardBody>
+                {photoPlace}
+             
+                </CardItem>
+                <CardItem>
               <Body>
 
-            <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around"}}>
+            <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",flex:1}}>
 
-                <Button transparent  onPress={() => {alert('You tapped the button!');}}>
+                <Button transparent  onPress={() => {console.log('You tapped the button!');}}>
                 <Ionicons name="md-star" size={22} color="yellow" />
                   <Text>{notePlace}</Text>
                 </Button>
@@ -288,8 +344,6 @@ const share = async () => {
                   <Text> Partager</Text>
                 </Button>
 
-
-
                 <Button transparent onPress={() => {mapItineraire();}}> 
                 <Ionicons name="md-navigate" size={22} color="green" />
                   <Text> Aller</Text>
@@ -300,13 +354,24 @@ const share = async () => {
               </Body>
 
             </CardItem>
-          </Card>
-
-        {commentArray}
 
 
-</ScrollView>
 
+
+              </Card>
+           {commentArray}
+            </ScrollView>
+
+      )
+    }
+  }
+}
+
+
+ return (
+
+ <View style={{backgroundColor:"white"}}>
+  <Affichage/>
 </View>
 
   );
@@ -328,12 +393,16 @@ const styles = StyleSheet.create({
   },
   distanceField:{
     flex:1
+  },
+  textTitle:{
+    marginTop:15,
+    fontSize:20
   }
 })
 
 
 function mapStateToProps(state) {
-  return { position: state.position,detailPops:state.infoPlace }
+  return { position: state.position,detailProps:state.infoPlace }
 }
 
 function mapDispatchToProps(dispatch) {
