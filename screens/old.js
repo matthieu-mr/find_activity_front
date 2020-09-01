@@ -152,7 +152,7 @@ const [infoPlaces,setInfoPlace]= useState ({
 
 // recuperation des POI 
 useEffect(()=>{
-  console.log("envoi requete")
+
 
   let lat =  props.detailProps.lat
   let lon = props.detailProps.long
@@ -165,7 +165,6 @@ useEffect(()=>{
       body:`lat=${lat}&long=${lon}&name=${name}`
     })
     var placeRaw = await requestBDD.json()
-    console.log("list return place deatils", placeRaw)
    // setInfoPlace(placeRaw)
   }
   recupDonnée()

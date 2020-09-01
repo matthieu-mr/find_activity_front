@@ -67,8 +67,7 @@ useEffect(()=>{
   let lat = props.positionInfoProps.lat
   let lon = props.positionInfoProps.lon
   let dist = props.positionInfoProps.distance
-  
-  console.log(props.positionInfoProps)
+
 
   
     async function recupDonnée(){

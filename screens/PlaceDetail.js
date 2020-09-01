@@ -187,8 +187,103 @@ let Affichage = () => {
   }else {
   
     if (infoPlace.existe == false){ // pas de resultat google place
+      console.log("return ",props.detailProps.item.fields)
+      let startInfo = props.detailProps.item.fields
+      let namePlace = startInfo.insnom
+      let adressPlace = startInfo.inslibellevoie + ", "+startInfo.inscodepostal + "," + startInfo.comlib
+      let typePlace =  <Badge style={{ backgroundColor: 'black' }}><Text style={{ color: 'white' }}>{props.detailProps.item.fields.naturelibelle}</Text></Badge>
+      let iconPlace =  <Image source={require('../assets/img-404.png')}  style={{height: 200, width: null, flex: 1}}/>
+      let photoPlace =  <Image source={require('../assets/img-404.png')}  style={{height: 200, width: null, flex: 1}}/>
+
+            // function share 
+            const [navWeb,setNavWeb] = useState(null)
+
+            //ajout webview
+            let webSite = async()=>{
+                let result = await WebBrowser.openBrowserAsync(websitePlace);
+                setNavWeb(result)
+            }
+
+            let mapItineraire = async()=>{
+              let lat =  props.detailProps.lat
+              let lon = props.detailProps.long
+              let encodedName = encodeURI(namePlace)
+                
+              let url =`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${encodedName}&destination_place_id=${idPlace}8&travelmode=walking`
+
+                
+              let result = await WebBrowser.openBrowserAsync(url);
+              setNavWeb(result)
+
+            }
+
+            // add share option
+              const share = async () => {
+                  try {
+                    const result = await Share.share({
+                      message:
+                        `${namePlace} situé à l'adresse : ${adressPlace} `,
+                    });
+                    if (result.action === Share.sharedAction) {
+                      if (result.activityType) {
+                        // shared with activity type of result.activityType
+                      } else {
+                        // shared
+                      }
+                    } else if (result.action === Share.dismissedAction) {
+                      // dismissed
+                    }
+                  } catch (error) {
+                    alert(error.message);
+                  }
+                };
+
+
       return (
-        <Text> pas de google place</Text>
+
+
+      <ScrollView>
+        <Card>
+                <CardItem>
+                  <Left>
+                    <Thumbnail source={{uri: `${iconPlace}`}} />
+                    <Body>
+                        <Text style={styles.textTitle}>{namePlace}</Text>
+                        <Text note>{adressPlace}</Text>
+                        <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
+                          {typePlace}
+                        </View>
+                    </Body>
+                  </Left>
+                </CardItem>
+                <CardItem cardBody>
+                  {photoPlace}
+                </CardItem>
+                <CardItem>
+              <Body>
+
+            <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",flex:1}}>
+
+
+                    <Button transparent onPress={() => {webSite();}}>
+                    <Ionicons name="md-globe" size={22} color="green" />
+                      <Text> Site internet</Text>
+                    </Button>
+
+                      <Button transparent onPress={() => {share();}}>
+                      <Ionicons name="md-share" size={22} color="green" />
+                      <Text> Partager</Text>
+                    </Button>
+
+                    <Button transparent onPress={() => {mapItineraire();}}> 
+                    <Ionicons name="md-navigate" size={22} color="green" />
+                      <Text> Aller</Text>
+                    </Button>
+                </View>
+              </Body>
+            </CardItem>
+          </Card>
+        </ScrollView>
       )
     }else { // resultat google place 
        
@@ -202,8 +297,7 @@ let Affichage = () => {
 
         let idPlace = infoPlace.response.candidates[0].place_id
         let photoPlace =  <Image source={require('../assets/img-404.png')}  style={{height: 200, width: null, flex: 1}}/>
-        let badgeOpen =   <Badge style={{ backgroundColor: 'red' }}><Text style={{ color: 'white' }}>Fermé</Text></Badge>
-        let typePlace =  <Badge style={{ backgroundColor: 'black' }}><Text style={{ color: 'white' }}>{props.detailProps.item.fields.typeerp}</Text></Badge>
+
 // custom photo if find 
         if (photoId ){
          let photoIdGet = infoPlace.response.candidates[0].photos[0].photo_reference
@@ -212,6 +306,8 @@ let Affichage = () => {
         }
 
 // get comments 
+
+console.log("props type",props.responseDetail)
 
 
 let commentArray =  infoPlace.responseDetail.reviews.map((item,i)=>{
@@ -242,15 +338,21 @@ let commentArray =  infoPlace.responseDetail.reviews.map((item,i)=>{
   ) 
 });
 
-// function share 
-console.log(props.detailProps.item.fields.typeerp)
+// --- Badge 
+let badgeOpen =   <Badge style={{ backgroundColor: 'red' }}><Text style={{ color: 'white' }}>Fermé</Text></Badge>
+let typePlace =  <Badge style={{ backgroundColor: 'black' }}><Text style={{ color: 'white' }}>{props.detailProps.item.fields.naturelibelle}</Text></Badge>
 
+      if (infoPlace.responseDetail.opening_hours.open_now =true){
+        badgeOpen =   <Badge style={{ backgroundColor: 'green' }}><Text style={{ color: 'white' }}>Ouvert</Text></Badge>
+      }
+      else {
+        badgeOpen =   <Badge style={{ backgroundColor: 'black' }}><Text style={{ color: 'white' }}>Pas d'informations</Text></Badge>
+      }
+
+
+// function share 
 const [navWeb,setNavWeb] = useState(null)
 
-
-if (infoPlace.responseDetail.opening_hours.open_now =true && infoPlace.responseDetail.opening_hours.open_now != undefined){
-  badgeOpen =   <Badge style={{ backgroundColor: 'green' }}><Text style={{ color: 'white' }}>Ouvert</Text></Badge>
-}
 
 //ajout webview
 let webSite = async()=>{
@@ -259,8 +361,6 @@ let webSite = async()=>{
     setNavWeb(result)
 }
 
-console.log("props.position",props.position)
-
 let mapItineraire = async()=>{
   let lat =  props.detailProps.lat
   let lon = props.detailProps.long
@@ -268,8 +368,6 @@ let mapItineraire = async()=>{
 
   let latitudePlace =infoPlace.response.candidates[0].geometry.location.lat
   let longitudePlace =infoPlace.response.candidates[0].geometry.location.lng
-
-
 
     let encodedName = encodeURI(namePlace)
     let test="https://www.google.com/maps/dir/?api=1&destination_place_id=ChIJISz8NjyuEmsRFTQ9Iw7Ear8&travelmode=walking"
@@ -304,7 +402,7 @@ const share = async () => {
   };
 
       return (
-        <ScrollView>
+      <ScrollView>
         <Card>
                 <CardItem>
                   <Left>
@@ -314,51 +412,41 @@ const share = async () => {
                         <Text note>{adressPlace}</Text>
                         <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
                           {badgeOpen}
-    
-                        {typePlace}
+                          {typePlace}
                         </View>
                     </Body>
                   </Left>
                 </CardItem>
                 <CardItem cardBody>
-                {photoPlace}
-             
+                  {photoPlace}
                 </CardItem>
                 <CardItem>
               <Body>
 
             <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",flex:1}}>
+                    <Button transparent  onPress={() => {console.log('You tapped the button!');}}>
+                    <Ionicons name="md-star" size={22} color="yellow" />
+                      <Text>{notePlace}</Text>
+                    </Button>
 
-                <Button transparent  onPress={() => {console.log('You tapped the button!');}}>
-                <Ionicons name="md-star" size={22} color="yellow" />
-                  <Text>{notePlace}</Text>
-                </Button>
+                    <Button transparent onPress={() => {webSite();}}>
+                    <Ionicons name="md-globe" size={22} color="green" />
+                      <Text> Site internet</Text>
+                    </Button>
 
-                <Button transparent onPress={() => {webSite();}}>
-                <Ionicons name="md-globe" size={22} color="green" />
-                  <Text> Site internet</Text>
-                </Button>
+                      <Button transparent onPress={() => {share();}}>
+                      <Ionicons name="md-share" size={22} color="green" />
+                      <Text> Partager</Text>
+                    </Button>
 
-                  <Button transparent onPress={() => {share();}}>
-                  <Ionicons name="md-share" size={22} color="green" />
-                  <Text> Partager</Text>
-                </Button>
-
-                <Button transparent onPress={() => {mapItineraire();}}> 
-                <Ionicons name="md-navigate" size={22} color="green" />
-                  <Text> Aller</Text>
-                </Button>
-
+                    <Button transparent onPress={() => {mapItineraire();}}> 
+                    <Ionicons name="md-navigate" size={22} color="green" />
+                      <Text> Aller</Text>
+                    </Button>
                 </View>
-
               </Body>
-
             </CardItem>
-
-
-
-
-              </Card>
+          </Card>
            {commentArray}
             </ScrollView>
 
@@ -415,8 +503,6 @@ function mapDispatchToProps(dispatch) {
   }
   }
 }
-
-
 
 export default connect(
   mapStateToProps, 

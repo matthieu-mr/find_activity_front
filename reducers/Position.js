@@ -2,7 +2,7 @@ export default function(position = "", action) {
   
     if(action.type == 'addPosition') {  
      let newPosition =action.location
-     console.log("add position",newPosition)
+  
       return newPosition;
 
     }
@@ -15,14 +15,13 @@ export default function(position = "", action) {
     
    else if (action.type == 'addManualAdress'){
       let newAdress = action.location
-      console.log("add adress",newAdress)
+    
      return newAdress
    }
 
    else if (action.type === "changeTypeActivityPosition"){
-    //  position.activityType = action
+     position.activityType = action.typeActivityToProps
 
-      console.log("change type activite",action)
       return position
    }
     else {

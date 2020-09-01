@@ -24,11 +24,9 @@ const [listActivity,setListActivity] = useState([])
 const [searchHeader, setSearchHeader] = useState(false)
 
 
-console.log("props.position",props.positionRecupState)
 let latitude = props.positionRecupState.lat
-let longitude = props.positionRecupState.longitude
-
-let distance = props.positionRecupState.distance
+let longitude = props.positionRecupState.lon
+let distance = props.positionRecupState.dist
 
 // recuperation des types d'activite 
 useEffect(()=>{
@@ -46,11 +44,9 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[props])
+},[])
 
 
-// FILTRAGE DES RESULTATS
-let lettreComparaison ="";
 
 const[search,setSearch]=useState("")
 
@@ -97,15 +93,27 @@ let affichageHeader=()=>{
 
 let headerSearchInput
 
+
+
+
+// FILTRAGE DES RESULTATS
+let lettreComparaison ="";
+
 affichageHeader()
 //Afichage de la liste comparaison premiere lettre
 let typeActivityArray = filteredList.map((item,i)=>{
+
   let wordingNb = `Nombre de lieux trouvés : ${item.count}`
+
   if(item.count == 1 ){
     wordingNb = `Nombre de lieu trouvé : ${item.count}`
   }
 
-  if (lettreComparaison === item.first_letter){
+console.log("item first letter",item.name[0] )
+
+
+  if (lettreComparaison === item.name[0] ){
+
     return (  
     <ListItem onPress={() => redirect({item})} key={i}>
          <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
@@ -122,11 +130,11 @@ let typeActivityArray = filteredList.map((item,i)=>{
     </ListItem>
     )
   }else {
-    lettreComparaison = item.first_letter
+    lettreComparaison = item.name[0] 
     return ( 
       <View>
       <ListItem itemDivider style={{ borderBottomWidth:2 }} key={i}>
-        <Text style={{ fontWeight: "600",fontSize:22}}>{item.first_letter}</Text>
+        <Text style={{ fontWeight: "600",fontSize:22}}>{item.name[0] }</Text>
       </ListItem>
 
       <ListItem onPress={() => redirect({item})}>

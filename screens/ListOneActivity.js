@@ -16,16 +16,16 @@ import ListType from './component/ListType';
 
 
 function  ListOneActivity(props) {
-
-
- let sportName = props.sport.name
+  let sportName = props.sport.name
+  let lat = props.positionRecupState.lat
+  let long = props.positionRecupState.lon
+  let dist = props.positionRecupState.dist
+  
  props.navigation.setOptions({ title:sportName })
+
 
 // recuperation des types d'activite 
 useEffect(()=>{
-let lat ="test"
-let long ="test"
-let dist="test"
 
   async function recupDonnée(){
 
@@ -36,7 +36,6 @@ let dist="test"
     })
     var listSportRaw = await requestBDD.json()
     props.listActivity(listSportRaw)
-  //  console.log("list sport",listSportRaw)
   }
   recupDonnée()
   
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { position: state.positionInfo,sport:state.sportName }
+  return {positionRecupState: state.positionInfo,sport:state.sportName }
 }
 function mapDispatchToProps(dispatch) {
   return {

@@ -23,12 +23,9 @@ const [location, setLocation] = useState(null);
 const [errorMsg, setErrorMsg] = useState(null);
 
 
-const [latitude,setLatitude] = useState();
-const [longitude,setLongitude] = useState();
-
 // Type d'activité
 
-const [listActivityType, setListActivityType]= useState([]) // type activity, ex indoor recup from back
+
 const [typeActivite,setTypeActivite] = useState ("Toutes") // selected by user
  // Liste activité
 
@@ -39,19 +36,18 @@ let lat = props.positionRecupState.lat
 let lon = props.positionRecupState.lon
 let dist = props.positionRecupState.dist
 
+let [affichageList,setAffichageList] = useState(false)
+
 // Recuperation de la localisation de l'user
 useEffect(() => {
   (async () => {
+    console.log("envoi localisarion")
     let { status } = await Location.requestPermissionsAsync();
     if (status !== 'granted') {
       setErrorMsg('Permission to access location was denied');
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-    setLatitude(location.coords.latitude)
-    setLongitude(location.coords.longitude)
-
     let coords = {
       lat :location.coords.latitude,
       lon :location.coords.longitude,
@@ -62,6 +58,7 @@ useEffect(() => {
     props.positionInfo(coords)
 
   })();
+  setAffichageList(true)
 },[]);
 
 let text = 'Waiting..';
@@ -72,7 +69,14 @@ if (errorMsg) {
 }
 
 
-// recuperation des types d'activite 
+// recuperation des types d'activite et nb
+
+const [total,setTotal] = useState()
+const [listActivityType, setListActivityType]= useState([]) // type activity, ex indoor recup from back
+
+
+
+
 useEffect(()=>{
 
   async function recupDonnée(){
@@ -88,11 +92,25 @@ useEffect(()=>{
       setTotal(listActivityRaw.total)
       setListActivityType(listActivityRaw.resultFiltered)
       props.listType(listActivityRaw.resultFiltered)
+  
   }
   recupDonnée()
   
-},[lat])
+},[affichageList])
 
+// Affichage type d'activite
+
+
+let totalLabel = `Toutes - ${total} sites`
+
+ let typeActivityArray = listActivityType.map((item,i)=>{
+    let type = item.name
+    let count = item.count
+  
+    let wordingLabel = `${type} - ${count} sites`
+    return (<Picker.Item label={wordingLabel} value={type} key={i}/>)
+  })
+  
 
 
 // recuperation des POI 
@@ -111,58 +129,49 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[lat])
+},[affichageList])
 
 
-/// count nb activity
-const [total,setTotal] = useState()
 
-let totalLabel = `Toutes - ${total} sites`
-
- let typeActivityArray = listActivityType.map((item,i)=>{
-    let type = item.name
-    let count = item.count
-  
-    let wordingLabel = `${type} - ${count} sites`
-    return (<Picker.Item label={wordingLabel} value={type} key={i}/>)
-  })
-  
 // FILTRAGE DES RESULTATS By TYPE
 let lettreComparaison ="";
 let filteredList=[] ;
 
+
+
+
 let select = (filterType)=> {
 
-console.log(filterType)
+    let listTypeFromProps = props.activity
 
-let listTypeFromProps = props.activity
-
-props.typeActivityToProps=filterType
-
-let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
-  if (item.name===filterType){
-      item.state=true
-      return item
-  }else {
-    item.state=false
-      return item
-  }
-})
-
-props.listType(typeActivityNewArray)
-
-  async function recupDonnée(){
-    var requestBDD = await fetch(`${ip}filteredType`,{
-      method:"POST",
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeActivite}`
+    setTypeActivite(filterType)
+    props.changeTypeActivity(filterType)
+    let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
+      if (item.name===filterType){
+          item.state=true
+          return item
+      }else {
+        item.state=false
+          return item
+      }
     })
 
-    var listActivityRaw = await requestBDD.json()
-    props.listActivity(listActivityRaw)
-    setListActivity(listActivityRaw)
-  }
-  recupDonnée()
+
+
+    props.listType(typeActivityNewArray)
+
+      async function recupDonnée(){
+        var requestBDD = await fetch(`${ip}filteredType`,{
+          method:"POST",
+          headers: {'Content-Type':'application/x-www-form-urlencoded'},
+          body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeActivite}`
+        })
+
+        var listActivityRaw = await requestBDD.json()
+        props.listActivity(listActivityRaw)
+        setListActivity(listActivityRaw)
+      }
+      recupDonnée()
 }
 
 // Affichage des markers
