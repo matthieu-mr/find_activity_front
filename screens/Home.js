@@ -138,8 +138,6 @@ let lettreComparaison ="";
 let filteredList=[] ;
 
 
-
-
 let select = (filterType)=> {
 
     let listTypeFromProps = props.activity
