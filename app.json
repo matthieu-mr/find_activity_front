@@ -1,15 +1,15 @@
 {
   "expo": {
     "name": "Quoi Faire",
-    "slug": "Quoi Faire",
-    "version": "1.0.0",
+    "slug": "Quoi-Faire",
+    "version": "3.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "description": "Trouvez une activité proche de vous",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash_t.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#00BBA0"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -32,7 +32,9 @@
       "measurementId": "G-KMQ5WQHQPV"
     },
     "android": {
-      "package": "matthieumichon.quoifaire"
+      "package": "com.matthieumichon.quoifaire",
+      "versionCode": 4,
+      "icon": "./logo.png"
     }
   }
 }

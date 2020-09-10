@@ -62,33 +62,45 @@ function DrawerContent(props){
       <Stack.Screen name="Place details" component={PlaceDetail}
           options={{
             headerLeft:()=>(
-              <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
-            ),
-            headerRight:()=>(
-              <Icon reverse name='ios-play' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
+              <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
+              headerRight:()=>(
+              <Icon />
             ), 
             headerStyle: {
               backgroundColor: '#009387',
             },
             headerTintColor:'#fff',
                 }}
-          />
-
+        />
       <Stack.Screen name="Liste" component={ListForActivty}  />
       <Stack.Screen name="Parametres" component={AdvancedParam} 
           options={{
             headerLeft:()=>(
               <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
-            headerRight:()=>(
-              <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />
+              headerRight:()=>(
+              <Icon />
             ), 
             headerStyle: {
               backgroundColor: '#009387',
             },
             headerTintColor:'#fff',
-                }}/>
-          <Stack.Screen name="Connection" component={ConnectScreen}  />
-      <Stack.Screen name="PlaceDetail" component={PlaceDetail} />
+                }}
+        />
+
+        {/*   <Stack.Screen name="Connection" component={ConnectScreen}  /> */} 
+      <Stack.Screen name="PlaceDetail" component={PlaceDetail} 
+          options={{
+            headerLeft:()=>(
+              <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
+              headerRight:()=>(
+              <Icon />
+            ), 
+            headerStyle: {
+              backgroundColor: '#009387',
+            },
+            headerTintColor:'#fff',
+                }}
+        />
       <Stack.Screen name="ConnectionItem" component={ConnectComponent} />
      
     </Stack.Navigator>

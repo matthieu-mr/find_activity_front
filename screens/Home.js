@@ -29,7 +29,8 @@ const [errorMsg, setErrorMsg] = useState(null);
 const [typeActivite,setTypeActivite] = useState ("Toutes") // selected by user
  // Liste activité
 
-const [listActivity, setListActivity] = useState({})
+const [listActivity, setListActivity] = useState([])
+
 
 
 let lat = props.positionRecupState.lat
@@ -55,11 +56,14 @@ useEffect(() => {
       type:"auto",
       activityType:'Toutes'
     }
+    lat = location.coords.latitude
+    lon =location.coords.longitude
+    dist =5000
     props.positionInfo(coords)
 
   })();
   setAffichageList(true)
-},[]);
+},[location]);
 
 let text = 'Waiting..';
 if (errorMsg) {
@@ -74,12 +78,11 @@ if (errorMsg) {
 const [total,setTotal] = useState()
 const [listActivityType, setListActivityType]= useState([]) // type activity, ex indoor recup from back
 
-
-
-
 useEffect(()=>{
 
   async function recupDonnée(){
+
+    console.log("recup info", lat,lon,dist)
 
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
@@ -96,7 +99,10 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[affichageList])
+},[lat])
+
+
+
 
 // Affichage type d'activite
 
@@ -125,11 +131,11 @@ useEffect(()=>{
     var listActivityRaw = await requestBDD.json()
     setListActivity(listActivityRaw)
     props.listActivity(listActivityRaw)
-
+    console.log("recup poi", listActivityRaw)
   }
   recupDonnée()
   
-},[affichageList])
+},[lat])
 
 
 
@@ -199,21 +205,7 @@ else {
   })
 }
 
-let MyMarker  = ()=>{
-    return (
-      <Marker
-      key={"800"}
-      coordinate=
-      {{
-      latitude: props.positionRecupState.lat,
-      longitude: props.positionRecupState.lon}}
-      title={"moi"}
-      description={"name"}
-      pinColor="blue"
-      image={require('../assets/perso.png')}
-  />
-    )
-  }
+
 
 MapViewMEF()
 
@@ -226,6 +218,31 @@ if (props.positionRecupState.lat == undefined){
 } else {
   let lat = props.positionRecupState.lat
   let lon = props.positionRecupState.lon
+  let markerList
+
+  if ( listActivity.result== undefined){
+  
+  }
+  else {
+    markerList = listActivity.result.map((item,i)=>{
+      let actlib = item.fields.actlib
+      let name = item.fields.insnom
+      let lat = item.fields.gps[0]
+      let lon = item.fields.gps[1]
+  
+      return (
+        <Marker
+        key={i}
+        coordinate={{latitude: lat,
+        longitude: lon}}
+        title={actlib}
+        description={name}
+        pinColor="blue"
+     
+    />
+      )
+    })
+  }
   return (
     <MapView style={styles.mapStyle} 
   
