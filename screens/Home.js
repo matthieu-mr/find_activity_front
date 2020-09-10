@@ -42,7 +42,7 @@ let [affichageList,setAffichageList] = useState(false)
 // Recuperation de la localisation de l'user
 useEffect(() => {
   (async () => {
-    console.log("envoi localisarion")
+  
     let { status } = await Location.requestPermissionsAsync();
     if (status !== 'granted') {
       setErrorMsg('Permission to access location was denied');
@@ -82,7 +82,7 @@ useEffect(()=>{
 
   async function recupDonnée(){
 
-    console.log("recup info", lat,lon,dist)
+   
 
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
@@ -131,7 +131,7 @@ useEffect(()=>{
     var listActivityRaw = await requestBDD.json()
     setListActivity(listActivityRaw)
     props.listActivity(listActivityRaw)
-    console.log("recup poi", listActivityRaw)
+    
   }
   recupDonnée()
   

@@ -109,8 +109,6 @@ let typeActivityArray = filteredList.map((item,i)=>{
     wordingNb = `Nombre de lieu trouvé : ${item.count}`
   }
 
-console.log("item first letter",item.name[0] )
-
 
   if (lettreComparaison === item.name[0] ){
 

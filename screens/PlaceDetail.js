@@ -187,7 +187,7 @@ let Affichage = () => {
   }else {
   
     if (infoPlace.existe == false){ // pas de resultat google place
-      console.log("return ",props.detailProps.item.fields)
+
       let startInfo = props.detailProps.item.fields
       let namePlace = startInfo.insnom
       let adressPlace = startInfo.inslibellevoie + ", "+startInfo.inscodepostal + "," + startInfo.comlib
@@ -306,10 +306,6 @@ let Affichage = () => {
         }
 
 // get comments 
-
-console.log("props type",props.responseDetail)
-
-
 let commentArray =  infoPlace.responseDetail.reviews.map((item,i)=>{
 
   let name=item.author_name
