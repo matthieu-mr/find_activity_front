@@ -1,8 +1,8 @@
-import React,{useState,useEffect,Component} from 'react';
+import React,{useState,useEffect} from 'react';
 import { StyleSheet, View,Dimensions,Text  } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, {Callout} from 'react-native-maps';
 import {connect} from 'react-redux';
-import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, Content,CardItem,Body, Row,Form,Picker,Header,Left,Title,Right,Spinner  } from 'native-base';
+import { Button, Icon, Tab, Tabs, TabHeading,Card, Body, Form,Picker,Header,Left,Title,Right,Spinner,CardItem  } from 'native-base';
 
 import {Marker} from 'react-native-maps';
 
@@ -99,7 +99,7 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[lat])
+},[dist])
 
 
 
@@ -135,8 +135,7 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[lat])
-
+},[dist])
 
 
 // FILTRAGE DES RESULTATS By TYPE
@@ -150,6 +149,7 @@ let select = (filterType)=> {
 
     setTypeActivite(filterType)
     props.changeTypeActivity(filterType)
+
     let typeActivityNewArray= listTypeFromProps.map((item,i)=>{
       if (item.name===filterType){
           item.state=true
@@ -159,8 +159,6 @@ let select = (filterType)=> {
           return item
       }
     })
-
-
 
     props.listType(typeActivityNewArray)
 
@@ -181,32 +179,6 @@ let select = (filterType)=> {
 // Affichage des markers
 let markerList
 
-if ( listActivity.result== undefined){
-
-}
-else {
-  markerList = listActivity.result.map((item,i)=>{
-    let actlib = item.fields.actlib
-    let name = item.fields.insnom
-    let lat = item.fields.gps[0]
-    let lon = item.fields.gps[1]
-
-    return (
-      <Marker
-      key={i}
-      coordinate={{latitude: lat,
-      longitude: lon}}
-      title={actlib}
-      description={name}
-      pinColor="blue"
-   
-  />
-    )
-  })
-}
-
-
-
 MapViewMEF()
 
 function MapViewMEF(){
@@ -218,7 +190,7 @@ if (props.positionRecupState.lat == undefined){
 } else {
   let lat = props.positionRecupState.lat
   let lon = props.positionRecupState.lon
-  let markerList
+
 
   if ( listActivity.result== undefined){
   
@@ -231,7 +203,7 @@ if (props.positionRecupState.lat == undefined){
       let lon = item.fields.gps[1]
   
       return (
-        <Marker
+        <Marker Button
         key={i}
         coordinate={{latitude: lat,
         longitude: lon}}
@@ -239,7 +211,11 @@ if (props.positionRecupState.lat == undefined){
         description={name}
         pinColor="blue"
      
-    />
+    >
+      <Callout tooltip>
+        <Text> Hello</Text>
+      </Callout>
+    </Marker>
       )
     })
   }
@@ -274,25 +250,27 @@ if (props.positionRecupState.lat == undefined){
   return (
 
   <View style={styles.containerAll}>
-       <Card>
+       <Card style={styles.cardActivity}>
+         
         <Form>
-          <Text style={styles.textTitle}> Type d'activité</Text>
+          <Text style={styles.textTitle}> Type d'activité :</Text>
             <Picker
               renderHeader={backAction =>
-                <Header style={{ backgroundColor: "#009387"  }}>
+                <Header >
                   <Left>
-                    <Button transparent onPress={backAction}>
+                    <Button onPress={backAction}>
                       <Icon name="arrow-back" style={{ color: "#fff" }} />
                     </Button>
                   </Left>
                   <Body style={{ flex: 3 }}>
-                    <Title style={{ color: "#fff" }}>Selectionner une activité</Title>
+                    <Title style={{ color: "#red" }}>Selectionner une activité</Title>
                   </Body>
                   <Right />
                 </Header>}
 
               mode="dropdown"
               iosIcon={<Icon name="arrow-down" />}
+              style={{ width: undefined }}
               selectedValue={typeActivite}
               onValueChange={(value)=>select(value)}
             >
@@ -325,6 +303,9 @@ const styles = StyleSheet.create({
   containerAll: {
     flex: 1, 
     backgroundColor: '#fff', 
+  },
+  cardActivity:{
+    padding:10
   },
   searchField:{
     flex:1,

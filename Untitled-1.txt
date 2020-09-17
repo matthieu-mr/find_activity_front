@@ -1,0 +1,1 @@
+keytool -list -v -keystore E:\00- Developpement\findactivity\findactivity\Quoi-Faire.jks -alias com.matthieumichon.quoifaire

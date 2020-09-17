@@ -2,7 +2,7 @@
   "expo": {
     "name": "Quoi Faire",
     "slug": "Quoi-Faire",
-    "version": "3.1.1",
+    "version": "3.1.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "description": "Trouvez une activité proche de vous",
@@ -33,8 +33,12 @@
     },
     "android": {
       "package": "com.matthieumichon.quoifaire",
-      "versionCode": 4,
-      "icon": "./logo.png"
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCXI24AWr0Cv2AXnbh29nVA9Ge7SPIvYBo"
+        },
+      
     }
   }
+}
 }
