@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { StyleSheet, View,Dimensions,Text  } from 'react-native';
+import { StyleSheet, View,Dimensions,Text,Image  } from 'react-native';
 import MapView, {Callout} from 'react-native-maps';
 import {connect} from 'react-redux';
 import { Button, Icon, Tab, Tabs, TabHeading,Card, Body, Form,Picker,Header,Left,Title,Right,Spinner,CardItem  } from 'native-base';
@@ -21,27 +21,36 @@ function  Home(props) {
 // recuperation de la location
 const [location, setLocation] = useState(null);
 const [errorMsg, setErrorMsg] = useState(null);
-
+const [getLocation,setGetLocation] = useState (false)
 
 // Type d'activité
+const [typeActivite,setTypeActivite] = useState () // selected by user
+
+// recup label from props
+useEffect(()=>{
+  let typeValue = `${props.positionRecupState.activityType}`
+  setTypeActivite(typeValue)
+
+  })
 
 
-const [typeActivite,setTypeActivite] = useState ("Toutes") // selected by user
- // Liste activité
-
+// Liste activité
 const [listActivity, setListActivity] = useState([])
-
-
 
 let lat = props.positionRecupState.lat
 let lon = props.positionRecupState.lon
 let dist = props.positionRecupState.dist
+let typeFromProps = props.positionRecupState.activityType
+
 
 let [affichageList,setAffichageList] = useState(false)
 
+
 // Recuperation de la localisation de l'user
 useEffect(() => {
-  (async () => {
+
+
+  (async () => {  
   
     let { status } = await Location.requestPermissionsAsync();
     if (status !== 'granted') {
@@ -52,18 +61,17 @@ useEffect(() => {
     let coords = {
       lat :location.coords.latitude,
       lon :location.coords.longitude,
-      dist:5000,
-      type:"auto",
+      dist:1000,
+      typeDist:"auto",
       activityType:'Toutes'
     }
+    props.positionInfo(coords)
     lat = location.coords.latitude
     lon =location.coords.longitude
-    dist =5000
-    props.positionInfo(coords)
-
+  
   })();
   setAffichageList(true)
-},[location]);
+},[]);
 
 let text = 'Waiting..';
 if (errorMsg) {
@@ -79,49 +87,40 @@ const [total,setTotal] = useState()
 const [listActivityType, setListActivityType]= useState([]) // type activity, ex indoor recup from back
 
 useEffect(()=>{
-
   async function recupDonnée(){
-
-   
-
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${dist}`
+      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeFromProps}`
     })
 
-    var listActivityRaw = await requestBDD.json()
 
-      setTotal(listActivityRaw.total)
-      setListActivityType(listActivityRaw.resultFiltered)
-      props.listType(listActivityRaw.resultFiltered)
-  
+    var listActivityRaw = await requestBDD.json()
+    props.listType(listActivityRaw.resultFiltered)
+    setListActivityType(listActivityRaw.resultFiltered)
+    setTotal(listActivityRaw.total)
   }
   recupDonnée()
   
-},[dist])
-
-
-
+},[lat,dist])
 
 // Affichage type d'activite
-
-
-let totalLabel = `Toutes - ${total} sites`
 
  let typeActivityArray = listActivityType.map((item,i)=>{
     let type = item.name
     let count = item.count
-  
-    let wordingLabel = `${type} - ${count} sites`
+    
+    let tabRaw = item.equipementtypecode
+    var tab = [...new Set(item.equipementtypecode)];
+    var nbSite = tab.length ;
+    let wordingLabel = `${type} - ${count} Activités - sur ${nbSite} sites`
+
     return (<Picker.Item label={wordingLabel} value={type} key={i}/>)
   })
   
 
-
 // recuperation des POI 
 useEffect(()=>{
-
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
@@ -135,18 +134,13 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[dist])
+},[])
 
 
 // FILTRAGE DES RESULTATS By TYPE
-let lettreComparaison ="";
-let filteredList=[] ;
-
 
 let select = (filterType)=> {
-
     let listTypeFromProps = props.activity
-
     setTypeActivite(filterType)
     props.changeTypeActivity(filterType)
 
@@ -159,14 +153,13 @@ let select = (filterType)=> {
           return item
       }
     })
-
     props.listType(typeActivityNewArray)
 
       async function recupDonnée(){
         var requestBDD = await fetch(`${ip}filteredType`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
-          body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeActivite}`
+          body:`lat=${lat}&long=${lon}&dist=${dist}&type=${filterType}`
         })
 
         var listActivityRaw = await requestBDD.json()
@@ -179,6 +172,18 @@ let select = (filterType)=> {
 // Affichage des markers
 let markerList
 
+let goPlaceDetails = (name,lat,lon,item) => {
+  let infoToSend = {
+    name:name,
+    lat:lat,
+    long:lon,
+    item:item
+  }
+  props.infoPlace(infoToSend)
+  props.navigation.navigate("Place details")
+}
+
+
 MapViewMEF()
 
 function MapViewMEF(){
@@ -190,7 +195,6 @@ if (props.positionRecupState.lat == undefined){
 } else {
   let lat = props.positionRecupState.lat
   let lon = props.positionRecupState.lon
-
 
   if ( listActivity.result== undefined){
   
@@ -210,11 +214,16 @@ if (props.positionRecupState.lat == undefined){
         title={actlib}
         description={name}
         pinColor="blue"
-     
     >
-      <Callout tooltip>
-        <Text> Hello</Text>
-      </Callout>
+
+      <Callout tooltip onPress={() => {goPlaceDetails(name,lat, lon,item);}}>
+        <View style={{backgroundColor:'white',padding:20}} > 
+            <Text style={{fontSize:20}} > {name}</Text>
+            <Text  style={{fontSize:15}}> Activité proposée : {actlib}</Text>
+        </View>
+
+      </Callout> 
+  
     </Marker>
       )
     })
@@ -225,23 +234,28 @@ if (props.positionRecupState.lat == undefined){
                   initialRegion={{
                   latitude: lat,
                   longitude:  lon,
-                  latitudeDelta: 0.07,
+                  latitudeDelta: 0.005,
                   longitudeDelta: 0.07,
-                  }}
-  
+                    }}
                   >
-                    <Marker
+
+                  {markerList}
+                  <Marker
                       key={"800"}
                       coordinate=
                       {{
-                      latitude: lat,
-                      longitude: lon}}
-                      title={"moi"}
-                      description={"name"}
-                      pinColor="blue"
-                      image={require('../assets/perso.png')}
-                    />
-                  {markerList}
+                        latitude: lat,
+                        longitude: lon}}
+                        title={"Votre position"}
+                        description={""}
+                        pinColor="blue"
+                     
+                  >
+                      <Image
+                        style={styles.tinyLogo}
+                        source={require('../assets/perso.png')}
+                      />
+                  </Marker>
                   </MapView>   
       )
     }
@@ -274,7 +288,7 @@ if (props.positionRecupState.lat == undefined){
               selectedValue={typeActivite}
               onValueChange={(value)=>select(value)}
             >
-              <Picker.Item label={totalLabel} value="Toutes" />
+              
               {typeActivityArray}
             </Picker>
     
@@ -331,7 +345,11 @@ const styles = StyleSheet.create({
   textTitle:{
     marginTop:15,
     fontSize:20
-  }
+  },
+  tinyLogo: {
+    resizeMode: 'center',
+    height: 50,
+  },
 
 })
 
@@ -353,6 +371,9 @@ function mapDispatchToProps(dispatch) {
 },
   changeTypeActivity: function(typeActivityToProps) {
     dispatch( {type: 'changeTypeActivityPosition',typeActivityToProps:typeActivityToProps} )
+},
+infoPlace: function(info) {
+  dispatch( {type: 'callPlace',info:info} )
 },
   }
 }

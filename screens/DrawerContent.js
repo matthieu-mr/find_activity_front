@@ -52,7 +52,7 @@ function DrawerContent(props){
             headerLeft:()=>(
               <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
             headerRight:()=>(
-              <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />
+              <Icon  />
             ), 
             headerStyle: {
               backgroundColor: '#009387',

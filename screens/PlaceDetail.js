@@ -362,14 +362,14 @@ let mapItineraire = async()=>{
   let lon = props.detailProps.long
   let name =  props.detailProps.name
 
+
+
   let latitudePlace =infoPlace.response.candidates[0].geometry.location.lat
   let longitudePlace =infoPlace.response.candidates[0].geometry.location.lng
 
     let encodedName = encodeURI(namePlace)
-    let test="https://www.google.com/maps/dir/?api=1&destination_place_id=ChIJISz8NjyuEmsRFTQ9Iw7Ear8&travelmode=walking"
-    
-    let url =`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${encodedName}&destination_place_id=${idPlace}8&travelmode=walking`
 
+    let url =`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${encodedName}&destination_place_id=${idPlace}8&travelmode=walking`
     
     let result = await WebBrowser.openBrowserAsync(url);
     setNavWeb(result)

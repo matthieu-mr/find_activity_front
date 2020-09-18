@@ -35,7 +35,6 @@ let goPlaceDetails = (name,lat,lon) => {
     item:item
   }
   props.infoPlace(infoToSend)
-
   navigation.navigate("Place details")
   
 }

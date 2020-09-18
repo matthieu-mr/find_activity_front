@@ -12,23 +12,28 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 function  AdvancedSearch(props) {
 
   const [adress,setAdress] = useState()
-  const [distance,setDistance] = useState()
-  const [baseDist, setBaseDist] = useState ("5 km")
+  //const [distance,setDistance] = useState()
+  const [baseDist, setBaseDist] = useState ()
   const [changeType,setChangeType] = useState(false)
 
+// recuperation du picker depuis les reducer
+useEffect(()=>{
+  let dist = `${props.positionInfoProps.dist/1000}`
+  setBaseDist(dist)
+
+  })
+
+// Gestion adress depuis coords
 
   const isFocused = useIsFocused();
-  
-if (distance==undefined){
-  setDistance(baseDist)
-}
 
   //gestion de la liste
   let select = (filterType)=> {
+    props.changeTypeActivityPos(filterType)
 
     listTypeFromProps.map((item,i)=>{
        if (item.name==filterType){
-           item.state=item.state
+           //item.state=item.state
            listTypeFromProps[i].state = true
        }else {
          listTypeFromProps[i].state =false
@@ -39,9 +44,6 @@ if (distance==undefined){
      setChangeType(!changeType)
    }
 
-
-
-
    let listTypeFromProps =props.type
  
    let AffichageList = ()=>{
@@ -50,26 +52,22 @@ if (distance==undefined){
          return (
            <ListItem style ={styles.searchInput} onPress={()=>select(item.name)} key={i}>
               <CheckBox checked={item.state} color="green" />
-             <Text>  {item.name} </Text>
+             <Text>  {item.name} - {item.count} Activités</Text>
          </ListItem>
          )
        })
      )
    }
-   
      useEffect(()=>{
        AffichageList()
-     },[[props, isFocused]])
+     },[])
 
 
 // Gestion adress depuis coords
 useEffect(()=>{
   let lat = props.positionInfoProps.lat
   let lon = props.positionInfoProps.lon
-  let dist = props.positionInfoProps.distance
 
-
-  
     async function recupDonnée(){
       var requestBDD = await fetch(`${ip}adressesListCoord`,{
         method:"POST",
@@ -85,16 +83,38 @@ useEffect(()=>{
   },[props, isFocused])
 
 
+// Actualisation liste nature
+useEffect(()=>{
+  let lat = props.positionInfoProps.lat
+  let lon = props.positionInfoProps.lon
+  let dist = props.positionInfoProps.dist
+  let type = props.positionInfoProps.activityType
+
+  async function recupDonnée(){
+    var requestBDD = await fetch(`${ip}nature`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${type}`
+    })
+
+    var listActivityRaw = await requestBDD.json()
+      listTypeFromProps = listActivityRaw.resultFiltered
+      props.listType(listActivityRaw.resultFiltered)
+   
+  }
+  recupDonnée()
+  
+},[baseDist])
+
+
 
 
 // gestion des inputs
 
   let changeDistance = (value) => {
  //  props.setInputDist(value.nativeEvent.text)
- setBaseDist(value)
-props.positionInfo(value*1000)
-    
-    
+  setBaseDist(value)
+  props.positionInfo(value*1000)
   }
 
 
@@ -108,6 +128,7 @@ let PickerDistance = ()=> {
     selectedValue={baseDist}
     onValueChange={(value)=>changeDistance(value)}
   >
+    <Picker.Item label="1 Km" value="1" />
     <Picker.Item label="5 Km" value="5" />
     <Picker.Item label="10 Km" value="10" />
     <Picker.Item label="15 Km" value="15" />
@@ -170,9 +191,6 @@ return (
           </Card>
       </View>
   
-        <Button full onPress={()=>test()}>
-          <Text>Valider</Text>
-        </Button>
     </ScrollView>
   
   </View>
@@ -212,6 +230,9 @@ marginLeft:20,
       positionInfo: function(location) {
         dispatch( {type: 'addDistance',location:location} )
     },
+    changeTypeActivityPos: function(typeActivityToProps) {
+      dispatch( {type: 'changeTypeActivityPosition',typeActivityToProps:typeActivityToProps} )
+  },
     listType: function(listType) {
       dispatch( {type: 'changeTypeActivity',listType:listType} )
       },
