@@ -134,7 +134,7 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[])
+},[dist])
 
 
 // FILTRAGE DES RESULTATS By TYPE
@@ -234,9 +234,10 @@ if (props.positionRecupState.lat == undefined){
                   initialRegion={{
                   latitude: lat,
                   longitude:  lon,
-                  latitudeDelta: 0.005,
+                  latitudeDelta: 0.05,
                   longitudeDelta: 0.07,
-                    }}
+                  }}
+  
                   >
 
                   {markerList}
