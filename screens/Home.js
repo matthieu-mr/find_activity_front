@@ -3,7 +3,7 @@ import { StyleSheet, View,Dimensions,Text,Image  } from 'react-native';
 import MapView, {Callout} from 'react-native-maps';
 import {connect} from 'react-redux';
 import { Button, Icon, Tab, Tabs, TabHeading,Card, Body, Form,Picker,Header,Left,Title,Right,Spinner,CardItem  } from 'native-base';
-
+import { useIsFocused } from "@react-navigation/native";
 import {Marker} from 'react-native-maps';
 
 
@@ -22,16 +22,17 @@ function  Home(props) {
 const [location, setLocation] = useState(null);
 const [errorMsg, setErrorMsg] = useState(null);
 const [getLocation,setGetLocation] = useState (false)
-
+const isFocused = useIsFocused();
 // Type d'activité
 const [typeActivite,setTypeActivite] = useState () // selected by user
 
+ 
 // recup label from props
 useEffect(()=>{
   let typeValue = `${props.positionRecupState.activityType}`
-  setTypeActivite(typeValue)
-
-  })
+  console.log("change type ", typeActivite)
+  setTypeActivite(typeActivite)
+  },[isFocused])
 
 
 // Liste activité
@@ -41,6 +42,17 @@ let lat = props.positionRecupState.lat
 let lon = props.positionRecupState.lon
 let dist = props.positionRecupState.dist
 let typeFromProps = props.positionRecupState.activityType
+let afficheEcran = props.navigation.isFocused()
+const [getTypeActivity,setGetType] = useState()
+
+
+useEffect(()=>{
+
+setGetType(props.positionRecupState.activityType)
+console.log("changement type ",getTypeActivity)
+select(props.positionRecupState.activityType)
+},[afficheEcran])
+
 
 
 let [affichageList,setAffichageList] = useState(false)
@@ -48,7 +60,6 @@ let [affichageList,setAffichageList] = useState(false)
 
 // Recuperation de la localisation de l'user
 useEffect(() => {
-
 
   (async () => {  
   
@@ -93,8 +104,6 @@ useEffect(()=>{
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeFromProps}`
     })
-
-
     var listActivityRaw = await requestBDD.json()
     props.listType(listActivityRaw.resultFiltered)
     setListActivityType(listActivityRaw.resultFiltered)
@@ -112,20 +121,22 @@ useEffect(()=>{
     
     let tabRaw = item.equipementtypecode
     var tab = [...new Set(item.equipementtypecode)];
+
     var nbSite = tab.length ;
     let wordingLabel = `${type} - ${count} Activités - sur ${nbSite} sites`
 
-    return (<Picker.Item label={wordingLabel} value={type} key={i}/>)
+    return (<Picker.Item selectedValue={"test"} label={wordingLabel} value={type} key={i}/>)
   })
   
 
 // recuperation des POI 
 useEffect(()=>{
+  console.log("send listpoint",getTypeActivity)
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeActivite}`
+      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${getTypeActivity}`
     })
     var listActivityRaw = await requestBDD.json()
     setListActivity(listActivityRaw)
@@ -134,13 +145,15 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[dist])
+},[dist,getTypeActivity])
 
 
 // FILTRAGE DES RESULTATS By TYPE
 
 let select = (filterType)=> {
-    let listTypeFromProps = props.activity
+    
+  let listTypeFromProps = props.activity
+
     setTypeActivite(filterType)
     props.changeTypeActivity(filterType)
 
@@ -153,6 +166,7 @@ let select = (filterType)=> {
           return item
       }
     })
+
     props.listType(typeActivityNewArray)
 
       async function recupDonnée(){
@@ -168,6 +182,7 @@ let select = (filterType)=> {
       }
       recupDonnée()
 }
+
 
 // Affichage des markers
 let markerList
