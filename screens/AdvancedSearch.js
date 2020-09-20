@@ -39,7 +39,18 @@ useEffect(()=>{
          listTypeFromProps[i].state =false
        }
      })
-   
+     async function recupDonnée(){
+      var requestBDD = await fetch(`${ip}filteredType`,{
+        method:"POST",
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body:`lat=${props.positionInfoProps.lat}&long=${props.positionInfoProps.lon}&dist=${props.positionInfoProps.dist}&type=${filterType}`
+      })
+
+      var listActivityRaw = await requestBDD.json()
+      props.listActivity(listActivityRaw)
+    }
+    recupDonnée()
+
      props.listType(listTypeFromProps)
      setChangeType(!changeType)
    }
@@ -236,6 +247,9 @@ marginLeft:20,
     listType: function(listType) {
       dispatch( {type: 'changeTypeActivity',listType:listType} )
       },
+      listActivity: function(list) {
+        dispatch( {type: 'addList',list:list} )
+    },
     }
   }
   

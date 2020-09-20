@@ -31,21 +31,48 @@ function DrawerContent(props){
   const Screens = ({navigation}) => {
     
     return (
-    <Stack.Navigator screenOptions={{
-      headerLeft:()=>(
-        <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
-      ),
-      headerRight:()=>(
-        <Icon reverse name='ios-settings' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
-      ), 
-      headerStyle: {
-        backgroundColor: '#009387',
-      },
-      headerTintColor:'#fff',
-    }}>
-      <Stack.Screen name="Accueil" component={Home} />
-      <Stack.Screen name="ListOneActivity" component={ListOneActivity} />
-      <Stack.Screen name="ListComponent" component={ListComponent} />
+    <Stack.Navigator>
+      <Stack.Screen name="Accueil" component={Home}                  
+      options={{
+                  
+        headerLeft:()=>(
+          <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
+        ),
+        headerRight:()=>(
+                    <Icon reverse name='ios-settings' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
+                    ), 
+                  headerStyle: {
+                    backgroundColor: '#009387',
+                  },
+                  headerTintColor:'#fff',
+                      }} />
+
+
+      <Stack.Screen name="ListOneActivity" component={ListOneActivity} 
+                 options={{
+                  headerLeft:()=>(
+                    <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
+                  headerRight:()=>(
+                    <Icon  />
+                  ), 
+                  headerStyle: {
+                    backgroundColor: '#009387',
+                  },
+                  headerTintColor:'#fff',
+                      }} />
+
+      <Stack.Screen name="ListComponent" component={ListComponent} 
+                options={{
+                  headerLeft:()=>(
+                    <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
+                  headerRight:()=>(
+                    <Icon  />
+                  ), 
+                  headerStyle: {
+                    backgroundColor: '#009387',
+                  },
+                  headerTintColor:'#fff',
+                      }} />
       
       <Stack.Screen name="SearchAdress" component={SearchAdress}
           options={{
@@ -59,20 +86,36 @@ function DrawerContent(props){
             },
             headerTintColor:'#fff',
                 }} />
+
       <Stack.Screen name="Place details" component={PlaceDetail}
-          options={{
-            headerLeft:()=>(
-              <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
-              headerRight:()=>(
-              <Icon />
-            ), 
-            headerStyle: {
-              backgroundColor: '#009387',
-            },
-            headerTintColor:'#fff',
-                }}
-        />
-      <Stack.Screen name="Liste" component={ListForActivty}  />
+                 options={{
+                  headerLeft:()=>(
+                    <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
+                  headerRight:()=>(
+                    <Icon reverse name='ios-settings' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
+                    ), 
+                  headerStyle: {
+                    backgroundColor: '#009387',
+                  },
+                  headerTintColor:'#fff',
+                      }} />
+
+      <Stack.Screen name="Liste" component={ListForActivty} 
+                options={{
+                  headerLeft:()=>(
+                    <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
+                  ),
+                  headerRight:()=>(
+                    <Icon reverse name='ios-settings' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {navigation.navigate('Parametres');}}  />
+                  ), 
+                  headerStyle: {
+                    backgroundColor: '#009387',
+                  },
+                  headerTintColor:'#fff',
+                      }}
+              />
+      
+      
       <Stack.Screen name="Parametres" component={AdvancedParam} 
           options={{
             headerLeft:()=>(
@@ -113,15 +156,14 @@ function DrawerContent(props){
 const CustomDrawerContent = (props) => {
   return (
 
- 
-    <DrawerContentScrollView {...props} >
+    <DrawerContentScrollView {...props} screenOptions ={{
+      headerStyle:{
+        backgroundColor:"#5c6bc0"
+      },
+      headerTintColor:"white"
+    }} >
 
-      <DrawerItem 
-      label =""
-      labelStyle={{marginLeft:-16}}
-      onPress={()=>{props.navigation.navigate("Connection");}}
-      icon ={()=> <ConnectComponent/>}
-      />
+
 
 
     <DrawerItem 

@@ -6,35 +6,36 @@ import { Button,Item, Input, Icon,Label, Container, Tab, Tabs, TabHeading,Card, 
 
 import {Marker} from 'react-native-maps';
 
-
 import * as Location from 'expo-location';
-
 
 //import components
 import ListType from './component/ListType';
 
 
-
 function  ListOneActivity(props) {
-  let sportName = props.sport.name
+  let sportName = props.sport
   let lat = props.positionRecupState.lat
   let long = props.positionRecupState.lon
   let dist = props.positionRecupState.dist
+  let type = props.positionRecupState.type
   
- props.navigation.setOptions({ title:sportName })
 
+  props.navigation.setOptions({ title:sportName })
 
 // recuperation des types d'activite 
 useEffect(()=>{
 
   async function recupDonnée(){
 
+    console.log(`recup 1 seul sport lat=${lat}&long=${long}&dist=${dist}&sport=${sportName}`)
+    
     var requestBDD = await fetch(`${ip}sport`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${long}&dist=${dist}&sport=${sportName}`
+      body:`lat=${lat}&long=${long}&dist=${dist}&sport=${sportName}&type=${type}`
     })
     var listSportRaw = await requestBDD.json()
+    console.log(listSportRaw)
     props.listActivity(listSportRaw)
   }
   recupDonnée()

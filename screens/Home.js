@@ -4,6 +4,8 @@ import MapView, {Callout} from 'react-native-maps';
 import {connect} from 'react-redux';
 import { Button, Icon, Tab, Tabs, TabHeading,Card, Body, Form,Picker,Header,Left,Title,Right,Spinner,CardItem  } from 'native-base';
 import { useIsFocused } from "@react-navigation/native";
+
+
 import {Marker} from 'react-native-maps';
 
 
@@ -22,18 +24,11 @@ function  Home(props) {
 const [location, setLocation] = useState(null);
 const [errorMsg, setErrorMsg] = useState(null);
 const [getLocation,setGetLocation] = useState (false)
-const isFocused = useIsFocused();
+
 // Type d'activité
 const [typeActivite,setTypeActivite] = useState () // selected by user
 
- 
-// recup label from props
-useEffect(()=>{
-  let typeValue = `${props.positionRecupState.activityType}`
-  console.log("change type ", typeActivite)
-  setTypeActivite(typeActivite)
-  },[isFocused])
-
+const isFocused = useIsFocused();
 
 // Liste activité
 const [listActivity, setListActivity] = useState([])
@@ -42,21 +37,15 @@ let lat = props.positionRecupState.lat
 let lon = props.positionRecupState.lon
 let dist = props.positionRecupState.dist
 let typeFromProps = props.positionRecupState.activityType
-let afficheEcran = props.navigation.isFocused()
-const [getTypeActivity,setGetType] = useState()
-
 
 useEffect(()=>{
-
-setGetType(props.positionRecupState.activityType)
-console.log("changement type ",getTypeActivity)
-select(props.positionRecupState.activityType)
-},[afficheEcran])
-
+  let typeValue = `${props.positionRecupState.activityType}`
+  setTypeActivite(typeValue)
+  },[isFocused])
 
 
 let [affichageList,setAffichageList] = useState(false)
-
+const [typeActiviteProps,setTypeActiviteProps] = useState (typeFromProps) // selected by user
 
 // Recuperation de la localisation de l'user
 useEffect(() => {
@@ -72,7 +61,7 @@ useEffect(() => {
     let coords = {
       lat :location.coords.latitude,
       lon :location.coords.longitude,
-      dist:1000,
+      dist:'1000',
       typeDist:"auto",
       activityType:'Toutes'
     }
@@ -104,6 +93,8 @@ useEffect(()=>{
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeFromProps}`
     })
+
+
     var listActivityRaw = await requestBDD.json()
     props.listType(listActivityRaw.resultFiltered)
     setListActivityType(listActivityRaw.resultFiltered)
@@ -121,22 +112,23 @@ useEffect(()=>{
     
     let tabRaw = item.equipementtypecode
     var tab = [...new Set(item.equipementtypecode)];
-
     var nbSite = tab.length ;
     let wordingLabel = `${type} - ${count} Activités - sur ${nbSite} sites`
 
-    return (<Picker.Item selectedValue={"test"} label={wordingLabel} value={type} key={i}/>)
+    return (<Picker.Item label={wordingLabel} value={type} key={i}/>)
   })
+  
+
   
 
 // recuperation des POI 
 useEffect(()=>{
-  console.log("send listpoint",getTypeActivity)
+
   async function recupDonnée(){
-    var requestBDD = await fetch(`${ip}listpoint`,{
+    var requestBDD = await fetch(`${ip}filteredType`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${getTypeActivity}`
+      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeFromProps}`
     })
     var listActivityRaw = await requestBDD.json()
     setListActivity(listActivityRaw)
@@ -145,15 +137,13 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[dist,getTypeActivity])
+},[lat,dist])
 
 
 // FILTRAGE DES RESULTATS By TYPE
 
 let select = (filterType)=> {
-    
-  let listTypeFromProps = props.activity
-
+    let listTypeFromProps = props.activity
     setTypeActivite(filterType)
     props.changeTypeActivity(filterType)
 
@@ -166,9 +156,7 @@ let select = (filterType)=> {
           return item
       }
     })
-
     props.listType(typeActivityNewArray)
-
       async function recupDonnée(){
         var requestBDD = await fetch(`${ip}filteredType`,{
           method:"POST",
@@ -182,7 +170,6 @@ let select = (filterType)=> {
       }
       recupDonnée()
 }
-
 
 // Affichage des markers
 let markerList
@@ -249,7 +236,7 @@ if (props.positionRecupState.lat == undefined){
                   initialRegion={{
                   latitude: lat,
                   longitude:  lon,
-                  latitudeDelta: 0.05,
+                  latitudeDelta: 0.07,
                   longitudeDelta: 0.07,
                   }}
   

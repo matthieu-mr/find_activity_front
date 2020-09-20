@@ -14,6 +14,8 @@ import * as Location from 'expo-location';
 
 function ListType(props) {
   const navigation = useNavigation();
+
+
   let listRaw =props.listActivity.list.result
   let lastName
 

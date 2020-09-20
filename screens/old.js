@@ -1,13 +1,11 @@
 import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View,Dimensions,Text,Image,Share  } from 'react-native';
-import { WebView } from 'react-native-webview';
-import * as WebBrowser from 'expo-web-browser';
-import * as Linking from 'expo-linking';
-import { Ionicons } from '@expo/vector-icons';
-
+import { StyleSheet, View,Dimensions,Text  } from 'react-native';
 import {connect} from 'react-redux';
-import {Card,CardItem,Left,Thumbnail,Body,Button,Icon,Right,List,ListItem,Badge} from 'native-base';
 
+import { List,Item,itemDivider,ListItem,Right,Icon,Header,Input,Button, Fab } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 
 import * as Location from 'expo-location';
@@ -15,316 +13,173 @@ import * as Location from 'expo-location';
 
 //import components
 import { ScrollView } from 'react-native-gesture-handler';
+import ListType from './component/ListType'
 
 
+function  ListForActivity(props) {
 
-function  PlaceDetail(props) {
+ //let navigation=props.navigation
+
+const [listSport,setListSport] = useState([])
+const [searchHeader, setSearchHeader] = useState(false)
 
 
-const [infoPlaces,setInfoPlace]= useState ({
-    "responseDetail": {
-        "html_attributions": [],
-        "result": {
-            "address_components": [
-                {
-                    "long_name": "23",
-                    "short_name": "23",
-                    "types": [
-                        "street_number"
-                    ]
-                },
-                {
-                    "long_name": "Avenue Junot",
-                    "short_name": "Avenue Junot",
-                    "types": [
-                        "route"
-                    ]
-                },
-                {
-                    "long_name": "Paris",
-                    "short_name": "Paris",
-                    "types": [
-                        "locality",
-                        "political"
-                    ]
-                },
-                {
-                    "long_name": "Arrondissement de Paris",
-                    "short_name": "Arrondissement de Paris",
-                    "types": [
-                        "administrative_area_level_2",
-                        "political"
-                    ]
-                },
-                {
-                    "long_name": "Île-de-France",
-                    "short_name": "IDF",
-                    "types": [
-                        "administrative_area_level_1",
-                        "political"
-                    ]
-                },
-                {
-                    "long_name": "France",
-                    "short_name": "FR",
-                    "types": [
-                        "country",
-                        "political"
-                    ]
-                },
-                {
-                    "long_name": "75018",
-                    "short_name": "75018",
-                    "types": [
-                        "postal_code"
-                    ]
-                }
-            ],
-            "adr_address": "<span class=\"street-address\">23 Avenue Junot</span>, <span class=\"postal-code\">75018</span> <span class=\"locality\">Paris</span>, <span class=\"country-name\">France</span>",
-            "business_status": "OPERATIONAL",
-            "formatted_address": "23 Avenue Junot, 75018 Paris, France",
-            "geometry": {
-                "location": {
-                    "lat": 48.8882439,
-                    "lng": 2.3354995
-                },
-                "viewport": {
-                    "northeast": {
-                        "lat": 48.8896215302915,
-                        "lng": 2.336916980291502
-                    },
-                    "southwest": {
-                        "lat": 48.8869235697085,
-                        "lng": 2.334219019708498
-                    }
-                }
-            },
-            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
-            "name": "CLAP - Club Lepic Abbesses Pétanque",
-            "photos": [
-                {
-                    "height": 2448,
-                    "html_attributions": [
-                        "<a href=\"https://maps.google.com/maps/contrib/107892677513730583522\">Nicolas Jammes</a>"
-                    ],
-                    "photo_reference": "CmRaAAAAJmTKnGcwBRBtQJ-dfInOUzjIRi9ASOmcX95Jr-Kt3MEeSD-U9sgbaZMyVdSRe7rEzpWNUjZCCtkcCHTuyr2HM_Qc0_eyHkecxMCxiRx7EpBYeheF4r0q_y0dhPlHSafIEhDYC6UMf8n7vTJXYDHw0N5mGhTHyPNIYRBeHjkouTdA97Es743DAg",
-                    "width": 3264
-                }
-            ],
-            "place_id": "ChIJf6TA2W5v5kcRw7ro2f93sm4",
-            "rating": 4.7,
-            "reviews": [
-                {
-                    "author_name": "Santos D-S-G",
-                    "author_url": "https://www.google.com/maps/contrib/103085080435343602135/reviews",
-                    "language": "fr",
-                    "profile_photo_url": "https://lh4.ggpht.com/-emIRX2KB3Z0/AAAAAAAAAAI/AAAAAAAAAAA/OiMXIq7A3tg/s128-c0x00000000-cc-rp-mo-ba5/photo.jpg",
-                    "rating": 4,
-                    "relative_time_description": "9 months ago",
-                    "text": "J'y vais entant qu'invité par des amis membre du Clap. Un pur dépaysement en plein Paris. Lieu très convivial . Vive la commune de Montmartre.",
-                    "time": 1572974914
-                },
-                {
-                    "author_name": "Jérôme Del Toso",
-                    "author_url": "https://www.google.com/maps/contrib/114053926856878612270/reviews",
-                    "profile_photo_url": "https://lh3.ggpht.com/-zJ8hR7OjPk4/AAAAAAAAAAI/AAAAAAAAAAA/Gy0MYzHV4s8/s128-c0x00000000-cc-rp-mo/photo.jpg",
-                    "rating": 5,
-                    "relative_time_description": "6 months ago",
-                    "text": "",
-                    "time": 1579475175
-                },
-                {
-                    "author_name": "Deep Sounddj",
-                    "author_url": "https://www.google.com/maps/contrib/113629236454484232931/reviews",
-                    "profile_photo_url": "https://lh5.ggpht.com/-yXIzXYxJtGk/AAAAAAAAAAI/AAAAAAAAAAA/jZJTAAtw_zI/s128-c0x00000000-cc-rp-mo-ba5/photo.jpg",
-                    "rating": 5,
-                    "relative_time_description": "a year ago",
-                    "text": "",
-                    "time": 1564687922
-                }
-            ],
-            "user_ratings_total": 3,
-            "website": "http://www.clap-montmartre.fr/"
-        },
-        "status": "OK"
-    }
-})
+let latitude = props.positionRecupState.lat
+let longitude = props.positionRecupState.lon
+let distance = props.positionRecupState.dist
+let type = props.positionRecupState.activityType
 
-// recuperation des POI 
+
+// recuperation des types d'activite 
 useEffect(()=>{
-
-
-  let lat =  props.detailProps.lat
-  let lon = props.detailProps.long
-  let name =  props.detailProps.name
-
+  
   async function recupDonnée(){
-    var requestBDD = await fetch(`${ip}pointinformation`,{
+    var requestBDD = await fetch(`${ip}sportlist`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&name=${name}`
+      body:`lat=${latitude}&long=${longitude}&dist=${distance}&type=${type}`
     })
-    var placeRaw = await requestBDD.json()
-   // setInfoPlace(placeRaw)
+    var listSportRaw = await requestBDD.json()
+
+    var listSport =listSportRaw.result
+
+    setListSport(listSport)   
   }
   recupDonnée()
   
 },[])
 
 
+const[search,setSearch]=useState("")
 
-let adressPlace = infoPlaces.responseDetail.result.formatted_address
-let iconPlace =infoPlaces.responseDetail.result.icon
-let namePlace = infoPlaces.responseDetail.result.name
-let photoId = infoPlaces.responseDetail.result.photos[0].photo_reference
-let notePlace = infoPlaces.responseDetail.result.rating
-let commentPlace = infoPlaces.responseDetail.result.reviews
-let websitePlace =infoPlaces.responseDetail.result.website
-let latitudePlace =infoPlaces.responseDetail.result.geometry.location.lat
-let longitudePlace =infoPlaces.responseDetail.result.geometry.location.lng
-let idPlace = infoPlaces.responseDetail.result.place_id
+let filteredList=[] ;
+
+/*  waiting for array playlist initialisation */
+   if(listSport){
+       filteredList= listSport.filter(function(item) {
+        //applying filter for the inserted text in search bar
+        
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = search.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        });
+
+   }else{
+       return (
+         <Text>Waitting</Text>
+       )
+   }
+ 
+  // Reset filtered search
+ let resetSearch =()=>{
+  setSearch("")
+  filteredList = listSport ;
+ }  
 
 
-let photoPlace = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoId}&key=AIzaSyCXI24AWr0Cv2AXnbh29nVA9Ge7SPIvYBo`
+let affichageHeader=()=>{
+  if(searchHeader){
+    headerSearchInput = (
+      <Header searchBar rounded style={{backgroundColor:"#009387" }}>
+        <Item>
+          <Icon name="ios-search" />
+          <Input placeholder="Rechercher" 
+          onChangeText={(value) => setSearch(value)}
+          />
+          <Icon name="ios-close" onPress={() => resetSearch()}/>
+        </Item>
+      </Header>
+    )
+  }
+}
+
+let headerSearchInput
 
 
+// FILTRAGE DES RESULTATS
+let lettreComparaison ="";
 
-let commentArray = commentPlace.map((item,i)=>{
+affichageHeader()
+//Afichage de la liste comparaison premiere lettre
+let typeActivityArray = filteredList.map((item,i)=>{
 
-    let name=item.author_name
-    let picture =item.profile_photo_url
-    let rating = item.rating
-    let time = item.relative_time_description
-    let comment = item.text
+  let wordingNb = `Nombre de lieux trouvés : ${item.count}`
 
- // Add comment to page
-    return (
-        <List key={i}>
-        <ListItem avatar>
-          <Left>
-            <Thumbnail source={{ uri: `${picture}` }} />
-          </Left>
-          <Body>
-        <Text>{name}</Text>
-            <Text note>{comment}</Text>
-            <Text note>{time}</Text>
-          </Body>
-          <Right>
-    <Text note> note : {rating}</Text>
-          </Right>
-        </ListItem>
-      </List>
-    ) 
-  });
+  if(item.count == 1 ){
+    wordingNb = `Nombre de lieu trouvé : ${item.count}`
+  }
+
+
+  if (lettreComparaison === item.name[0] ){
+
+    return (  
+    <ListItem onPress={() => redirect({item})} key={i}>
+         <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
+              <View style={{flex:1}}>
+                  <Text style={styles.textTitle}>{item.name}</Text>
+                  <Text>{wordingNb}</Text>
+              </View>
+          <View> 
+              <Right>
+                  <Icon name="arrow-forward" />
+              </Right>
+           </View>
+        </View>
+    </ListItem>
+    )
+  }else {
+    lettreComparaison = item.name[0] 
+    return ( 
+      <View>
+      <ListItem itemDivider style={{ borderBottomWidth:2 }} key={100*i}>
+        <Text style={{ fontWeight: "600",fontSize:22}}>{item.name[0] }</Text>
+      </ListItem>
+
+      <ListItem onPress={() => redirect({item})}>
+
+      <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
+              <View style={{flex:1}}>
+                  <Text style={styles.textTitle}>{item.name}</Text>
+                  <Text>{wordingNb}</Text>
+              </View>
+          <View> 
+              <Right>
+                  <Icon name="arrow-forward" />
+              </Right>
+           </View>
+        </View>
+      </ListItem>
+      </View>
+    )
+  }
+});
+
+
+let redirect = (item) => {
+   props.sportName(item.item.name)
+   let title = item.item.name
+   props.navigation.navigate('ListOneActivity')}
   
-
-const [navWeb,setNavWeb] = useState(null)
-
-//ajout webview
-let webSite = async()=>{
-    let result = await WebBrowser.openBrowserAsync(websitePlace);
-    setNavWeb(result)
-}
-
-let mapItineraire = async()=>{
-    let latitude = 48.86701
-    let longitude = 2.35399
-    let encodedName = encodeURI(namePlace)
-    let test="https://www.google.com/maps/dir/?api=1&destination_place_id=ChIJISz8NjyuEmsRFTQ9Iw7Ear8&travelmode=walking"
-    
-    let url =`https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${encodedName}&destination_place_id=${idPlace}8&travelmode=walking`
-
-    
-    let result = await WebBrowser.openBrowserAsync(url);
-    setNavWeb(result)
-
-}
-
-// add share option
-const share = async () => {
-    try {
-      const result = await Share.share({
-        message:
-          `${nom} situé à l'adresse : ${adressPlace} `,
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
   return (
+  <View style={styles.containerAll}>
+    <View>
+      {headerSearchInput}
+    </View>
 
- <View style={{backgroundColor:"white"}}>
-     <ScrollView>
-    <Card>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{uri: `${iconPlace}`}} />
-                <Body>
-                    <Text>{namePlace}</Text>
-                    <Text note>{adressPlace}</Text>
-                    <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
-                        <Badge style={{ backgroundColor: 'black' }}>
-                            <Text style={{ color: 'white' }}>Salle danse</Text>
-                        </Badge>
+    <ScrollView>
+      <List>
+        {typeActivityArray}
+      </List>
+    </ScrollView>
 
-                        <Badge style={{ backgroundColor: 'black' }}>
-                            <Text style={{ color: 'white' }}>errain couvert</Text>
-                        </Badge>
-                    </View>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody>
-            <Image source={{uri: `${photoPlace}`}} style={{height: 200, width: null, flex: 1}}/>
-            </CardItem>
-            <CardItem>
-              <Body>
-
-            <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around"}}>
-
-                <Button transparent  onPress={() => {alert('You tapped the button!');}}>
-                <Ionicons name="md-star" size={22} color="yellow" />
-                  <Text>{notePlace}</Text>
-                </Button>
-
-                <Button transparent onPress={() => {webSite();}}>
-                <Ionicons name="md-globe" size={22} color="green" />
-                  <Text> Site internet</Text>
-                </Button>
-
-                  <Button transparent onPress={() => {share();}}>
-                  <Ionicons name="md-share" size={22} color="green" />
-                  <Text> Partager</Text>
-                </Button>
-
-
-
-                <Button transparent onPress={() => {mapItineraire();}}> 
-                <Ionicons name="md-navigate" size={22} color="green" />
-                  <Text> Aller</Text>
-                </Button>
-
-                </View>
-
-              </Body>
-
-            </CardItem>
-          </Card>
-
-        {commentArray}
-
-
-</ScrollView>
+    <Fab
+            direction="up"
+            containerStyle={{ }}
+            style={{ backgroundColor: "#009387"  }}
+            position="bottomRight"
+            onPress={() => setSearchHeader(!searchHeader)}>
+            <Icon name="search" />
+          </Fab>
 
 </View>
 
@@ -337,41 +192,34 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#fff', 
   },
-  searchField:{
-    flex:1,
-    flexDirection:"row",
-    justifyContent:"center",
-  },
-  adressField:{
-    flex:1
-  },
-  distanceField:{
-    flex:1
+  textTitle:{
+    fontSize:20
   }
+
 })
 
 
 function mapStateToProps(state) {
-  return { position: state.position,detailProps:state.infoPlace }
+  return { positionRecupState: state.positionInfo }
 }
+
 
 function mapDispatchToProps(dispatch) {
   return {
-    position: function(location) {
-        dispatch( {type: 'addPosition',location:location} )
+    sportName: function(name) {
+        dispatch( {type: 'addName',name:name} )
     },
-    listActivity: function(list) {
-      dispatch( {type: 'addList',list:list} )
-  }
   }
 }
-
 
 
 export default connect(
   mapStateToProps, 
   mapDispatchToProps
-)(PlaceDetail);
+)(ListForActivity);
 
 
-//export default Home
+
+
+
+//export default ListForActivity
