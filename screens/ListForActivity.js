@@ -21,18 +21,26 @@ function  ListForActivity(props) {
  //let navigation=props.navigation
 
 const [listSport,setListSport] = useState([])
-const [nBSport,setNbSport ] =useState([])
-const [searchHeader, setSearchHeader] = useState(true)
+const [searchHeader, setSearchHeader] = useState(false)
 const[search,setSearch]=useState("")
 
 let latitude = props.positionRecupState.lat
 let longitude = props.positionRecupState.lon
 let distance = props.positionRecupState.dist
-let type = props.positionRecupState.activityType
+let type = "Toutes"
+let typeListActivity =props.listTypeFromState
+
 
 // recuperation des types d'activite 
 useEffect(()=>{
-  
+  let type
+
+  typeListActivity.map((item)=>{
+    if (item.state == true){
+      type=item.name
+    }
+  })
+
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}sportlist`,{
       method:"POST",
@@ -41,15 +49,14 @@ useEffect(()=>{
     })
     var listSportRaw = await requestBDD.json()
 
-    var listSport =listSportRaw.result
     var listSportNb = listSportRaw.resultat
+    setListSport(listSportNb)
+
     
-    setListSport(listSport)
-    setNbSport(listSportNb)
   }
   recupDonnée()
   
-},[])
+},[typeListActivity,distance,type])
 
 let headerSearchInput
 let filteredList=[] ;
@@ -60,13 +67,11 @@ let lettreComparaison ="";
 
 // redirection vers liste
 let redirect = (item) => {
-  props.sportName(item.item.fields.actlib)
-   let title = item.item.fields.actlib
+  props.sportName(item.item.name)
+  // let title = item.item.name
+   console.log(item.item.name)
   props.navigation.navigate('ListOneActivity')
 }
-
-
-
 
 
 // search function
@@ -100,7 +105,7 @@ if(listSport){
   filteredList= listSport.filter(function(item) {
     
    //applying filter for the inserted text in search bar   
-   const itemData = item.fields.actlib ? item.fields.actlib.toUpperCase() : ''.toUpperCase();
+   const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
    const textData = search.toUpperCase();
    return itemData.indexOf(textData) > -1;
    });
@@ -113,13 +118,13 @@ if(listSport){
 
 let typeActivityArray = filteredList.map((item,i)=>{
 
-  if (lettreComparaison === item.fields.actlib[0] ){
+  if (lettreComparaison === item.name[0] ){
     return (  
     <ListItem onPress={() => redirect({item})} key={i}>
          <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
               <View style={{flex:1}}>
-                  <Text style={styles.textTitle}>{item.fields.actlib}</Text>
-                  <Text>{wordingNb}</Text>
+                  <Text style={styles.textTitle}>{item.name}</Text>
+                  <Text>wordingNb</Text>
               </View>
           <View> 
               <Right>
@@ -130,29 +135,22 @@ let typeActivityArray = filteredList.map((item,i)=>{
     </ListItem>
     )
   }else {
-      lettreComparaison = item.fields.actlib[0] 
+      lettreComparaison = item.name[0] 
       let nbsite 
 
-      nBSport.map((site)=>{
-        console.log(site)
-
-        if (site.name ==item.fields.actlib ) {
-          nbsite = site.count
-        }
-      })
 
     return ( 
       <View>
       <ListItem itemDivider style={{ borderBottomWidth:2 }} key={100*i}>
-        <Text style={{ fontWeight: "600",fontSize:22}}>{item.fields.actlib[0] }</Text>
+        <Text style={{ fontWeight: "600",fontSize:22}}>{item.name[0] }</Text>
       </ListItem>
 
       <ListItem onPress={() => redirect({item})}>
 
       <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
               <View style={{flex:1}}>
-                  <Text style={styles.textTitle}>{item.fields.actlib}</Text>
-                  <Text>Nombre de site trouvé(s) : {nbsite} </Text>
+                  <Text style={styles.textTitle}>{item.name}</Text>
+                  <Text>Nombre de site trouvé(s) : {item.count} </Text>
               </View>
           <View> 
               <Right>
@@ -210,7 +208,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { positionRecupState: state.positionInfo }
+  return { positionRecupState: state.positionInfo,listTypeFromState:state.listType }
 }
 
 

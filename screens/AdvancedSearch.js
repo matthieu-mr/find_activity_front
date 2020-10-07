@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import { useIsFocused } from "@react-navigation/native";
 
 import { Button, Icon,Card,CardItem,Body,ListItem,CheckBox,Input,Picker  } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -11,73 +12,19 @@ import * as Location from 'expo-location';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 function  AdvancedSearch(props) {
 
-  const [adress,setAdress] = useState()
-  //const [distance,setDistance] = useState()
-  const [baseDist, setBaseDist] = useState ()
-  const [changeType,setChangeType] = useState(false)
+  const navigation = useNavigation();
 
-// recuperation du picker depuis les reducer
-useEffect(()=>{
-  let dist = `${props.positionInfoProps.dist/1000}`
-  setBaseDist(dist)
-
-  })
-
-// Gestion adress depuis coords
-
-  const isFocused = useIsFocused();
-
-  //gestion de la liste
-  let select = (filterType)=> {
-    props.changeTypeActivityPos(filterType)
-
-    listTypeFromProps.map((item,i)=>{
-       if (item.name==filterType){
-           //item.state=item.state
-           listTypeFromProps[i].state = true
-       }else {
-         listTypeFromProps[i].state =false
-       }
-     })
-     async function recupDonnée(){
-      var requestBDD = await fetch(`${ip}filteredType`,{
-        method:"POST",
-        headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body:`lat=${props.positionInfoProps.lat}&long=${props.positionInfoProps.lon}&dist=${props.positionInfoProps.dist}&type=${filterType}`
-      })
-
-      var listActivityRaw = await requestBDD.json()
-      props.listActivity(listActivityRaw)
-    }
-    recupDonnée()
-
-     props.listType(listTypeFromProps)
-     setChangeType(!changeType)
-   }
-
-   let listTypeFromProps =props.type
- 
-   let AffichageList = ()=>{
-     return (
-       listTypeFromProps.map((item,i)=>{
-         return (
-           <ListItem style ={styles.searchInput} onPress={()=>select(item.name)} key={i}>
-              <CheckBox checked={item.state} color="green" />
-             <Text>  {item.name} - {item.count} Activités</Text>
-         </ListItem>
-         )
-       })
-     )
-   }
-     useEffect(()=>{
-       AffichageList()
-     },[])
-
-
-// Gestion adress depuis coords
-useEffect(()=>{
   let lat = props.positionInfoProps.lat
   let lon = props.positionInfoProps.lon
+  let dist = props.positionInfoProps.dist
+  let type = props.positionInfoProps.activityType
+  let listTypeActivity = props.listTypeFromState 
+  
+  const [adress,setAdress] = useState()
+  const [distance,setDistance] = useState(dist)
+
+// Gestion adress depuis coords
+useEffect(()=>{
 
     async function recupDonnée(){
       var requestBDD = await fetch(`${ip}adressesListCoord`,{
@@ -91,42 +38,43 @@ useEffect(()=>{
     }
     recupDonnée()
     
-  },[props, isFocused])
+  },[])
 
+  let selectTypeActivity =(value)=>{
+    let typeActivityNewArray =[...listTypeActivity]
 
-// Actualisation liste nature
-useEffect(()=>{
-  let lat = props.positionInfoProps.lat
-  let lon = props.positionInfoProps.lon
-  let dist = props.positionInfoProps.dist
-  let type = props.positionInfoProps.activityType
-
-  async function recupDonnée(){
-    var requestBDD = await fetch(`${ip}nature`,{
-      method:"POST",
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${type}`
+    typeActivityNewArray.map((item,i)=> {      
+      if(item.name == value ){
+        item.state = true
+      }else{
+        item.state = false
+      }
+      
     })
-
-    var listActivityRaw = await requestBDD.json()
-      listTypeFromProps = listActivityRaw.resultFiltered
-      props.listType(listActivityRaw.resultFiltered)
-   
+    props.addListType(typeActivityNewArray)
   }
-  recupDonnée()
+
+
+  let AffichageList = listTypeActivity.map((item,i)=> {
+  return (
+    <ListItem style ={styles.searchInput} onPress={()=>selectTypeActivity(item.name)} key={i}>
+       <CheckBox checked={item.state} color="green" />
+      <Text>  {item.name} - {item.count} Activités sur {item.nbSite} site(s) </Text>
+  </ListItem>
+  )
+})
+
+
+ 
+
   
-},[baseDist])
 
-
-
+let changeDistance =async (value) => {
+  props.positionInfo(value)
+  setDistance(value)
+  }
 
 // gestion des inputs
-
-  let changeDistance = (value) => {
- //  props.setInputDist(value.nativeEvent.text)
-  setBaseDist(value)
-  props.positionInfo(value*1000)
-  }
 
 
 let PickerDistance = ()=> { 
@@ -136,45 +84,50 @@ let PickerDistance = ()=> {
     iosHeader="Distance autour de vous"
     iosIcon={<Icon name="arrow-down" />}
     style={{ width: undefined }}
-    selectedValue={baseDist}
+    selectedValue={distance}
     onValueChange={(value)=>changeDistance(value)}
   >
-    <Picker.Item label="1 Km" value="1" />
-    <Picker.Item label="5 Km" value="5" />
-    <Picker.Item label="10 Km" value="10" />
-    <Picker.Item label="15 Km" value="15" />
-    <Picker.Item label="30 Km" value="30" />
-    <Picker.Item label="50 Km" value="50" />
-    <Picker.Item label="100 Km" value="100" />
+    <Picker.Item label="1 Km" value="1000" />
+    <Picker.Item label="5 Km" value="5000" />
+    <Picker.Item label="10 Km" value="10000" />
+    <Picker.Item label="15 Km" value="15000" />
+    <Picker.Item label="30 Km" value="30000" />
+    <Picker.Item label="50 Km" value="50000" />
+    <Picker.Item label="100 Km" value="100000" />
   </Picker>
   )
 }
 
+
+
+
+
 let AffichageHeader = () => {
 return (
   <CardItem bordered>
-                     <Body>
-                  
-                       <View style={styles.searchInput}>
-                        <Text style={styles.labelSearch}>Adresse</Text>
-                        <TouchableOpacity onPress ={()=> {props.navigation.navigate('SearchAdress');}}>
-                        <ListItem>
-                        <Icon active type="FontAwesome" name="map-marker" />
-                            <Text style={styles.inputText}>{adress}</Text>
-                          </ListItem>
-                        </TouchableOpacity>
-                      </View>
+    <Body>
 
-                      <View style={styles.searchInput}>
-                          <Text style={styles.labelSearch}>Rayon de recherche (km) </Text>
-                          <ListItem>
-                              <PickerDistance/>
-                          </ListItem>
-                        </View>
-                        
-                    </Body>
-                  </CardItem>
-            )
+      <View style={styles.searchInput}>
+        <Text style={styles.labelSearch}>Adresse</Text>
+          <TouchableOpacity onPress ={()=> {props.navigation.navigate('SearchAdress');}}>
+            <ListItem>
+              <Icon active type="FontAwesome" name="map-marker" />
+              <Text style={styles.inputText}>{adress}</Text>
+            </ListItem>
+          </TouchableOpacity>
+        </View>
+
+              <View style={styles.searchInput}>
+              <Text style={styles.labelSearch}>Rayon de recherche (km) </Text>
+            <ListItem>
+
+          <PickerDistance/>
+        </ListItem>
+      </View>
+
+    </Body>
+  </CardItem>
+  )
 }
 
 
@@ -196,7 +149,7 @@ return (
                 </CardItem>
                   <CardItem>
                     <Body>
-                      <AffichageList/>
+                      {AffichageList}
                     </Body>
                   </CardItem>
           </Card>
@@ -233,7 +186,7 @@ marginLeft:20,
 })
   
   function mapStateToProps(state) {
-    return { positionInfoProps: state.positionInfo,type:state.listType }
+    return { positionInfoProps: state.positionInfo,listTypeFromState:state.listType }
   }
   
   function mapDispatchToProps(dispatch) {
@@ -241,11 +194,8 @@ marginLeft:20,
       positionInfo: function(location) {
         dispatch( {type: 'addDistance',location:location} )
     },
-    changeTypeActivityPos: function(typeActivityToProps) {
-      dispatch( {type: 'changeTypeActivityPosition',typeActivityToProps:typeActivityToProps} )
-  },
-    listType: function(listType) {
-      dispatch( {type: 'changeTypeActivity',listType:listType} )
+    addListType: function(listType) {
+      dispatch( {type: 'addTypeActivity',listType:listType} )
       },
       listActivity: function(list) {
         dispatch( {type: 'addList',list:list} )

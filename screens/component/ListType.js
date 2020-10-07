@@ -14,9 +14,8 @@ import * as Location from 'expo-location';
 
 function ListType(props) {
   const navigation = useNavigation();
+  let listRaw =props.listActivity
 
-
-  let listRaw =props.listActivity.list.result
   let lastName
 
 let listArray = listRaw.map((item,i)=>{
@@ -41,13 +40,12 @@ let goPlaceDetails = (name,lat,lon) => {
   
 }
 
-
-if (lastName != name){
+if (lastName != name ){
   
   lastName = name
 
   return (
-    <View >
+    <View key={i}>
       <Card transparent key={i} >
         <CardItem button onPress={() => {goPlaceDetails(name,lat, lon,item);}}>
           <View>
@@ -95,7 +93,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { listActivity: state.listActivity,}
+  return { listActivity: state.listActivity}
 }
 
 function mapDispatchToProps(dispatch) {

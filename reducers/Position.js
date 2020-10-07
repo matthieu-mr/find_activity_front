@@ -2,14 +2,14 @@ export default function(position = "", action) {
     
     if(action.type == 'addPosition') {  
      let newPosition =action.location
-  
       return newPosition;
 
     }
     else if (action.type=== 'addDistance'){
-      position.dist = action.location
-      position.typeDist="manuel"
-      return position;
+      let newPosition = {...position}
+      newPosition.dist = action.location
+      newPosition.typeDist="manuel"
+      return newPosition;
     } 
     
    else if (action.type == 'addManualAdress'){

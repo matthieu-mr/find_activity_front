@@ -21,14 +21,14 @@ function  ListForActivity(props) {
  //let navigation=props.navigation
 
 const [listSport,setListSport] = useState([])
+const [nBSport,setNbSport ] =useState([])
 const [searchHeader, setSearchHeader] = useState(false)
-
+const[search,setSearch]=useState("")
 
 let latitude = props.positionRecupState.lat
 let longitude = props.positionRecupState.lon
 let distance = props.positionRecupState.dist
 let type = props.positionRecupState.activityType
-
 
 // recuperation des types d'activite 
 useEffect(()=>{
@@ -42,41 +42,34 @@ useEffect(()=>{
     var listSportRaw = await requestBDD.json()
 
     var listSport =listSportRaw.result
-
-    setListSport(listSport)   
+    var listSportNb = listSportRaw.resultat
+    
+    setListSport(listSport)
+    setNbSport(listSportNb)
   }
   recupDonnée()
   
 },[])
 
-
-const[search,setSearch]=useState("")
-
+let headerSearchInput
 let filteredList=[] ;
-
-/*  waiting for array playlist initialisation */
-   if(listSport){
-       filteredList= listSport.filter(function(item) {
-        //applying filter for the inserted text in search bar
-        
-        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
-        const textData = search.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-        });
-
-   }else{
-       return (
-         <Text>Waitting</Text>
-       )
-   }
- 
-  // Reset filtered search
- let resetSearch =()=>{
-  setSearch("")
-  filteredList = listSport ;
- }  
+// FILTRAGE DES RESULTATS
+let lettreComparaison ="";
 
 
+
+// redirection vers liste
+let redirect = (item) => {
+  props.sportName(item.item.fields.actlib)
+   let title = item.item.fields.actlib
+  props.navigation.navigate('ListOneActivity')
+}
+
+
+
+
+
+// search function
 let affichageHeader=()=>{
   if(searchHeader){
     headerSearchInput = (
@@ -92,31 +85,40 @@ let affichageHeader=()=>{
     )
   }
 }
-
-let headerSearchInput
-
-
-// FILTRAGE DES RESULTATS
-let lettreComparaison ="";
-
 affichageHeader()
-//Afichage de la liste comparaison premiere lettre
+
+  // Reset filtered search
+  let resetSearch =()=>{
+    setSearch("")
+    filteredList = listSport ;
+   }  
+  
+/*  waiting for array playlist initialisation */
+
+if(listSport){
+
+  filteredList= listSport.filter(function(item) {
+    
+   //applying filter for the inserted text in search bar   
+   const itemData = item.fields.actlib ? item.fields.actlib.toUpperCase() : ''.toUpperCase();
+   const textData = search.toUpperCase();
+   return itemData.indexOf(textData) > -1;
+   });
+
+}else{
+  return (
+    <Text>Waitting</Text>
+  )
+}
+
 let typeActivityArray = filteredList.map((item,i)=>{
 
-  let wordingNb = `Nombre de lieux trouvés : ${item.count}`
-
-  if(item.count == 1 ){
-    wordingNb = `Nombre de lieu trouvé : ${item.count}`
-  }
-
-
-  if (lettreComparaison === item.name[0] ){
-
+  if (lettreComparaison === item.fields.actlib[0] ){
     return (  
     <ListItem onPress={() => redirect({item})} key={i}>
          <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
               <View style={{flex:1}}>
-                  <Text style={styles.textTitle}>{item.name}</Text>
+                  <Text style={styles.textTitle}>{item.fields.actlib}</Text>
                   <Text>{wordingNb}</Text>
               </View>
           <View> 
@@ -128,19 +130,28 @@ let typeActivityArray = filteredList.map((item,i)=>{
     </ListItem>
     )
   }else {
-    lettreComparaison = item.name[0] 
+      lettreComparaison = item.fields.actlib[0] 
+      let nbsite 
+
+      nBSport.map((site)=>{
+     
+        if (site.name ==item.fields.actlib ) {
+          nbsite = site.count
+        }
+      })
+
     return ( 
       <View>
       <ListItem itemDivider style={{ borderBottomWidth:2 }} key={100*i}>
-        <Text style={{ fontWeight: "600",fontSize:22}}>{item.name[0] }</Text>
+        <Text style={{ fontWeight: "600",fontSize:22}}>{item.fields.actlib[0] }</Text>
       </ListItem>
 
       <ListItem onPress={() => redirect({item})}>
 
       <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
               <View style={{flex:1}}>
-                  <Text style={styles.textTitle}>{item.name}</Text>
-                  <Text>{wordingNb}</Text>
+                  <Text style={styles.textTitle}>{item.fields.actlib}</Text>
+                  <Text>Nombre de site trouvé(s) : {nbsite} </Text>
               </View>
           <View> 
               <Right>
@@ -152,35 +163,32 @@ let typeActivityArray = filteredList.map((item,i)=>{
       </View>
     )
   }
-});
+
+})
 
 
-let redirect = (item) => {
-   props.sportName(item.item.name)
-   let title = item.item.name
-   props.navigation.navigate('ListOneActivity')}
-  
+
   return (
-  <View style={styles.containerAll}>
-    <View>
-      {headerSearchInput}
-    </View>
 
-    <ScrollView>
-      <List>
-        {typeActivityArray}
-      </List>
-    </ScrollView>
+<View style={styles.containerAll}>
+  <View>
+    {headerSearchInput}
+  </View>
 
-    <Fab
-            direction="up"
-            containerStyle={{ }}
-            style={{ backgroundColor: "#009387"  }}
-            position="bottomRight"
-            onPress={() => setSearchHeader(!searchHeader)}>
-            <Icon name="search" />
-          </Fab>
+  <ScrollView>
+    <List>
+      {typeActivityArray}
+    </List>
+  </ScrollView>
 
+  <Fab
+    direction="up"
+    containerStyle={{ }}
+    style={{ backgroundColor: "#009387"  }}
+    position="bottomRight"
+    onPress={() => setSearchHeader(!searchHeader)}>
+    <Icon name="search" />
+  </Fab>
 </View>
 
   );
@@ -189,6 +197,7 @@ let redirect = (item) => {
 // STYLES
 const styles = StyleSheet.create({
   containerAll: {
+    display:"flex",
     flex: 1, 
     backgroundColor: '#fff', 
   },

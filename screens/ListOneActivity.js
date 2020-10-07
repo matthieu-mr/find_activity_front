@@ -10,6 +10,7 @@ import * as Location from 'expo-location';
 
 //import components
 import ListType from './component/ListType';
+import MapPoint from './component/map'
 
 
 function  ListOneActivity(props) {
@@ -19,6 +20,8 @@ function  ListOneActivity(props) {
   let dist = props.positionRecupState.dist
   let type = props.positionRecupState.type
   
+  
+  
 
   props.navigation.setOptions({ title:sportName })
 
@@ -26,8 +29,6 @@ function  ListOneActivity(props) {
 useEffect(()=>{
 
   async function recupDonnée(){
-
-    console.log(`recup 1 seul sport lat=${lat}&long=${long}&dist=${dist}&sport=${sportName}`)
     
     var requestBDD = await fetch(`${ip}sport`,{
       method:"POST",
@@ -35,17 +36,32 @@ useEffect(()=>{
       body:`lat=${lat}&long=${long}&dist=${dist}&sport=${sportName}&type=${type}`
     })
     var listSportRaw = await requestBDD.json()
-    console.log(listSportRaw)
-    props.listActivity(listSportRaw)
+    var listSport = listSportRaw.result
+    props.listActivity(listSport)
   }
   recupDonnée()
   
 },[])
 
+
+
+
+
+
   return (
 
   <View style={styles.containerAll}>
-       <ListType />
+
+  <Tabs tabBarUnderlineStyle={{borderBottomColor:'#009387',borderBottomWidth:5}} activeTextStyle={{color: 'red'}} >
+    <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}} activeTextStyle={{color: 'yellow'}} ><Icon name="map" style={{color: '#000000'}} /><Text  > Carte</Text></TabHeading>} >
+      <MapPoint />
+    </Tab>
+    <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}}><Icon name="list"  style={{color: '#000000'}} /><Text  >  Liste</Text></TabHeading>}>
+      <ListType />
+    </Tab>
+  </Tabs>
+
+     
 </View>
 
   );
@@ -90,7 +106,7 @@ function mapDispatchToProps(dispatch) {
     },
     listActivity: function(list) {
       dispatch( {type: 'addList',list:list} )
-  },
+      },
 
   }
 }
