@@ -55,6 +55,7 @@ let listActivity =props.listActivityFromState
 
 
 
+
 let text = 'Waiting..';
 if (errorMsg) {
   text = errorMsg;
@@ -67,6 +68,7 @@ if (errorMsg) {
 // List type part 
 useEffect(()=>{
   async function recupDonnée(){
+
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -74,7 +76,7 @@ useEffect(()=>{
     })
     var listTypeRaw = await requestBDD.json()
     var listType=listTypeRaw.resultFiltered
-    props.addListType(listType)
+    props.listType(listType)
   }
   recupDonnée()
   
@@ -94,19 +96,21 @@ useEffect(()=>{
   })
 
   async function recupDonnée(){
-    
+    console.log("calling")
+
     var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${lat}&long=${lon}&dist=${dist}&type=${type}`
     })
     var listActivityRaw = await requestBDD.json()
+    console.log("Result")
     var listActivity = listActivityRaw.result
     props.listActivity(listActivity)
   }
   recupDonnée()
   
-},[typeListActivity,lat,dist])
+},[lat,dist,typeListActivity])
 
 
 let showListActivity = typeListActivity.map((item,i)=>{
@@ -129,7 +133,7 @@ let select = (filterType)=> {
             return item
         }
       })
-      props.addListType(typeActivityNewArray)
+      props.listType(typeActivityNewArray)
   }
 
 
@@ -231,9 +235,7 @@ function mapDispatchToProps(dispatch) {
     listType: function(listType) {
     dispatch( {type: 'changeTypeActivity',listType:listType} )
     },
-    addListType: function(listType) {
-      dispatch( {type: 'addTypeActivity',listType:listType} )
-      },
+  
     changeTypeActivity: function(typeActivityToProps) {
     dispatch( {type: 'changeTypeActivityPosition',typeActivityToProps:typeActivityToProps} )
     },

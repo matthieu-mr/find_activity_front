@@ -17,10 +17,57 @@ function mapComponent(props) {
 const navigation = useNavigation();
 let lat = props.positionRecupState.lat
 let lon = props.positionRecupState.lon
+let dist = props.positionRecupState.dist
 let markerList = props.listActivity
 let carte =  <Spinner color='blue' />
 
-let markerListMap
+
+let latitudeDelta
+let longitudeDelta 
+
+
+switch(dist){
+  case "5000":
+    console.log("case 5000")
+    latitudeDelta = 0.07
+    longitudeDelta =0.07
+    break;
+
+  case "10000":
+    console.log("case 10000")
+      latitudeDelta =0.25
+      longitudeDelta = 0.35
+    break;
+
+  case "15000":
+    console.log("case 15000")
+    latitudeDelta = 0.50
+    longitudeDelta =0.50
+    break;
+
+  case "30000":
+    console.log("case 5000")
+    latitudeDelta = 1.00
+    longitudeDelta =1.00
+    break;
+
+  case "50000":
+    console.log("case 30000")
+    latitudeDelta = 1.50
+    longitudeDelta =1.50
+    break;
+
+    default:
+      console.log("default")
+      latitudeDelta = 0.07
+      longitudeDelta =0.07
+}
+
+
+
+let markerListMap   
+
+
 
 let goPlaceDetails = (name,lat,lon,item) => {
     let infoToSend = {
@@ -74,8 +121,8 @@ if (lat != undefined ){
         initialRegion={{
         latitude: lat,
         longitude:  lon,
-        latitudeDelta: 0.07,
-        longitudeDelta: 0.07,
+        latitudeDelta: latitudeDelta,
+        longitudeDelta: longitudeDelta,
         }}
     >
             <Marker

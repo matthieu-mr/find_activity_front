@@ -51,9 +51,8 @@ useEffect(()=>{
       }
       
     })
-    props.addListType(typeActivityNewArray)
+    props.listType(typeActivityNewArray)
   }
-
 
   let AffichageList = listTypeActivity.map((item,i)=> {
   return (
@@ -65,17 +64,26 @@ useEffect(()=>{
 })
 
 
- 
-
-  
-
 let changeDistance =async (value) => {
   props.positionInfo(value)
   setDistance(value)
   }
 
 // gestion des inputs
-
+useEffect(()=>{
+  async function recupDonnée(){
+    var requestBDD = await fetch(`${ip}nature`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`lat=${lat}&long=${lon}&dist=${dist}&type=${type}`
+    })
+    var listTypeRaw = await requestBDD.json()
+    var listType=listTypeRaw.resultFiltered
+    props.listType(listType)
+  }
+  recupDonnée()
+  
+},[distance])
 
 let PickerDistance = ()=> { 
   return (
@@ -93,7 +101,7 @@ let PickerDistance = ()=> {
     <Picker.Item label="15 Km" value="15000" />
     <Picker.Item label="30 Km" value="30000" />
     <Picker.Item label="50 Km" value="50000" />
-    <Picker.Item label="100 Km" value="100000" />
+
   </Picker>
   )
 }
@@ -194,9 +202,10 @@ marginLeft:20,
       positionInfo: function(location) {
         dispatch( {type: 'addDistance',location:location} )
     },
-    addListType: function(listType) {
-      dispatch( {type: 'addTypeActivity',listType:listType} )
+    listType: function(listType) {
+      dispatch( {type: 'changeTypeActivity',listType:listType} )
       },
+    
       listActivity: function(list) {
         dispatch( {type: 'addList',list:list} )
     },

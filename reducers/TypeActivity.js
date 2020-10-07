@@ -5,13 +5,7 @@ export default function(typeActivity = [], action) {
   
       return newList;
     
-    }else if(action.type == 'addTypeActivity') {
-      let newList = action.listType
-
-    
-      return newList;
-    
-    }  else {
+    } else {
       return typeActivity;
     }
 }

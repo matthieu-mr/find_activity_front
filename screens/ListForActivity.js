@@ -69,7 +69,6 @@ let lettreComparaison ="";
 let redirect = (item) => {
   props.sportName(item.item.name)
   // let title = item.item.name
-   console.log(item.item.name)
   props.navigation.navigate('ListOneActivity')
 }
 
