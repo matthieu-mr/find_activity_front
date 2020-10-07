@@ -11,6 +11,7 @@ import * as Location from 'expo-location';
 //import components
 import ListType from './component/ListType';
 import MapPoint from './component/map'
+import HeaderComponent from './component/header'
 
 
 function  ListOneActivity(props) {
@@ -51,7 +52,7 @@ useEffect(()=>{
   return (
 
   <View style={styles.containerAll}>
-
+     <HeaderComponent/>
   <Tabs tabBarUnderlineStyle={{borderBottomColor:'#009387',borderBottomWidth:5}} activeTextStyle={{color: 'red'}} >
     <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}} activeTextStyle={{color: 'yellow'}} ><Icon name="map" style={{color: '#000000'}} /><Text  > Carte</Text></TabHeading>} >
       <MapPoint />

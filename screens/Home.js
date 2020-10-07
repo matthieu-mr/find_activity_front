@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { StyleSheet, View,Text,Image  } from 'react-native';
+import { StyleSheet, View,Text,Image,StatusBar  } from 'react-native';
 import MapView, {Callout} from 'react-native-maps';
 import {connect} from 'react-redux';
 import { Button, Icon, Tab, Tabs, TabHeading,Card, Body, Form,Picker,Header,Left,Title,Right,Spinner,CardItem  } from 'native-base';
@@ -13,7 +13,7 @@ import * as Location from 'expo-location';
 //import components
 import ListType from './component/ListType';
 import MapPoint from './component/map'
-
+import HeaderComponent from './component/header'
 
 function  Home(props) {
 
@@ -96,7 +96,6 @@ useEffect(()=>{
   })
 
   async function recupDonnée(){
-    console.log("calling")
 
     var requestBDD = await fetch(`${ip}listpoint`,{
       method:"POST",
@@ -104,7 +103,6 @@ useEffect(()=>{
       body:`lat=${lat}&long=${lon}&dist=${dist}&type=${type}`
     })
     var listActivityRaw = await requestBDD.json()
-    console.log("Result")
     var listActivity = listActivityRaw.result
     props.listActivity(listActivity)
   }
@@ -114,9 +112,7 @@ useEffect(()=>{
 
 
 let showListActivity = typeListActivity.map((item,i)=>{
-  
   let wordingLabel = `${item.name} - ${item.count} Activités - sur ${item.nbSite} sites`
-  
   return (<Picker.Item label={wordingLabel} value={item.name} key={i}/>)
 })
 
@@ -126,7 +122,9 @@ let select = (filterType)=> {
       let typeActivityNewArray= typeListActivity.map((item,i)=>{
         if (item.name===filterType){
             item.state=true
-           // setWordingSelectedType(item.name)
+         //   setWordingSelectedType(item.name)
+         console.log("home",item.name)
+         props.changeTypeActivity(item.name)
             return item
         }else {
           item.state=false
@@ -141,6 +139,7 @@ let select = (filterType)=> {
   return (
 
   <View style={styles.containerAll}>
+      <HeaderComponent/>
        <Card style={styles.cardActivity}>
          
         <Form>
@@ -190,6 +189,7 @@ let select = (filterType)=> {
 // STYLES
 const styles = StyleSheet.create({
   containerAll: {
+    display:"flex",
     flex: 1, 
     backgroundColor: '#fff', 
   },

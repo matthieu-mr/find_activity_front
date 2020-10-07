@@ -18,8 +18,8 @@ export default function(position = "", action) {
    }
 
    else if (action.type === "changeTypeActivityPosition"){
-     
      position.activityType = action.typeActivityToProps
+     console.log("reducer type activity perso",  position.activityType)
       return position
    }
 

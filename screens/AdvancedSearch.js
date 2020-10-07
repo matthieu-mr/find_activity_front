@@ -3,7 +3,7 @@ import { StyleSheet, View,Dimensions,Text, ScrollView, Alert,Keyboard, TextInput
 import {connect} from 'react-redux';
 import { useIsFocused } from "@react-navigation/native";
 
-import { Button, Icon,Card,CardItem,Body,ListItem,CheckBox,Input,Picker  } from 'native-base';
+import { Button, Icon,Card,CardItem,Body,ListItem,CheckBox,Input,Picker,Spinner  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -20,9 +20,13 @@ function  AdvancedSearch(props) {
   let type = props.positionInfoProps.activityType
   let listTypeActivity = props.listTypeFromState 
   
+
+  
+  console.log(props.positionInfoProps)
+
   const [adress,setAdress] = useState()
   const [distance,setDistance] = useState(dist)
-
+  const [recupList,SetRecupList] = useState(true)
 // Gestion adress depuis coords
 useEffect(()=>{
 
@@ -54,24 +58,38 @@ useEffect(()=>{
     props.listType(typeActivityNewArray)
   }
 
-  let AffichageList = listTypeActivity.map((item,i)=> {
-  return (
-    <ListItem style ={styles.searchInput} onPress={()=>selectTypeActivity(item.name)} key={i}>
-       <CheckBox checked={item.state} color="green" />
-      <Text>  {item.name} - {item.count} Activités sur {item.nbSite} site(s) </Text>
-  </ListItem>
-  )
-})
+  let AffichageList
+  
+  if (recupList == false){
+
+    AffichageList =<Spinner style={{display:"flex",alignSelf:"center"}} color='#009387' />
+
+  }else {
+    AffichageList= listTypeActivity.map((item,i)=> {
+      return (
+        <ListItem style ={styles.searchInput} onPress={()=>selectTypeActivity(item.name)} key={i}>
+           <CheckBox checked={item.state} color="green" />
+          <Text>  {item.name} - {item.count} Activités sur {item.nbSite} site(s) </Text>
+      </ListItem>
+      )
+    })
+    
+  }
+  
 
 
 let changeDistance =async (value) => {
+  SetRecupList(false)
+  
   props.positionInfo(value)
   setDistance(value)
   }
 
 // gestion des inputs
 useEffect(()=>{
+
   async function recupDonnée(){
+    console.log("envoi")
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -79,11 +97,15 @@ useEffect(()=>{
     })
     var listTypeRaw = await requestBDD.json()
     var listType=listTypeRaw.resultFiltered
+
+    SetRecupList(true)
     props.listType(listType)
   }
   recupDonnée()
   
 },[distance])
+
+
 
 let PickerDistance = ()=> { 
   return (

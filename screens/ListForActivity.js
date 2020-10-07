@@ -1,19 +1,15 @@
 import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View,Dimensions,Text  } from 'react-native';
+import { StyleSheet, View,Dimensions,Text,StatusBar  } from 'react-native';
 import {connect} from 'react-redux';
 
-import { List,Item,itemDivider,ListItem,Right,Icon,Header,Input,Button, Fab } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid';
+import { List,Item,ListItem,Icon,Header,Input,Button, Fab } from 'native-base';
 
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
-
-
-import * as Location from 'expo-location';
+import { Octicons } from '@expo/vector-icons'; 
 
 
 //import components
 import { ScrollView } from 'react-native-gesture-handler';
-import ListType from './component/ListType'
+import HeaderComponent from './component/header'
 
 
 function  ListForActivity(props) {
@@ -78,6 +74,8 @@ let affichageHeader=()=>{
   if(searchHeader){
     headerSearchInput = (
       <Header searchBar rounded style={{backgroundColor:"#009387" }}>
+        <HeaderComponent/>
+
         <Item>
           <Icon name="ios-search" />
           <Input placeholder="Rechercher" 
@@ -120,41 +118,37 @@ let typeActivityArray = filteredList.map((item,i)=>{
   if (lettreComparaison === item.name[0] ){
     return (  
     <ListItem onPress={() => redirect({item})} key={i}>
-         <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
-              <View style={{flex:1}}>
+         <View style={{display:"flex",flex:1,alignContent:"center",alignItems:"center",flexDirection:"row"}}> 
+              <View styles={{backgroundColor:"blue"}}>
                   <Text style={styles.textTitle}>{item.name}</Text>
                   <Text>wordingNb</Text>
               </View>
-          <View> 
-              <Right>
-                  <Icon name="arrow-forward" />
-              </Right>
-           </View>
+            <View style={{backgroundColor:"red"}}> 
+              <Octicons name="triangle-right" size={24} color="#009387" />
+            </View>
         </View>
     </ListItem>
     )
   }else {
       lettreComparaison = item.name[0] 
       let nbsite 
-
-
     return ( 
       <View>
-      <ListItem itemDivider style={{ borderBottomWidth:2 }} key={100*i}>
-        <Text style={{ fontWeight: "600",fontSize:22}}>{item.name[0] }</Text>
+        <StatusBar barStyle="light-content" backgroundColor="#009387" />
+      <ListItem itemDivider style={{ borderBottomColor:"#009387",display:"flex",flex:1,justifyContent:"center",backgroundColor:"#51c4b7"}} key={100*i}>
+        <Text style={{ fontWeight: "00",fontSize:20,color:"white",}}>{item.name[0] }</Text>
       </ListItem>
 
       <ListItem onPress={() => redirect({item})}>
 
-      <View style={{display:"flex",flexDirection:"row", justifyContent:"space-around",margin:5}}> 
+      <View style={{display:"flex",flex:1,alignContent:"center",alignItems:"center",flexDirection:"row"}}> 
               <View style={{flex:1}}>
                   <Text style={styles.textTitle}>{item.name}</Text>
                   <Text>Nombre de site trouvé(s) : {item.count} </Text>
               </View>
+     
           <View> 
-              <Right>
-                  <Icon name="arrow-forward" />
-              </Right>
+            <Octicons name="triangle-right" size={24} color="#51c4b7" />
            </View>
         </View>
       </ListItem>
@@ -169,6 +163,7 @@ let typeActivityArray = filteredList.map((item,i)=>{
   return (
 
 <View style={styles.containerAll}>
+<HeaderComponent/>
   <View>
     {headerSearchInput}
   </View>

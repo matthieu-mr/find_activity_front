@@ -19,7 +19,7 @@ let lat = props.positionRecupState.lat
 let lon = props.positionRecupState.lon
 let dist = props.positionRecupState.dist
 let markerList = props.listActivity
-let carte =  <Spinner color='blue' />
+let carte =  <Spinner color='#009387'  />
 
 
 let latitudeDelta
@@ -41,14 +41,14 @@ switch(dist){
 
   case "15000":
     console.log("case 15000")
-    latitudeDelta = 0.50
-    longitudeDelta =0.50
+    latitudeDelta = 1.50
+    longitudeDelta =1.50
     break;
 
   case "30000":
     console.log("case 5000")
-    latitudeDelta = 1.00
-    longitudeDelta =1.00
+    latitudeDelta = 1.50
+    longitudeDelta =1.50
     break;
 
   case "50000":

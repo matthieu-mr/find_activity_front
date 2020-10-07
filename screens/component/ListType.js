@@ -8,7 +8,7 @@ import { StackNavigator } from 'react-navigation';
 import { useNavigation } from '@react-navigation/native';
 
 import * as Location from 'expo-location';
-
+import { Octicons } from '@expo/vector-icons'; 
 
 //import module
 
@@ -47,14 +47,14 @@ if (lastName != name ){
   return (
     <View key={i}>
       <Card transparent key={i} >
-        <CardItem button onPress={() => {goPlaceDetails(name,lat, lon,item);}}>
-          <View>
+        <CardItem button style={{display:"flex",flex:1,alignContent:"center",alignItems:"center"}} onPress={() => {goPlaceDetails(name,lat, lon,item);}}>
+          <View style={{flex:1}}>
               <Text style={styles.textTitle}>{name}</Text>
               <Text>{type} </Text>
           </View>
-          <Right>
-            <Icon name="arrow-forward" />
-          </Right>
+          <View > 
+          <Octicons name="triangle-right" size={24} color="#009387" />
+          </View>
         </CardItem>
       </Card>
       <Divider/>
@@ -70,7 +70,7 @@ if (lastName != name ){
     
     <View>
       <ScrollView>
-      {listArray}
+        {listArray}
       </ScrollView>
     </View>
   

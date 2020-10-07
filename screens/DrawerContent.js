@@ -31,10 +31,10 @@ function DrawerContent(props){
   const Screens = ({navigation}) => {
     
     return (
-    <Stack.Navigator>
+    <Stack.Navigator
+    >
       <Stack.Screen name="Accueil" component={Home}                  
-      options={{
-                  
+      options={{ 
         headerLeft:()=>(
           <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
         ),
@@ -196,7 +196,7 @@ const CustomDrawerContent = (props) => {
 
 
   return(
-    <View style ={{flex:1}}>
+    <View style ={{flex:1,display:"flex"}}>
         <Drawer.Navigator initialRouteName="PlaceDetail"  drawerContent={props=> <CustomDrawerContent {...props} /> }   >
         <Drawer.Screen name="Screens" component={Screens} />
       </Drawer.Navigator>

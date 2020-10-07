@@ -6,7 +6,7 @@ import * as Linking from 'expo-linking';
 import { Ionicons } from '@expo/vector-icons';
 
 import {connect} from 'react-redux';
-import {Spinner,Card,CardItem,Left,Thumbnail,Body,Button,Icon,Right,List,ListItem,Badge} from 'native-base';
+import {Spinner,Card,CardItem,Left,Thumbnail,Body,Button,Right,List,ListItem,Badge} from 'native-base';
 
 
 
