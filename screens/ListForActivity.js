@@ -117,17 +117,19 @@ let typeActivityArray = filteredList.map((item,i)=>{
 
   if (lettreComparaison === item.name[0] ){
     return (  
-    <ListItem onPress={() => redirect({item})} key={i}>
-         <View style={{display:"flex",flex:1,alignContent:"center",alignItems:"center",flexDirection:"row"}}> 
-              <View styles={{backgroundColor:"blue"}}>
-                  <Text style={styles.textTitle}>{item.name}</Text>
-                  <Text>wordingNb</Text>
-              </View>
-            <View style={{backgroundColor:"red"}}> 
-              <Octicons name="triangle-right" size={24} color="#009387" />
-            </View>
+<ListItem onPress={() => redirect({item})}>
+
+<View style={{display:"flex",flex:1,alignContent:"center",alignItems:"center",flexDirection:"row"}}> 
+        <View style={{flex:1}}>
+            <Text style={styles.textTitle}>{item.name}</Text>
+            <Text>Nombre de site trouvé(s) : {item.count} </Text>
         </View>
-    </ListItem>
+
+    <View> 
+      <Octicons name="triangle-right" size={24} color="#51c4b7" />
+     </View>
+  </View>
+</ListItem>
     )
   }else {
       lettreComparaison = item.name[0] 

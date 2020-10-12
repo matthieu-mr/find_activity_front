@@ -10,7 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator,DrawerContentScrollView,DrawerItem,CustomDrawerContent } from '@react-navigation/drawer';
 
 import Home from './Home'
-import ConnectScreen from './Connect'
+import ConnectScreen from './login/ConnectScreen'
 import ListForActivty from './ListForActivity';
 import ListOneActivity from './ListOneActivity'
 import AdvancedParam from './AdvancedSearch'
@@ -18,6 +18,10 @@ import ConnectComponent from './component/ConnectComponent'
 import PlaceDetail from './PlaceDetail'
 import SearchAdress from './SearchAdress'
 import ListComponent from './component/ListType'
+import ListActivitySortie from './listTypeActivitySortie'
+import siginScreen from './login/signin'
+
+import AdressListUserScreen from "./AdressListUser"
 
 
 function DrawerContent(props){
@@ -31,9 +35,8 @@ function DrawerContent(props){
   const Screens = ({navigation}) => {
     
     return (
-    <Stack.Navigator
-    >
-      <Stack.Screen name="Accueil" component={Home}                  
+    <Stack.Navigator>
+      <Stack.Screen name="Accueil" component={ConnectScreen}                  
       options={{ 
         headerLeft:()=>(
           <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
@@ -174,12 +177,19 @@ const CustomDrawerContent = (props) => {
       />
 
     <DrawerItem 
-      label ="Liste complète des activités"
+      label ="Liste activités sportives"
       labelStyle={{marginLeft:-16}}
       onPress={()=>{props.navigation.navigate("Liste");}}
       icon ={()=> <Icon reverse name='ios-list' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
     
+    <DrawerItem 
+      label ="Liste sorties"
+      labelStyle={{marginLeft:-16}}
+      onPress={()=>{props.navigation.navigate("Liste");}}
+      icon ={()=> <Icon reverse name='ios-list' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
+      />
+
     <DrawerItem 
       label ="Parametres"
       labelStyle={{marginLeft:-16}}
@@ -198,7 +208,7 @@ const CustomDrawerContent = (props) => {
   return(
     <View style ={{flex:1,display:"flex"}}>
         <Drawer.Navigator initialRouteName="PlaceDetail"  drawerContent={props=> <CustomDrawerContent {...props} /> }   >
-        <Drawer.Screen name="Screens" component={Screens} />
+          <Drawer.Screen name="Screens" component={Screens} />
       </Drawer.Navigator>
     </View>
 

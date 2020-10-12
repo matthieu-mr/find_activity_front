@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "805275159192",
+    "firebase_url": "https://entre-nous-5d8d8.firebaseio.com",
+    "project_id": "entre-nous-5d8d8",
+    "storage_bucket": "entre-nous-5d8d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805275159192:android:32b5b8142f7b1f4f32deed",
+        "android_client_info": {
+          "package_name": "com.matthieumichon.entrenous"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805275159192-4b4shij9k6spaqpsk0v0magf70vl1eka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDCsSb2NNLdta1Joc1srFryzqLVnWbza8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805275159192-4b4shij9k6spaqpsk0v0magf70vl1eka.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,7 +17,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 function listTypeActivitySortie(props) {
 
-  let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
+  let gradientSelected = ["#80d6ff","#42a5f5","#42a5f5","#80d6ff"]
   let noSelectGradient = ["#e2f1f8","#b0bec5","#808e95","#b0bec5","#e2f1f8"]
   const [nbAdress,setNbAdress] = useState(15)
   const [listTypeFromBdd,setlistTypeFromBdd] = useState([])
@@ -28,13 +28,16 @@ function listTypeActivitySortie(props) {
       async function recupDonnée(){
         var requestBDD = await fetch(`${ip}googleinfo/typegoogle`)
         var listTypeRaw = await requestBDD.json()
-        let result = listTypeRaw.showCatergory
+        let result = listTypeRaw.filteredCatagoryList
        // console.log(listTypeRaw.showCatergory)
         setlistTypeFromBdd(result)
       }
       recupDonnée()
       
     },[])
+
+
+
 
 let list = (
   <View style={{alignSelf:"center", width:"50%"}}> 
@@ -55,54 +58,76 @@ let list = (
   </View>
 )
 let copyList = [...listTypeFromBdd]
+const [changeGilter,setChangeFilter] = useState(false)
 
 let setValidated =(id)=>{
-  console.log("validated function")
+  setChangeFilter(!changeGilter)
+  copyList.map((item,i)=>{
+    if(id==i){item.setAffichageSortie = !item.setAffichageSortie}
+  })
 
 }
 
+const [ckeckAll,setCheckAll] = useState(false)
 
-let affichage
-affichage = copyList.map((item,i)=>{
-  if (item.setAffichageSortie == "false"){
-    return (
-      <View style={{alignSelf:"center",width:"50%"}} key={i}>
-      <TouchableOpacity onPress={()=>{alert("hi")}}>
-            <LinearGradient
-            colors={noSelectGradient}
-            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-            style={{ height: 60, width:"96%",alignItems: 'center', justifyContent: 'center', borderRadius:50,marginTop:20,marginLeft:"2%",padding:15}}
-            >
-              <View style={{flex:1,flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
-                <Text style={{ textAlign: 'center',fontSize:17, fontFamily: 'Baskerville-Black'}}>
-                  {item.wording_fr}
-                </Text>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-      </View>
-    )
-  }else{
-    return (
-      <View style={{alignSelf:"center",width:"50%"}} key={i}>
-      <TouchableOpacity style={styles.buttonContainer} onPress={()=>setValidated('findadress')}>
-            <LinearGradient
-            colors={gradient}
-            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-            style={{ height: 48, width:"96%",alignItems: 'center', justifyContent: 'center', borderRadius:50,marginTop:20,marginLeft:"20%"}}
-            >
-              <View style={{flex:1,flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
-                <Text style={{ textAlign: 'center', color: 'white', fontSize:17, fontFamily: 'Baskerville-Black'}}>
-                  {item.wording_fr}
-                </Text>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
+let resetFilter = ()=>{
+  setCheckAll(!ckeckAll)
+
+  copyList.map((item)=>{
+    item.setAffichageSortie = !ckeckAll
+  })
+}
+
+let AffichageReset =()=> {
+  let gradient = ckeckAll ?gradientSelected:noSelectGradient
+  return (
+      <View style={styles.constainerList}>  
+      <View style={{marginBottom:15,alignSelf:"center"}}> 
+        <TouchableOpacity style={styles.buttonContainer} onPress={()=>resetFilter()}>
+              <LinearGradient
+              colors={gradient}
+              start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
+              style={{ height: 48, width: 400, alignItems: 'center', justifyContent: 'center', borderRadius:50,marginTop:20}}
+              >
+                <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
+                  <Text style={styles.buttonText}>
+                  Toutes
+                  </Text>
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+        </View>
       </View>
     )
   }
 
 
+
+let affichage = copyList.map((item,i)=>{
+
+  let width = item.setAffichageSortie ?"98%":"85%" 
+  let color = item.setAffichageSortie ?"white%":"black" 
+  let fontSize = item.setAffichageSortie ?17:15
+  let gradient = item.setAffichageSortie ?gradientSelected:noSelectGradient
+
+    return (
+      <View style={{alignSelf:"center",width:"50%"}} key={i}>
+      <TouchableOpacity onPress={()=>{setValidated(i)}}>
+            <LinearGradient
+            colors={gradient}
+            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
+            style={{ height: 60, width:width,alignItems: 'center', justifyContent: 'center', borderRadius:50,marginTop:20,padding:15,alignSelf:"center"}}
+            >
+              <View style={{flex:1,flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
+                <Text style={{ textAlign: 'center',fontSize:fontSize,color:color, fontFamily: 'Baskerville-Black'}}>
+                  {item}
+                </Text>
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+      </View>
+    )
+  
 })
 
 
@@ -112,24 +137,7 @@ affichage = copyList.map((item,i)=>{
     <HeaderComponent/>
     <ScrollView>
 
-    <View style={styles.constainerList}>  
-        <View style={{marginBottom:15,alignSelf:"center"}}> 
-          <TouchableOpacity style={styles.buttonContainer} onPress={()=>alert('findadress')}>
-                <LinearGradient
-                colors={gradient}
-                start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-                style={{ height: 48, width: 400, alignItems: 'center', justifyContent: 'center', borderRadius:50,marginTop:20}}
-                >
-                  <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
-                    <Text style={styles.buttonText}>
-                    Toutes
-                    </Text>
-                  </View>
-                </LinearGradient>
-              </TouchableOpacity>
-          </View>
-        </View>
-
+    <AffichageReset />
     
     <View style={{display:"flex",flexDirection:"row",flexWrap:"wrap"}}> 
     {affichage}

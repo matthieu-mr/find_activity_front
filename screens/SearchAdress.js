@@ -1,161 +1,139 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View,Dimensions,Text, } from 'react-native';
 import {connect} from 'react-redux';
-
-import { Button,Item,  Icon,Header,ListItem,Input,Right } from 'native-base';
-
-
-
+import { Item,Header,ListItem,Input } from 'native-base';
 import * as Location from 'expo-location';
+import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+
+let gradient = {gradient}
+
+import { FontAwesome5 } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
+
+import { Ionicons } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons'; 
+import * as Font from 'expo-font';
+import { Feather } from '@expo/vector-icons'; 
+
+
 function  SearchAdress(props) {
+  let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
+
+  const [adress,setAdress] = useState("16 rue saint hilaire")
+  const [listAdress,setListAdress] = useState([])
 
 
-  const [listAdress,setListAdress] = useState({})
-  //gestion de la liste
-
-// recup address from input
-
-let search = (value) => { 
-
-
+  useEffect(()=>{
     async function recupDonnée(){
-        var requestBDD = await fetch(`${ip}adressesList`,{
-          method:"POST",
-          headers: {'Content-Type':'application/x-www-form-urlencoded'},
-          body:`adress=${value}`
-        })
-        var listAdressRaw = await requestBDD.json()
-        setListAdress(listAdressRaw.result)
-    
-      }
-      recupDonnée()
-}
-
-
-let sendChoice = (name,lon,lat) => {
-
-let coords = {
-    lat:lat,
-    lon:lon,
-    adress:name,
-    type:"manual"
-
-}
-
-props.position(coords)
-props.navigation.navigate('Parametres')
-
-}
-
-
-// Affichage 
-let ListResult = () => {
-
-    if(listAdress.map == [] || listAdress.map == undefined ){
-        return (
-            <Text style={styles.noresult}> Aucun résultat </Text> 
-        )
-    }else {
-        return (
-            listAdress.map((item,i)=>{
-
-                let lon = item.geometry.coordinates[1]
-                let lat = item.geometry.coordinates[0]
-                let name = item.properties.name
-                
-                let city = item.properties.city
-                let citycode =item.properties.citycode
-
-                let allInfo = name + ", "+ citycode + ", " + city
-                
-                return (
-           
-                <ListItem key={i}  onPress={()=> sendChoice(allInfo,lat,lon)}> 
-                    <View style={{flex:1}}> 
-                        <Text style={styles.textTitle}>{name} </Text>
-                       <Text>{citycode}, {city} </Text>
-                    </View>
-                    <View> 
-                  <Right>
-                      <Icon name="arrow-forward" />
-                  </Right>
-               </View>
-            </ListItem>
-    
-                )
-            })
-        )
+      var requestBDD = await fetch(`${ip}adress/coords`,{
+        method:"POST",
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body:`adress=${adress}`
+      })
+      var listAdressBdd = await requestBDD.json()
+      setListAdress(listAdressBdd)
     }
-
-
-}
-
-const [textSearch,setTextSearch]= useState("Rechercher")
+    recupDonnée()
     
-    return (
-      <View style={styles.containerAll}>
-            
-            <Header searchBar rounded style={{backgroundColor:"#009387" }}>
-          <Item>
-            <Icon name="ios-search" />
-            <Input placeholder={textSearch} onChangeText={(value) => search(value)}/>         
-          </Item>
-          <Button transparent >
-            <Text>Rechercher</Text>
-          </Button>
-        </Header>
-        <ScrollView>
-             <ListResult/>
-        </ScrollView>
+  },[adress])
+
+  let ListResult =(
+    <View style={{display:"flex",flex:1,alignItems:"center",alignContent:"space-around",justifyContent:"space-around"}}> 
+      <Feather name="arrow-up" size={35} color="#0077c2" />
+      <Text  style={{color:"#0077c2",fontFamily: 'Sansita-Medium',fontSize:30}}> Veuillez saisir une adresse</Text>
+    </View>
+    )
+   
+  if (adress !==""){
+    ListResult = (
+      listAdress.map((item,i)=>{
+        return (
+      <ListItem key={i}   
+            onPress={() => {
+              props.addAdress(item),props.navigation.navigate("Accueil");
+            }}
+            style={{backgroundColor:"white",display:"flex",flex:1}}>
+
+            <View style={{display:"flex",flex:1,flexDirection:"row",alignItems:"center",alignContent:"space-around",justifyContent:"space-around"}}> 
+                <View style={{display:"flex",flex:1,alignItems:"flex-start",alignContent:"space-around",justifyContent:"space-around"}} > 
+                  <Text style={{fontSize:20,fontFamily: 'Baskerville-Medium'}}>{item.properties.name}</Text>
+                  <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{item.properties.postcode}, {item.properties.city} </Text>
+                </View>
+            <View> 
+
+                <Ionicons name="ios-add-circle-outline" size={24} color="#42a5f5" />
+              </View>
+            </View>
+              
+      </ListItem>  
+
+          )
+      })
+    )
+  }
  
-    
-  </View>
-    );
-  }
 
 
 
+  return (
+    <View style={styles.container}>
 
+          <LinearGradient
+            colors={gradient}
+              start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
+              style={{ alignItems: 'center', justifyContent: 'center', }}
+            >
+            
+            <View style={styles.searchInput}>
+              <Item >
+              <AntDesign name="search1" size={20} color="white" />
+                <Input style={styles.textInput} placeholder="Recherche" onChangeText={text => setAdress(text)} />
+              </Item>
+            </View>
 
-  
-// STYLES
+          </LinearGradient>
+
+      <ScrollView> 
+          {ListResult}
+      </ScrollView>
+        
+
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  containerAll: {
-    backgroundColor: '#fff', 
-    display:"flex",
-    flex:1
-    
+  container: {
+    flex: 1,
+    alignContent:"center",
+    backgroundColor: '#fff',
   },
-    searchInput :{
-    width:Dimensions.get('window').width-40,
-    marginTop:20
-    },
-  textTitle:{
-    fontSize:20
+  searchInput:{
+    marginTop:10,
+    marginBottom:5,
+    width:"90%",
+    marginLeft:"5%",
+    marginRight:"5%",
+    borderRadius:50,
+    color:"white"
   },
-  noresult :{
-    fontSize:40,
-    marginTop:50,
-    alignSelf:"center"
+  textInput:{
+    color:"white"
   }
-})
-  
-  function mapStateToProps(state) {
-    return { positionInfo: state.positionInfo,type:state.listType }
-  }
-  
-  function mapDispatchToProps(dispatch) {
-    return {
-      position: function(location) {
-        dispatch( {type: 'addManualAdress',location:location} )
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addAdress: function(location) {
+      dispatch( {type: 'addNewAdress',location:location} )
     },
-    }
   }
-  
+}
+
   
   export default connect(
-    mapStateToProps, 
+    null, 
     mapDispatchToProps
   )(SearchAdress);
 
