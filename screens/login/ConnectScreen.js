@@ -198,11 +198,16 @@ let sendRequest =async ()=>{
                     onSubmitEditing={text => sendRequest(text)}/>
             </Item>
             {passwordError}
-        <ErrorMessage />
-        <ValidationButton />
-        
+        <View> 
+         <ErrorMessage />
+        </View>
+   
+        <View> 
+          <ValidationButton />
+        </View>
+
         <View > 
-        <Create/>
+          <Create/>
         </View>
     
     </Container>
