@@ -202,11 +202,16 @@ let sendRequest =async ()=>{
          <ErrorMessage />
         </View>
    
-        <View> 
+        <View style={{marginTop:20, display:"flex",alignItems:"center"}}>  
           <ValidationButton />
         </View>
 
-        <View > 
+        <View style={{marginTop:20,alignItems:"center"}} > 
+          <Text> Ou </Text>
+        </View>
+
+
+        <View style={{marginTop:20,alignItems:"center"}} > 
           <Create/>
         </View>
     

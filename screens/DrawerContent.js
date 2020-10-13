@@ -20,8 +20,10 @@ import SearchAdress from './SearchAdress'
 import ListComponent from './component/ListType'
 import ListActivitySortie from './listTypeActivitySortie'
 import siginScreen from './login/signin'
+import AdressContactUser from "./ContactAdressList"
 
-import AdressListUserScreen from "./AdressListUser"
+
+import AdressListUserScreen from "./ContactAdressList"
 
 
 function DrawerContent(props){
@@ -36,7 +38,7 @@ function DrawerContent(props){
     
     return (
     <Stack.Navigator>
-      <Stack.Screen name="Accueil" component={ConnectScreen}                  
+      <Stack.Screen name="Accueil" component={AdressContactUser}                  
       options={{ 
         headerLeft:()=>(
           <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
