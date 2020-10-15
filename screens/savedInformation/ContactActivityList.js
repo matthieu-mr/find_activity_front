@@ -11,46 +11,52 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 function ContactScreen(props) {
-  
-   
+  let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
+  const [nbAdress,setNbAdress] = useState(15)
 
-    let AddAdress = ()=>{ 
-        let gradient = ["#ffffff","#fafafa","#c7c7c7","#fafafa","#ffffff"]
-        if (showValidateButton){
-          return ( 
-      
-            
-            <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendRequest()}>
-                <LinearGradient
-                colors={gradient}
-                start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-                style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
-                >
-      
-                    <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                        <Text style={styles.buttonTextByPass}>
-                          Utiliser sans compte
-                        </Text>
-                        <MaterialCommunityIcons name="send" size={28} color="black" />
-                    </View>
-                </LinearGradient>
-            </TouchableOpacity>
-           
-          ) 
-        } else {
-            return <Text>  </Text>
-        }
-        
-      }
+  const [userInfo,setUserInfo] = useState(null)
+  const [contactAdress,setcontactAdress] = useState([])
+
+
+
+// List type part 
+useEffect(()=>{
+  async function recupDonnée(){
+
+    var requestBDD = await fetch(`${ip}users/userinformation`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`useremail = m.michon@yahoo.fr`
+    })
+    var listTypeRaw = await requestBDD.json()
+    setUserInfo(listTypeRaw.user)
+    setcontactAdress(listTypeRaw.user.favoritesplaces)
+   // console.log(listTypeRaw.user)
+    
+  }
+  recupDonnée()
+  
+},[])
+
+
+var ListAdressSaved = contactAdress.map(function(item, i) {
+  console.log("item envoye",item)
+  return <LisAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="activity"/>;
+})
 
 
   return (
   <View style={styles.container}>
-      <Text> hello</Text>
-      <Container style={styles.buttonContainer}> 
-      <AddAdress />
-    </Container>
-</View>
+    <ScrollView>
+
+
+    <View style={styles.constainerList}> 
+    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Vos Activités sauvgardées </Text>
+      {ListAdressSaved}
+    </View>
+
+    </ScrollView>
+    </View>
   );
 }
 

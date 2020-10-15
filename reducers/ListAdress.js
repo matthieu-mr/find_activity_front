@@ -17,14 +17,12 @@ export default function(listAdresse = [], action) {
       }
 
       newList.push(newAdress)
-   //  console.log(newList)
       return newList
     }
     
     else if (action.type == 'deleteAdress'){
       let newList = [...listAdresse]
       let idDelete = action.item.id-1
-      console.log("1",newList)
 
      newList.splice(idDelete,1)
 
@@ -32,7 +30,6 @@ export default function(listAdresse = [], action) {
        item.name=`Adresse ${i + 1}`
      })
 
-      console.log("del reducer",idDelete)
       return newList
     }
      

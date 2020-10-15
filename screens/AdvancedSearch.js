@@ -21,9 +21,6 @@ function  AdvancedSearch(props) {
   let listTypeActivity = props.listTypeFromState 
   
 
-  
-  console.log(props.positionInfoProps)
-
   const [adress,setAdress] = useState()
   const [distance,setDistance] = useState(dist)
   const [recupList,SetRecupList] = useState(true)
@@ -89,7 +86,6 @@ let changeDistance =async (value) => {
 useEffect(()=>{
 
   async function recupDonnée(){
-    console.log("envoi")
     var requestBDD = await fetch(`${ip}nature`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},

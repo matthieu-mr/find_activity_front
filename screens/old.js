@@ -29,7 +29,6 @@ function listTypeActivitySortie(props) {
         var requestBDD = await fetch(`${ip}googleinfo/typegoogle`)
         var listTypeRaw = await requestBDD.json()
         let result = listTypeRaw.showCatergory
-       // console.log(listTypeRaw.showCatergory)
         setlistTypeFromBdd(result)
       }
       recupDonnée()

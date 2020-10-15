@@ -20,11 +20,11 @@ import SearchAdress from './SearchAdress'
 import ListComponent from './component/ListType'
 import ListActivitySortie from './listTypeActivitySortie'
 import siginScreen from './login/signin'
-import AdressContactUser from "./ContactAdressList"
 
-
-import AdressListUserScreen from "./ContactAdressList"
-
+import ContactAdressList from "./savedInformation/ContactAdressList"
+import SearchSaveAdress from './savedInformation/SearchSaveAdress'
+import ContactActivityList from './savedInformation/ContactActivityList'
+import FormChangeInfoAdress from './savedInformation/formModifAdress'
 
 function DrawerContent(props){
 
@@ -38,7 +38,7 @@ function DrawerContent(props){
     
     return (
     <Stack.Navigator>
-      <Stack.Screen name="Accueil" component={AdressContactUser}                  
+      <Stack.Screen name="Accueil" component={ContactAdressList}                  
       options={{ 
         headerLeft:()=>(
           <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />
@@ -54,6 +54,20 @@ function DrawerContent(props){
 
 
       <Stack.Screen name="ListOneActivity" component={ListOneActivity} 
+                 options={{
+                  headerLeft:()=>(
+                    <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
+                  headerRight:()=>(
+                    <Icon  />
+                  ), 
+                  headerStyle: {
+                    backgroundColor: '#009387',
+                  },
+                  headerTintColor:'#fff',
+                      }} />
+
+      
+            <Stack.Screen name="formChangeAdressInfo" component={FormChangeInfoAdress} 
                  options={{
                   headerLeft:()=>(
                     <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),

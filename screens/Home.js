@@ -123,7 +123,6 @@ let select = (filterType)=> {
         if (item.name===filterType){
             item.state=true
          //   setWordingSelectedType(item.name)
-         console.log("home",item.name)
          props.changeTypeActivity(item.name)
             return item
         }else {

@@ -48,7 +48,6 @@ function signin(props) {
 
 
 let ValidationButton = ()=>{ 
-    let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
     if(pseudo.length == 0 ||email.length == 0  ||password.length == 0 ){
         gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
@@ -95,21 +94,18 @@ let resultPass = expressionPass.test(password)
 
 
 if(!resultMail){
-    console.log("Le mot de passe doit contenir plus de 6 characères avec au moins 1 majuscule et 1 chiffre",resultPass), 
     setPasswordError(
         <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Format d'email incorrect</Text>
     )
 }else{setPasswordError()}
 
 if(pseudo.length<3){
-    console.log("Le mot de passe doit contenir plus de 6 characères avec au moins 1 majuscule et 1 chiffre",resultPass), 
     setPseudoError(
         <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Veuillez saisir un pseudo de 4 charactères minimum </Text>
     )
 }else{setPseudoError()}
 
 if(!resultPass){
-    console.log("Le mot de passe doit contenir plus de 6 characères, 1 majuscule et 1 chiffre",resultPass), 
     setEmailError(
         <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Le mot de passe doit contenir au moins 6 charactères, 1 majuscule et 1 chiffre</Text>
     )
@@ -124,7 +120,6 @@ if (resultPass && pseudo.length>3 && resultMail){
       })
       var retourCreatAccount = await requestBDD.json()
       var result = retourCreatAccount.login
-      console.log(retourCreatAccount)
       if( result ){
         alert("ok")
     }
@@ -137,7 +132,6 @@ if (resultPass && pseudo.length>3 && resultMail){
 
 }
 
-  console.log("------- >email : ", email,"pseudo : ",pseudo, "passwonrd :",password )
 }
 
 

@@ -146,7 +146,6 @@ let sendRequest =async ()=>{
       })
       var retourCreatAccount = await requestBDD.json()
       var result = retourCreatAccount.login
-      console.log(retourCreatAccount)
       if( result ){
         alert("ok")
     }
@@ -157,7 +156,6 @@ let sendRequest =async ()=>{
       }
 
 
-  console.log("------- >email : ", email,"pseudo : ",)
 }
 
 
