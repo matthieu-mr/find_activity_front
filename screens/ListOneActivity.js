@@ -9,7 +9,7 @@ import {Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
 
 //import components
-import ListType from './component/ListType';
+import ListType from './component/ListItemInfo';
 import MapPoint from './component/map'
 import HeaderComponent from './component/header'
 

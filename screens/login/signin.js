@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,Keyboard,} from 'react-native';
+import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,Keyboard,AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
 import { Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content,Button } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,9 +11,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 function signin(props) {
-  
-    let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
+    props.navigation.setOptions({ title:"" })
 
+    let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
     const [showValidateButton,setShowValidateButton] = useState(true)
     const [email,setEmail] = useState("")
@@ -22,7 +22,7 @@ function signin(props) {
     
     // Error wording
         //Global
-    const [isError, setIsError] = useState(true)
+    const [isError, setIsError] = useState(false)
     const [error,setError] = useState()
 
         //item
@@ -85,19 +85,15 @@ const expressionPass = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/
     // at least one number, one lowercase and one uppercase letter
     // at least six characters
 
-var pseudo = "azza"
-var email = "aaa@a.com"
-var password = "Test001"
-
 let resultMail = expressionMail.test(email)
 let resultPass = expressionPass.test(password)
 
 
 if(!resultMail){
-    setPasswordError(
+  setEmailError(
         <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Format d'email incorrect</Text>
     )
-}else{setPasswordError()}
+}else{setEmailError()}
 
 if(pseudo.length<3){
     setPseudoError(
@@ -106,21 +102,26 @@ if(pseudo.length<3){
 }else{setPseudoError()}
 
 if(!resultPass){
-    setEmailError(
+  setPasswordError(
         <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Le mot de passe doit contenir au moins 6 charactères, 1 majuscule et 1 chiffre</Text>
     )
-}else{setEmailError()}
+}else{setPasswordError()}
 
 
 if (resultPass && pseudo.length>3 && resultMail){
-    let requestBDD =await fetch(`${ip}users/create`,{
+
+    let requestBDD =await fetch(`${ip}users/createuser`,{
         method:"POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
         body:`email=${email}&pseudo=${pseudo}&password=${password}`
       })
+
       var retourCreatAccount = await requestBDD.json()
       var result = retourCreatAccount.login
+
       if( result ){
+        var userData = {email:email,pseudo:pseudo}
+        AsyncStorage.setItem('userInformation',JSON.stringify(userData))
         alert("ok")
     }
      else {
@@ -129,9 +130,7 @@ if (resultPass && pseudo.length>3 && resultMail){
           setError(wording)
       }
 
-
-}
-
+    }
 }
 
 
@@ -175,14 +174,13 @@ if (resultPass && pseudo.length>3 && resultMail){
               <Label>Password</Label>
               <Input                     
                     autoCapitalize="none"
-                    secureTextEntry={true}
+                    secureTextEntry={false}
                     placeholder="Email *"
                     onChangeText={text => setPassword(text)}
                     onSubmitEditing={text => sendRequest(text)}/>
             </Item>
             {passwordError}
         <ErrorMessage />
-
     </Container>
 
     <Container style={styles.buttonContainer}> 

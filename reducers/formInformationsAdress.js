@@ -1,4 +1,6 @@
 export default function(infoPlaceForm = "", action) {
+    //new code : used on form adress naget from navigation if from empty adress or not 
+
     if(action.type == 'infoFormAdress') {
       let infoPlace = action.info
       let newplace ={...infoPlace}
@@ -24,9 +26,7 @@ export default function(infoPlaceForm = "", action) {
 
       let newPlaceInfo = {...infoPlaceForm}
       newPlaceInfo.showListSearch = true
-      
-      console.log(newPlaceInfo)
-
+    
       return newPlaceInfo;
     }
     else if(action.type == 'EmptyFormAdress') {
@@ -37,7 +37,6 @@ export default function(infoPlaceForm = "", action) {
         type:"contact"
       }
       
-
       return emptyForm;
     }else {
       return infoPlaceForm;

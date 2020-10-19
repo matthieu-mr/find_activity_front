@@ -17,7 +17,6 @@ function FormModifAdress(props) {
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
   let affichagelist =props.infoFormAdress.showListSearch
 
-  console.log(nameAdress)
 
 useEffect(() => {
   Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
@@ -83,7 +82,6 @@ let ValidationButton = ()=>{
   
 }
 
-console.log("get from props",props.infoFormAdress)
 
 
 let sendModification =async ()=>{ 
@@ -99,7 +97,6 @@ let newItem =props.infoFormAdress
       let info = JSON.stringify(props)
       alert('ok')
       if(props.infoFormAdress.action == "new"){
-        console.log("new")
         await fetch(`${ip}users/savecontactadress`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -107,7 +104,6 @@ let newItem =props.infoFormAdress
         })
       }else{
         /*
-        console.log("modif")
         await fetch(`${ip}users/deleteinfo`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -117,7 +113,6 @@ let newItem =props.infoFormAdress
       }
 
     }
-  console.log("monnew item",newItem)
 //  props.actionOnSaved()
 
 }

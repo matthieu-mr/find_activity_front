@@ -6,9 +6,9 @@ import { Button,Form,Item, Input, Label, Card, CardItem, Body,Container,Header,C
 
 import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
-import adressComponent from '../component/adressUser'
+import adressComponent from '../component/listCardAdress'
 //Style
-import LisAdress from './component/listAdress'
+import ListAdress from '../component/listCardAdress'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { ScrollView } from 'react-native-gesture-handler';
@@ -31,7 +31,7 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}users/userinformation`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`useremail = m.michon@yahoo.fr`
+      body:`email = m.michon@yahoo.fr`
     })
     var listTypeRaw = await requestBDD.json()
     setUserInfo(listTypeRaw.user)
@@ -41,19 +41,9 @@ useEffect(()=>{
   recupDonnée()
   
 },[props.actionOnSaved])
-/*
-let userinfoAdress
-if (!userInfo){
-  userinfoAdress = <Text> loading</Text>
-}else{
-  userinfoAdress = (
-  <LisAdress key="0" name="Votre adresse" adress={userInfo.adress} postcode={userInfo.postcode} city={userInfo.city} type="adressPerso"/>
-  )
-}
-*/
+
 var ListAdressSaved = contactAdress.map(function(item, i) {
-  console.log(item)
-  return <LisAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification"/>;
+  return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
 })
 
 

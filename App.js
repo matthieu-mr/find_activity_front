@@ -61,9 +61,11 @@ import {Provider} from 'react-redux';
 import listActivity from './reducers/Activity'
 import positionInfo from './reducers/Position'
 import listType from './reducers/TypeActivity'
+
 import infoPlace from './reducers/InfoPlace'
 import sportName from './reducers/SportName'
-import listAdress from './reducers/ListAdress'
+
+import listAdress from './reducers/ListAdressParticipant'
 import actionOnSaved from './reducers/AdressSaved'
 import infoFormAdress from './reducers/formInformationsAdress'
 

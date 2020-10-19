@@ -31,7 +31,6 @@ useEffect(()=>{
     var listTypeRaw = await requestBDD.json()
     setUserInfo(listTypeRaw.user)
     setcontactAdress(listTypeRaw.user.favoritesplaces)
-   // console.log(listTypeRaw.user)
     
   }
   recupDonnée()
@@ -40,8 +39,7 @@ useEffect(()=>{
 
 
 var ListAdressSaved = contactAdress.map(function(item, i) {
-  console.log("item envoye",item)
-  return <LisAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="activity"/>;
+  return <LisAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="activity" action="modification"/>;
 })
 
 

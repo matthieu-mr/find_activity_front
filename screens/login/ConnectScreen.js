@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,Keyboard,} from 'react-native';
+import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,Keyboard,AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
 import { Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content,Button } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,8 +11,24 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 function ConnectScreen(props) {
-  
+  props.navigation.setOptions({ title:"" })
+
     let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
+
+    var userData = {email:"email",pseudo:"pseudo"}
+    AsyncStorage.setItem('userInformation',JSON.stringify(userData))
+
+    const [infoUserAsync,setinfoUserAsync] = useState(false)
+  
+    AsyncStorage.getItem("userInformation", 
+        function(error, data){
+          setinfoUserAsync(data);
+        })
+
+if(infoUserAsync){
+ // props.navigation.navigate("ContactAdressList")
+ console.log("async ok",infoUserAsync )
+}
 
 
     const [showValidateButton,setShowValidateButton] = useState(true)
@@ -21,7 +37,7 @@ function ConnectScreen(props) {
     
     // Error wording
         //Global
-    const [isError, setIsError] = useState(true)
+    const [isError, setIsError] = useState(false)
     const [error,setError] = useState()
 
         //item
@@ -69,7 +85,6 @@ let ValidationButton = ()=>{
             </LinearGradient>
         </TouchableOpacity>
 
-
       ) 
     } else {
         return <Text>  </Text>
@@ -81,7 +96,7 @@ let Create= ()=>{
   if (showValidateButton){
     return ( 
  
-      <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendRequest()}>
+      <TouchableOpacity style={styles.buttonOpacity} onPress={()=>props.navigation.navigate("siginScreen")}>
         <LinearGradient
         colors={["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]}
         start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
@@ -96,8 +111,6 @@ let Create= ()=>{
             </View>
         </LinearGradient>
       </TouchableOpacity>
-      
-
     ) 
   } else {
       return <Text>  </Text>
@@ -110,9 +123,7 @@ let CreateOrByPassButton = ()=>{
   let gradient = ["#ffffff","#fafafa","#c7c7c7","#fafafa","#ffffff"]
   if (showValidateButton){
     return ( 
-
-      
-      <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendRequest()}>
+      <TouchableOpacity style={styles.buttonOpacity} onPress={()=>props.navigation.navigate("ParticipantListAdress")}>
           <LinearGradient
           colors={gradient}
           start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
@@ -205,7 +216,7 @@ let sendRequest =async ()=>{
         </View>
 
         <View style={{marginTop:20,alignItems:"center"}} > 
-          <Text> Ou </Text>
+          <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > Ou </Text>
         </View>
 
 
@@ -214,6 +225,10 @@ let sendRequest =async ()=>{
         </View>
     
     </Container>
+
+      <View style={{marginTop:20,marginBottom:20,alignItems:"center"}} > 
+        <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > Mot de passe oublié ? </Text>
+      </View>
 
 
     <Container style={styles.buttonContainer}> 
@@ -241,25 +256,24 @@ const styles = StyleSheet.create({
     alignItems:"center",
     marginBottom:15,
     width:"100%",
-   
 },
-buttonOpacity:{
-    width:"90%"
-},
- buttonText: {
+  buttonOpacity:{
+      width:"90%"
+  },
+  buttonText: {
+      textAlign: 'center',
+      color: 'white',
+      fontSize:20,
+      fontFamily: 'Baskerville-Black',
+      marginRight:20
+  },
+  buttonTextByPass:{
     textAlign: 'center',
-    color: 'white',
+    color: 'black',
     fontSize:20,
     fontFamily: 'Baskerville-Black',
     marginRight:20
-},
-buttonTextByPass:{
-  textAlign: 'center',
-  color: 'black',
-  fontSize:20,
-  fontFamily: 'Baskerville-Black',
-  marginRight:20
-}
+  }
 
 });
 
