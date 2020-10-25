@@ -11,10 +11,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 import { ScrollView } from 'react-native-gesture-handler';
-import ListAdress from '../component/listCardAdress'
+import ListAdress from '../component/ListCardAdress'
 
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+
+
+
 function AdressListParticipant(props) {
 props.navigation.setOptions({ title:"Liste des participants" })
 
@@ -67,7 +70,6 @@ let validateAction = () => {
   let nbAdress = props.listAdress.length
   let activity = listButton[0].name
 
-  console.log(activity)
   props.SelectedActivity(activity)
 
   props.navigation.navigate("ListActivityType")
@@ -140,6 +142,7 @@ let validateAction = () => {
 const styles = StyleSheet.create({
   container: {
     flex:1,
+    backgroundColor:"white"
   },
 
   constainerList:{

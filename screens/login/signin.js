@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,Keyboard,AsyncStorage} from 'react-native';
+import { StyleSheet, Text, View,Paper,TouchableOpacity, Keyboard,AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
-import { Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content,Button } from 'native-base';
+import { Item, Input, Label, Container, } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 
 //import * as Analytics from 'expo-firebase-analytics';

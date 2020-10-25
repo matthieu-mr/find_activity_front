@@ -9,10 +9,14 @@ import { useNavigation } from '@react-navigation/native';
 // Ajout des modules de navigation 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator,DrawerContentScrollView,DrawerItem,CustomDrawerContent } from '@react-navigation/drawer';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+
+
 
 import Home from './Home'
 import ConnectScreen from './login/ConnectScreen'
-import ListForActivty from './ListForActivity';
+import ListForActivty from './listTypeActivitySport.js';
 import ListOneActivity from './ListOneActivity'
 import AdvancedParam from './AdvancedSearch'
 import ConnectComponent from './component/ConnectComponent'
@@ -31,14 +35,22 @@ import ContactAdressList from "./savedInformation/ContactAdressList"
 import SearchSaveAdress from './savedInformation/SearchSaveAdress'
 import ContactActivityList from './savedInformation/ContactActivityList'
 import FormChangeInfoAdress from './savedInformation/formModifAdress'
+import MapActivity from './MapActivity'
+
+
+
 
 
 function DrawerContent(props){
 
-
   const Drawer = createDrawerNavigator();
   const Stack = createStackNavigator();
   //const navigation = useNavigation();
+
+  const Tab = createMaterialTopTabNavigator();
+
+
+
 
   const Screens = ({navigation}) => {
     let goBack = {
@@ -72,9 +84,9 @@ function DrawerContent(props){
         headerTintColor:'#fff',
       }} >
 
-      <Stack.Screen name="Accueil" component={ListActivityType}/>
+      <Stack.Screen name="Accueil" component={ConnectScreen}/>
 
-        <Stack.Screen name="Place details" component={PlaceDetail} options={menu} />
+        <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
         <Stack.Screen name="Liste" component={ListForActivty} options={menu} />
         
         
@@ -93,7 +105,7 @@ function DrawerContent(props){
         <Stack.Screen name="ContactActivityList" component={ContactActivityList} options={goBack} />
         <Stack.Screen name="formChangeAdressInfo" component={FormChangeInfoAdress} options={goBack} />
         <Stack.Screen name="Parametres" component={AdvancedParam} options={goBack} />
-        <Stack.Screen name="PlaceDetail" component={PlaceDetail} options={goBack} />
+       
         <Stack.Screen name="ConnectionItem" component={ConnectComponent} />
 
     </Stack.Navigator>
@@ -122,16 +134,16 @@ const CustomDrawerContent = (props) => {
       />
 
     <DrawerItem 
-      label ="Liste activités sportives"
+      label ="Vos adresses"
       labelStyle={{marginLeft:-16}}
-      onPress={()=>{props.navigation.navigate("Liste");}}
+      onPress={()=>{props.navigation.navigate("ContactAdressList");}}
       icon ={()=> <Icon reverse name='ios-list' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
     
     <DrawerItem 
-      label ="Liste sorties"
+      label ="Vos sorties"
       labelStyle={{marginLeft:-16}}
-      onPress={()=>{props.navigation.navigate("Liste");}}
+      onPress={()=>{props.navigation.navigate("ContactActivityList");}}
       icon ={()=> <Icon reverse name='ios-list' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
       />
 
@@ -152,7 +164,7 @@ const CustomDrawerContent = (props) => {
 
   return(
     <View style ={{flex:1,display:"flex"}}>
-        <Drawer.Navigator initialRouteName="PlaceDetail"  drawerContent={props=> <CustomDrawerContent {...props} /> }   >
+        <Drawer.Navigator initialRouteName="Place details"  drawerContent={props=> <CustomDrawerContent {...props} /> }   >
           <Drawer.Screen name="Screens" component={Screens} />
       </Drawer.Navigator>
     </View>

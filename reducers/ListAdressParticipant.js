@@ -16,7 +16,6 @@ export default function(listAdresse = [], action) {
         lon:action.info.lon,
         isFavorite:false
       }
-      console.log(newAdress)
 
       newList.push(newAdress)
       
@@ -37,7 +36,6 @@ export default function(listAdresse = [], action) {
         lon:action.info.lon,
         isFavorite:true,
       }
-      console.log(newAdress)
       newList.push(newAdress)
       
       return newList
@@ -45,14 +43,12 @@ export default function(listAdresse = [], action) {
 
     
     else if (action.type == 'deleteAdressParticipant'){
-      console.log('reducer', action)
       let newList = [...listAdresse]
 
       let idDelete = action.info.id-1
 
         newList.splice(idDelete,1)
         newList.map((item,i)=>{
-          console.log("reducer item", item.isFavorite)
 
           if (item.isFavorite){
             item.id=i
@@ -63,7 +59,6 @@ export default function(listAdresse = [], action) {
          
         })
 
-        console.log(newList)
       return newList
     }
      

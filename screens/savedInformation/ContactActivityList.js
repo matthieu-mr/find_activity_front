@@ -38,22 +38,37 @@ useEffect(()=>{
 },[])
 
 
-var ListAdressSaved = contactAdress.map(function(item, i) {
-  return <LisAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="activity" action="modification"/>;
-})
+const [infoUserAsync,setinfoUserAsync] = useState(false)
+  
+AsyncStorage.getItem("userInformation", 
+    function(error, data){
+      const info = JSON.parse(data)
+      setinfoUserAsync(info);
+    })
+
+    var ListAdressSaved = contactAdress.map(function(item, i) {
+      return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
+    })
+
+
+
+if (infoUserAsync.pseudo =="aa"){
+  ListAdressSaved = <BoutonNonConnecte />
+  ButtonAddNewAdress = <Text> </Text>
+} 
 
 
   return (
   <View style={styles.container}>
-    <ScrollView>
-
+        <ScrollView>
 
     <View style={styles.constainerList}> 
-    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Vos Activités sauvgardées </Text>
       {ListAdressSaved}
     </View>
 
     </ScrollView>
+
+
     </View>
   );
 }
@@ -61,43 +76,54 @@ var ListAdressSaved = contactAdress.map(function(item, i) {
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:"white",
-    alignContent:"center",
-    alignItems:"center",
+    backgroundColor:"white"
   },
-  formContainer:{
-    width:"90%",
-    flex:10
-  },    
+
+  constainerList:{
+    alignItems:"center",
+
+  },
+
+  content:{
+   width:"90%",
+
+  },
+  contentTextCard:{
+    fontSize:16,
+    color:"#819ca9",
+    fontFamily: 'Monserrat-Light'
+  },
+  
+  contentCard:{
+    display:"flex",
+    flexDirection:"row",
+    flex:1,
+    justifyContent:"space-between",
+    alignItems:"center",
+  
+},
+  buttonInput:{
+    textAlign: 'center',
+    color: '#4C64FF',
+    padding: 15,
+    marginLeft: 1,
+    marginRight: 1,
+    width: 198,
+    alignItems: 'center',
+    },
+    
   buttonContainer: {
     display:"flex",
-    flex:1,
-    justifyContent:"flex-end",
-    alignItems:"center",
-    marginBottom:15,
-    width:"100%",
-   
+    flexDirection:"row",
 },
-buttonOpacity:{
-    width:"90%"
-},
- buttonText: {
+  buttonText: {
     textAlign: 'center',
     color: 'white',
-    fontSize:20,
-    fontFamily: 'Baskerville-Black',
-    marginRight:20
-},
-buttonTextByPass:{
-  textAlign: 'center',
-  color: 'black',
-  fontSize:20,
-  fontFamily: 'Baskerville-Black',
-  marginRight:20
+    fontSize:17,
+    fontFamily: 'Baskerville-Black'
 }
 
 });
-
 
 function mapStateToProps(state) {
   return { listAdress: state.listAdress }

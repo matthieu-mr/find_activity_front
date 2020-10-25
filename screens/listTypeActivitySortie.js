@@ -1,32 +1,34 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
 import {connect} from 'react-redux';
-import { Button,Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
 
 //Style
-import HeaderComponent from './component/header'
+import HeaderComponent from './component/Header'
+import ButtonType from './component/ButtonActivity'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 import { ScrollView } from 'react-native-gesture-handler';
 
-import ButtonType from './component/buttonActivity'
 
 
 function listTypeActivitySortie(props) {
 
   let gradientSelected = ["#80d6ff","#42a5f5","#42a5f5","#80d6ff"]
   let noSelectGradient = ["#e2f1f8","#b0bec5","#808e95","#b0bec5","#e2f1f8"]
+  
   const [nbAdress,setNbAdress] = useState(15)
   const [listActivityGoogleFromBdd,setlistActivityGoogleFromBdd] = useState([])
   const [listTypeGoogleFromBdd,setlistTypeGoogleFromBdd] = useState([])
   const [typeFilter,setTypeFilter] = useState("Entre amis")
 
+
+  let typeActitySelected = "sport"
 
   let [copyListSortie,setListCopie] = useState([])
   //let copyListTypeSortie = [...listTypeGoogleFromBdd]
@@ -137,7 +139,7 @@ let activeSelection = (selected)=>{
           return (
             <View style={{alignSelf:"center",width:"50%"}} key={i}>
             <TouchableOpacity onPress={()=>{activeSelection(item.wording_fr)}}>
-                    <ButtonType ley={i} width={width} color={color}  fontSize={fontSize} gradient={gradient} wording_fr={item.wording_fr}/>
+                    <ButtonType key={i} width={width} color={color}  fontSize={fontSize} gradient={gradient} wording_fr={item.wording_fr}/>
                 </TouchableOpacity>
             </View>
           )
@@ -155,14 +157,11 @@ let activeSelection = (selected)=>{
         </ScrollView>
       </View>
 
-
-
       <View style={{display:"flex",flex:5,flexDirection:"row",alignContent:"flex-start"}}> 
         <ScrollView>
           <View style={{display:"flex",flex:5,flexDirection:"row",flexWrap:"wrap",alignContent:"flex-start"}}> 
           {affichageResult}
           </View>
-          
           </ScrollView>
       </View>
 
@@ -176,7 +175,7 @@ let activeSelection = (selected)=>{
             >
               <View style={{width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
                 <Text style={styles.buttonText}>
-                type activite
+                Valider
                 </Text>
                 <MaterialCommunityIcons name="send" size={28} color="white" />
               </View>

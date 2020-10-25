@@ -1,20 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,Paper,TouchableOpacity,AsyncStorage } from 'react-native';
 import {connect} from 'react-redux';
 import { Button,Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content } from 'native-base';
 
 import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
-import adressComponent from '../component/listCardAdress'
 //Style
-import ListAdress from '../component/listCardAdress'
+import ListAdress from '../component/ListCardAdress'
+import BoutonNonConnecte from '../component/BoutonNonConnecte'
+
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { ScrollView } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons'; 
 
 function AdressList(props) {
+
+  props.navigation.setOptions({ title:"Adresses sauvegardées" })
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
   const [nbAdress,setNbAdress] = useState(15)
@@ -42,20 +45,33 @@ useEffect(()=>{
   
 },[props.actionOnSaved])
 
-var ListAdressSaved = contactAdress.map(function(item, i) {
-  return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
-})
+const [infoUserAsync,setinfoUserAsync] = useState(false)
+  
+AsyncStorage.getItem("userInformation", 
+    function(error, data){
+      const info = JSON.parse(data)
+      setinfoUserAsync(info);
+    })
+
+    var ListAdressSaved = contactAdress.map(function(item, i) {
+      return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
+    })
 
 
-  return (
-  <View style={styles.container}>
-        <ScrollView>
 
-    <View style={styles.constainerList}> 
-      {ListAdressSaved}
-    </View>
+if (infoUserAsync.pseudo =="aa"){
+  ListAdressSaved = <BoutonNonConnecte />
+  ButtonAddNewAdress = <Text> </Text>
+} 
 
-    </ScrollView>
+let ButtonAddNewAdress = () =>{
+  if (infoUserAsync.pseudo =="aa"){
+    return (
+      <Text> </Text>
+    )
+
+  } else{
+    return (
       <View style={{marginBottom:15,alignSelf:"center"}}> 
       <TouchableOpacity style={styles.buttonContainer} onPress={()=>{props.goToemptyFormAdress(),props.navigation.navigate('formChangeAdressInfo')}}>
         <LinearGradient
@@ -69,11 +85,29 @@ var ListAdressSaved = contactAdress.map(function(item, i) {
                 </Text>
               <MaterialCommunityIcons name="send" size={28} color="white" />
             </View>
-
+  
              </LinearGradient>
         </TouchableOpacity>
       </View>
+    )
+  }
+  
 
+}
+
+
+
+  return (
+  <View style={styles.container}>
+        <ScrollView>
+
+    <View style={styles.constainerList}> 
+      {ListAdressSaved}
+    </View>
+
+    </ScrollView>
+
+<ButtonAddNewAdress />
     </View>
   );
 }

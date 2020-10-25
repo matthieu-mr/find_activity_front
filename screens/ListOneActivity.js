@@ -11,7 +11,7 @@ import * as Location from 'expo-location';
 //import components
 import ListType from './component/ListItemInfo';
 import MapPoint from './component/map'
-import HeaderComponent from './component/header'
+import HeaderComponent from './component/Header'
 
 
 function  ListOneActivity(props) {

@@ -1,6 +1,6 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View, AsyncStorage, ScrollView,TouchableOpacity} from 'react-native';
-import { Container, Header,Text, Item, Input, Icon, Content, Card, CardItem,  } from 'native-base';
+import { Text, Card, CardItem,  } from 'native-base';
 import {connect} from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -43,13 +43,10 @@ let secondAction =(
 )
 
 
-console.log("---> component", props)
 
 let fromScreen = props.screenShow
 switch (fromScreen){
     case "listSavedAdress":
-      console.log(`listAddAdress`);
-
     case 'addParticipantAdress':
     
         firstAction =(
@@ -84,7 +81,7 @@ switch (fromScreen){
       if (!props.isFavorite) {
         firstAction =(
         <View> 
-          <TouchableOpacity onPress={() => props.addParticipant(props)}>
+          <TouchableOpacity onPress={() => alert("props")}>
             <FontAwesome name="star-o" size={28} color="black" />
           </TouchableOpacity>
         </View>
@@ -101,7 +98,6 @@ switch (fromScreen){
       break;
 
     default:
-    console.log(`Sorry, we a.`);
 }
 
 

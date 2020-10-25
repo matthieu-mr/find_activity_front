@@ -19,7 +19,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import { Feather } from '@expo/vector-icons'; 
 
-import ListAdress from '../component/listCardAdress'
+import ListAdress from '../component/ListCardAdress'
 import ListType from '../component/ListItemInfo';
 
 
@@ -75,20 +75,16 @@ useEffect(()=>{
 var ListAdressSaved
 
 const [infoUserAsync,setinfoUserAsync] = useState(true)
+
   AsyncStorage.getItem("userInformation", 
   function(error, data){
     setinfoUserAsync(data);
   })
 
-if(infoUserAsync){
-  // props.navigation.navigate("ContactAdressList")
   
   ListAdressSaved = contactAdress.map(function(item, i) {
     return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
   })
- }else{
-   return (<Text> Veuillez vous connecter</Text>)
- }
 
   return (
 

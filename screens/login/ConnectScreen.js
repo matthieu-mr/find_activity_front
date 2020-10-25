@@ -15,8 +15,6 @@ function ConnectScreen(props) {
 
     let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
-    var userData = {email:"email",pseudo:"pseudo"}
-    AsyncStorage.setItem('userInformation',JSON.stringify(userData))
 
     const [infoUserAsync,setinfoUserAsync] = useState(false)
   
@@ -25,9 +23,15 @@ function ConnectScreen(props) {
           setinfoUserAsync(data);
         })
 
+let sendToAsync=(email,pseudo) =>{
+  var userData = {email:email,pseudo:pseudo}
+  AsyncStorage.setItem('userInformation',JSON.stringify(userData))
+  props.navigation.navigate("ParticipantListAdress")
+}
+
+
 if(infoUserAsync){
- // props.navigation.navigate("ContactAdressList")
- console.log("async ok",infoUserAsync )
+  props.navigation.navigate("ParticipantListAdress")
 }
 
 
@@ -91,6 +95,7 @@ let ValidationButton = ()=>{
     }
     
 }
+
 let Create= ()=>{ 
   let gradient = ["#ffffff","#fafafa","#c7c7c7","#fafafa","#ffffff"]
   if (showValidateButton){
@@ -121,9 +126,11 @@ let Create= ()=>{
 
 let CreateOrByPassButton = ()=>{ 
   let gradient = ["#ffffff","#fafafa","#c7c7c7","#fafafa","#ffffff"]
+
+
   if (showValidateButton){
     return ( 
-      <TouchableOpacity style={styles.buttonOpacity} onPress={()=>props.navigation.navigate("ParticipantListAdress")}>
+      <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendToAsync(false,false)}>
           <LinearGradient
           colors={gradient}
           start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
@@ -150,15 +157,17 @@ let CreateOrByPassButton = ()=>{
 
 let sendRequest =async ()=>{
 
-    let requestBDD =await fetch(`${ip}users/create`,{
+    let requestBDD =await fetch(`${ip}users/login`,{
         method:"POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body:`email=${email}&pseudo=${pseudo}&password=${password}`
+        body:`email=${email}&pseudo=${email}&password=${password}`
       })
       var retourCreatAccount = await requestBDD.json()
       var result = retourCreatAccount.login
+
       if( result ){
-        alert("ok")
+        console.log("retour create",retourCreatAccount.user.email,retourCreatAccount.user.pseudo)
+        sendToAsync(retourCreatAccount.user.email,retourCreatAccount.user.pseudo)
     }
      else {
          let wording = retourCreatAccount.retour

@@ -1,6 +1,6 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View, AsyncStorage, ScrollView,Text} from 'react-native';
-import { Container, Header,Item, Input, Icon, Content, Card, CardItem, Right,ListItem } from 'native-base';
+import { ListItem,Badge } from 'native-base';
 import {connect} from 'react-redux';
 
 import { useNavigation } from '@react-navigation/native';
@@ -11,24 +11,103 @@ import { AntDesign } from '@expo/vector-icons';
 //import module
 
 function ListType(props) {
+const navigation = useNavigation();
+let styleTitle1 = {fontSize:20,fontFamily: 'Baskerville-Medium'}
+
+let sizeTitle1 = props.sizetitle1
+let color=props.color
+let icon
 
 
 // add the switch to props
+
+let Wording= ()=>{
+  return (
+    <View style={{flex:15}}> 
+    <Text style={{fontSize:sizeTitle1,fontFamily: 'Baskerville-Medium'}}>{props.title1}</Text>
+    <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
+  </View>
+  )
+}
+
+
+let actionOnClick =()=>{
+  envoiPropsInformation(props)
+}
+
+let badge
+
+switch(props.action){
+  case 'addSport':
+    sizeTitle1 = props.sizeTitle1
+    color=props.color
+    Wording= ()=>{
+      return (
+        <View style={{flex:15}}> 
+        <Text style={{fontSize:sizeTitle1,fontFamily: 'Baskerville-Medium',color:color}}>{props.title1}</Text>
+      </View>
+      )
+    }
+
+    case 'goPlaceDetail':
+      
+      sizeTitle1 = props.sizeTitle1
+      color=props.color
+      icon =<AntDesign name="rightcircleo" size={24} color="#42a5f5" />
+
+      actionOnClick = ()=>{
+        props.infoPlace(props.item)
+        navigation.navigate("Place details")
+      }
+      badge=props.item.nature_libelle.map((item,i)=>{
+          return (
+            <Badge style={{backgroundColor:color2,marginRight:5,color:"white"}}>
+            <Text style={{margin:5,color:"white"}}>{item}</Text>
+          </Badge>
+          )
+      })
+
+      Wording= ()=>{
+        return (
+          <View style={{flex:15}}> 
+          <Text style={{fontSize:sizeTitle1,fontFamily: 'Baskerville-Medium',color:color}}>{props.title1}</Text>
+          <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
+          <View style={{flexDirection:"row",marginTop:5}}> 
+          {badge}
+          </View>
+ 
+        </View>
+        )
+      }
+
+
+  break
+    default : 
+    icon = <Ionicons style={{flex:1}} name="ios-add-circle-outline" size={24} color="#42a5f5" />
+} 
+
+
+
+
 let envoiPropsInformation =()=>{
-  props.addParticipantList(props)
+  switch(props.action){
+    case 'addSport':
+      sizeTitle1 = 12
+      props.sportName(props.title1)
+    break
+      default : 
+      props.addParticipantList(props)
+  } 
 }
 
   return (
-      <ListItem key={1}   
-            onPress={() =>envoiPropsInformation(props)}>
+      <ListItem key={props.i}   
+            onPress={() =>actionOnClick()}>
             <View style={{display:"flex",flex:1,flexDirection:"row",alignItems:"center",justifyContent:"space-between"}}> 
-                <View > 
-                  <Text style={{fontSize:20,fontFamily: 'Baskerville-Medium'}}>{props.title1}</Text>
-                  <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
-                </View>
-              
-                <Ionicons name="ios-add-circle-outline" size={24} color="#42a5f5" />
-              </View>
+                  <Wording/>
+                
+                {icon} 
+            </View>
       </ListItem>  
 
   );
@@ -60,7 +139,11 @@ function mapDispatchToProps(dispatch) {
   addParticipantList: function(info) {
     dispatch( {type: 'addNewParticipantAdress',info:info} )
   },
+  sportName: function(name) {
+    dispatch( {type: 'addName',name:name} )
+  },
   }
+  
 }
 
 
