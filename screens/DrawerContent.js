@@ -1,33 +1,27 @@
 import 'react-native-gesture-handler';
-import React,{useState,useEffect} from 'react';
-import {connect} from 'react-redux';
-import { View,Text } from 'react-native';
+import React from 'react';
+import {} from 'react-redux';
+import { View } from 'react-native';
 
-import { List,ListItem,Body,Left,Thumbnail,Right,Button,Icon,Content, Title  } from 'native-base';
-import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'native-base';
 
 // Ajout des modules de navigation 
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator,DrawerContentScrollView,DrawerItem,CustomDrawerContent } from '@react-navigation/drawer';
+import { createDrawerNavigator,DrawerContentScrollView,DrawerItem } from '@react-navigation/drawer';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
-
 
 
 import Home from './Home'
 import ConnectScreen from './login/ConnectScreen'
-import ListForActivty from './listTypeActivitySport.js';
-import ListOneActivity from './ListOneActivity'
 import AdvancedParam from './AdvancedSearch'
-import ConnectComponent from './component/ConnectComponent'
-import PlaceDetail from './PlaceDetail'
 import siginScreen from './login/signin'
 
+import ListActivitySortie from './listTypeActivitySortie'
+import ListActivtySport from './listTypeActivitySport';
 
+import MapActivity from './showActivity/MapActivity'
+import PlaceDetail from './PlaceDetail'
 
-import ListActivityType from './listTypeActivitySortie'
-
-import ListActivitySortie from './processCreateActivity/SearchParticipantAdress'
 import ParticipantListAdress from './processCreateActivity/ParticipantListAdress'
 import SearchAdressParticipant from './processCreateActivity/SearchParticipantAdress'
 
@@ -35,8 +29,6 @@ import ContactAdressList from "./savedInformation/ContactAdressList"
 import SearchSaveAdress from './savedInformation/SearchSaveAdress'
 import ContactActivityList from './savedInformation/ContactActivityList'
 import FormChangeInfoAdress from './savedInformation/formModifAdress'
-import MapActivity from './MapActivity'
-
 
 
 
@@ -46,10 +38,6 @@ function DrawerContent(props){
   const Drawer = createDrawerNavigator();
   const Stack = createStackNavigator();
   //const navigation = useNavigation();
-
-  const Tab = createMaterialTopTabNavigator();
-
-
 
 
   const Screens = ({navigation}) => {
@@ -84,21 +72,18 @@ function DrawerContent(props){
         headerTintColor:'#fff',
       }} >
 
-      <Stack.Screen name="Accueil" component={ConnectScreen}/>
-
-        <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
-        <Stack.Screen name="Liste" component={ListForActivty} options={menu} />
-        
-        
         <Stack.Screen name="ParticipantListAdress" component={ParticipantListAdress} options={menuOnly} />
+        <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
+
+
+      <Stack.Screen name="Accueil" component={Home}/>
+
+        
         <Stack.Screen name="SearchAdressParticipant" component={SearchAdressParticipant} options={goBack} />
 
-
-        
-        <Stack.Screen name="ListActivityType" component={ListActivityType} options={goBack} />
-
-        <Stack.Screen name="ListOneActivity" component={ListOneActivity} options={goBack} />
+        <Stack.Screen name="ListActivitySport" component={ListActivtySport} options={goBack} />
         <Stack.Screen name="ListActivitySortie" component={ListActivitySortie} options={goBack} />
+
         <Stack.Screen name="siginScreen" component={siginScreen} options={goBack} />
         <Stack.Screen name="ContactAdressList" component={ContactAdressList} options={goBack} />
         <Stack.Screen name="SearchSaveAdress" component={SearchSaveAdress} options={goBack} />
@@ -106,7 +91,12 @@ function DrawerContent(props){
         <Stack.Screen name="formChangeAdressInfo" component={FormChangeInfoAdress} options={goBack} />
         <Stack.Screen name="Parametres" component={AdvancedParam} options={goBack} />
        
-        <Stack.Screen name="ConnectionItem" component={ConnectComponent} />
+
+
+        <Stack.Screen name="MapActivity" component={MapActivity} options={goBack} />
+
+        
+
 
     </Stack.Navigator>
     )
@@ -157,7 +147,6 @@ const CustomDrawerContent = (props) => {
     </DrawerContentScrollView>
 
   )
-
 }
 
 

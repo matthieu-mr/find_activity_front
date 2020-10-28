@@ -16,9 +16,11 @@ import ListAdress from '../component/ListCardAdress'
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
+import ButtonValidation from '../component/ButtonValidation'
 
 
 function AdressListParticipant(props) {
+
 props.navigation.setOptions({ title:"Liste des participants" })
 
 let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
@@ -69,39 +71,58 @@ if (i != button){ SelectedGradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#
 let validateAction = () => { 
   let nbAdress = props.listAdress.length
   let activity = listButton[0].name
+  let adress = JSON.stringify(props.listAdress)
+ // props.navigation.navigate("ListActivityType")
 
-  props.SelectedActivity(activity)
-
-  props.navigation.navigate("ListActivityType")
-
+ getRdvPoint(adress)
 
   if(nbAdress==0){
     alert("merci d'ajouter une adresse",activity)
-  }else{
+  }
+  if(button==0){
+  props.navigation.navigate("ListActivitySortie")
+   }else if(button==1){
+  props.navigation.navigate("ListActivitySport")
+  }
+  /*
+  else{
     props.SelectedActivity(activity)
   }
- 
+ */
 }
 
+
+
+let getRdvPoint=async (adress)=>{
+  var requestBDD = await fetch(`${ip}adress/getrdvpoint`,{
+    method:"POST",
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body:`info=${adress}`
+  })
+  var listTypeRaw = await requestBDD.json()
+  console.log(listTypeRaw)
+  props.AddRdvPoint(listTypeRaw)
+}
 
 
 
   return (
   <View style={styles.container}>
-
-<Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Type d'activité</Text>
-  <View style={{display:"flex",flexDirection:"row" }}> 
+<View style={{backgroundColor:"white",width:"95%",alignSelf:"center",padding:5,marginTop:10,borderRadius:20}}> 
+    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,alignSelf:"center"}}> Type d'activité</Text>
+    <View style={{display:"flex",flexDirection:"row",marginBottom:20 }}> 
     {ButtonCustomActivity}
-  </View>
+    </View>
+</View>
 
 
-<Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Adresses </Text>
+<View style={styles.contentScreenList}>  
+<ScrollView>
 
-    <ScrollView>
+<Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20,alignSelf:"center"}}> Adresses </Text>
 
     <View style={styles.constainerList}> 
-          {AffichageAdress}
-          
+          {AffichageAdress}  
           <TouchableOpacity style={styles.buttonContainer} onPress={()=>props.navigation.navigate('SearchAdressParticipant')}>
 
         <LinearGradient
@@ -115,25 +136,14 @@ let validateAction = () => {
             </Text>
         </LinearGradient>
       </TouchableOpacity>
-
         </View>
 
     </ScrollView>
-      <View style={{marginBottom:15}}> 
+      <View style={{marginBottom:15,}}> 
         <TouchableOpacity style={styles.buttonOpacity} onPress={()=>validateAction()}>
-            <LinearGradient
-            colors={gradient}
-            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-            style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
-            >
-
-                <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                <Text style={{fontFamily:"Sansita-Bold", color:"white",fontSize:20,}}> Valider     </Text>
-
-                    <MaterialCommunityIcons name="send" size={28} color="white" />
-                </View>
-            </LinearGradient>
+                <ButtonValidation wordingLabel="Valider participants"/>
         </TouchableOpacity>
+      </View>
       </View>
     </View>
   );
@@ -142,18 +152,22 @@ let validateAction = () => {
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:"white"
+    backgroundColor: 'white', 
   },
+  contentScreenList:{
+    backgroundColor:"white",
+    flex:1,
+    width:'95%',
+    alignSelf:"center",
 
+
+
+  },
   constainerList:{
     alignItems:"center",
     flex:1,
   },
 
-  content:{
-   width:"90%",
-
-  },
   contentTextCard:{
     fontSize:16,
     color:"#819ca9",
@@ -166,7 +180,6 @@ const styles = StyleSheet.create({
     width:"80%",
     justifyContent:"space-between",
     alignItems:"center",
-  
 
 },
 
@@ -212,6 +225,9 @@ function mapDispatchToProps(dispatch) {
     SelectedActivity: function(item) {
       dispatch( {type: 'selectedActivity',item} )
   },
+  AddRdvPoint: function(item) {
+    dispatch( {type: 'addRdvPointAdress',item} )
+},
   }
 }
 

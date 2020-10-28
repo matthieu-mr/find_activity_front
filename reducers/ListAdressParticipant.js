@@ -1,9 +1,7 @@
-export default function(listAdresse = [], action) {
+export default function(listAdress = [], action) {
 // show particpant adress from form 
     if(action.type == 'addNewParticipantAdress') {
-      
-      let newList = [...listAdresse]
-     
+      let newList = [...listAdress]
       let nbAdress = newList.length +1
 
       let newAdress ={ 
@@ -18,12 +16,13 @@ export default function(listAdresse = [], action) {
       }
 
       newList.push(newAdress)
-      
+
+      console.log("new list totoal",newList)
       return newList
     }
 
     else if(action.type == 'addNewAdressContact') {
-      let newList = [...listAdresse]
+      let newList = [...listAdress]
       let nbAdress = newList.length +1
 
       let newAdress ={ 
@@ -43,27 +42,28 @@ export default function(listAdresse = [], action) {
 
     
     else if (action.type == 'deleteAdressParticipant'){
-      let newList = [...listAdresse]
-
+      let newList = [...listAdress]
+      console.log("delete",action.info)
       let idDelete = action.info.id-1
 
         newList.splice(idDelete,1)
+
         newList.map((item,i)=>{
 
           if (item.isFavorite){
             item.id=i
           }else{
-            item.name=`Adresse ${i}`
+            item.name=`Adresse ${i+1}`
             item.id=i
           }
          
         })
-
+console.log("result",newList)
       return newList
     }
      
     
     else {
-      return listAdresse;
+      return listAdress;
     }
 }

@@ -1,23 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
 import {connect} from 'react-redux';
 import { Fab,Icon,Spinner,Header,Item,Input } from 'native-base';
 
-import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
 
 //Style
 import HeaderComponent from './component/Header'
 import ListType from './component/ListItemInfo';
 import ButtonType from './component/ButtonActivity'
-import ButtonValidation from './component/ButtonValidation'
 
-
-
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { FontAwesome5 } from '@expo/vector-icons'; 
-import { FontAwesome } from '@expo/vector-icons'; 
 import { ScrollView } from 'react-native-gesture-handler';
 
 
@@ -25,9 +17,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 function  ListForActivity(props) {
 
  //let navigation=props.navigation
- props.navigation.setOptions({ title:"Selection du sport" }
- )
-  let gradientSelected = ["#80d6ff","#42a5f5","#42a5f5","#80d6ff"]
+ props.navigation.setOptions({ title:"Selection du sport" } )
+  let gradientSelected =gradient
   let noSelectGradient = ["#e2f1f8","#b0bec5","#b0bec5","#808e95","#e2f1f8"]
   let noSelectGradientWhite = ["#ffffff","#ffffff","#ffffff","#ffffff","#ffffff"]
 
@@ -41,11 +32,10 @@ function  ListForActivity(props) {
  const [searchHeader, setSearchHeader] = useState(false)
  const[search,setSearch]=useState("")
 
-let latitude = props.positionRecupState.lat
-let longitude = props.positionRecupState.lon
-let distance = props.positionRecupState.dist
-let type = "Toutes"
-let typeListActivity =props.listTypeFromState
+let latitude = props.rdvPoint.lat
+let longitude = props.rdvPoint.lon
+let distance = 5000
+console.log("------",props.rdvPoint)
 
 
 // recuperation des types d'activite 
@@ -141,10 +131,6 @@ if(listSport){
    }  
   
 
-
-
-
-
 // Affichage result
 let affichageResult
 if(filteredList.length ==0){
@@ -165,7 +151,7 @@ if(filteredList.length ==0){
                   colors={gradient}
                   start={{x: 1.0, y: 10.0}} end={{x: 0.0, y: 0.0}}
                   >
-      <ListType key={i} title1={item.path} color={color} sizeTitle1={fontSize} type="sport" action="addSport" screenShow="addParticipantAdress" />        
+      <ListType key={i} title1={item.path} color={color} sizeTitle1={fontSize} type="sport" action="addSport" screenShow="addParticipantAdress" item={item} filterType={typeFilter} />        
         </LinearGradient>
       </TouchableOpacity>
   
@@ -197,9 +183,9 @@ let lettreComparaison ="";
       </ScrollView>
     </View>
 
-    <View style={{display:"flex",flex:5,flexDirection:"row",alignContent:"flex-start"}}> 
+    <View style={styles.listInformation}> 
         <ScrollView>
-          <View style={{display:"flex",flex:5,flexDirection:"row",flexWrap:"wrap",alignContent:"flex-start"}}> 
+          <View style={{display:"flex",flex:5,flexDirection:"row",flexWrap:"wrap",alignContent:"flex-start",}}> 
           {affichageResult}
           </View>
           </ScrollView>
@@ -217,13 +203,6 @@ let lettreComparaison ="";
   </Fab>
 </View>
 
-
-
-   <View style={styles.buttonValidationContainer}> 
-      <TouchableOpacity style={{width:"100%",alignItems:"center"}} onPress={()=>{alert("hello")}}>
-          <ButtonValidation wordingLabel="Carte des sites"/>
-      </TouchableOpacity>
-    </View>
 </View>
 
   );
@@ -234,7 +213,7 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     alignContent:"flex-start",
-    backgroundColor:"white"
+    backgroundColor: 'white',  
   },
   constainerFilterList:{
     display:"flex",
@@ -250,6 +229,24 @@ const styles = StyleSheet.create({
     width:"100%",
    
 },
+
+listInformation:{
+  display:"flex",
+  flex:5,
+  flexDirection:"row",
+  alignContent:"flex-start",
+  alignSelf:"center",
+  width:"95%",
+  borderTopLeftRadius:20,
+  borderTopRightRadius:20,
+  backgroundColor:"white",
+  padding:5,
+  borderColor:"#80d6ff",
+  borderWidth:3
+},
+
+
+
   buttonFilter:{
     height: 60,
      width: 150, 
@@ -258,6 +255,7 @@ const styles = StyleSheet.create({
       borderRadius:50,
       marginTop:20,
       marginLeft:15,
+      
   },
     
   buttonText: {
@@ -271,7 +269,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { positionRecupState: state.positionInfo,listTypeFromState:state.listType,sportNameState:state.sportName }
+  return { rdvPoint: state.rdvPointAdress}
 }
 
 

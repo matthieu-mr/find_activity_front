@@ -21,15 +21,12 @@ function ButtonValidation(props) {
     let wordingLabel =props.wordingLabel
 
 
-    //let font =""
-
     useEffect(() => {
         Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
         Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
       }, []);
     
       const _keyboardDidShow = () => {
-
         setShowValidateButton(!showValidateButton)
       };
     
@@ -44,7 +41,7 @@ let ValidationButton = ()=>{
                 <LinearGradient
                 colors={gradient}
                 start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-                style={{ height: 48, width:"98%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
+                style={{ height: 48, marginLeft:"1%",width:"98%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
                 >
     
                     <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>

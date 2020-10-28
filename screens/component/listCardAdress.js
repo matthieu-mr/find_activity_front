@@ -1,6 +1,6 @@
 import React,{useState,useEffect,Component} from 'react';
 import { StyleSheet, View, AsyncStorage, ScrollView,TouchableOpacity} from 'react-native';
-import { Text, Card, CardItem,  } from 'native-base';
+import { Text, Card, CardItem, Item,  } from 'native-base';
 import {connect} from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -8,19 +8,18 @@ import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons'; 
 
 //import module
-
 function AccordionComponent(props) {
   const navigation = useNavigation();
 
   let deleteAdress=async()=>{
-    props.actionOnSaved()
- 
+/*    props.actionOnSaved()
+
     await fetch(`${ip}users/deleteinfo`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`useremail =aa@a.com&objectid=${props.id}&type=${props.type}`
     })
- 
+ */
   }
 
 
@@ -29,6 +28,8 @@ let changeInfo = ()=> {
   navigation.navigate("formChangeAdressInfo")
 }
 
+
+
 let firstAction =(
   <View> 
   <TouchableOpacity onPress={() => changeInfo("save")}>
@@ -36,6 +37,7 @@ let firstAction =(
   </TouchableOpacity>
 </View>
 )
+
 let secondAction =(
   <TouchableOpacity onPress={() => deleteAdress({id})}>
     <FontAwesome name="remove" size={20} color="red" />
@@ -47,6 +49,8 @@ let secondAction =(
 let fromScreen = props.screenShow
 switch (fromScreen){
     case "listSavedAdress":
+      break
+
     case 'addParticipantAdress':
     
         firstAction =(
@@ -103,7 +107,7 @@ switch (fromScreen){
 
   return (
     
-    <View style={{marginTop:15,borderRadius:500,width:"80%"}} key="0">
+    <View style={{marginTop:15,borderRadius:500,width:"98%"}} key="0">
     <LinearGradient
     colors={gradient}
     start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}

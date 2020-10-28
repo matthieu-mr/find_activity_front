@@ -1,34 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
 import {connect} from 'react-redux';
 
-import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
 
 //Style
 import HeaderComponent from './component/Header'
 import ButtonType from './component/ButtonActivity'
+import ButtonValidation from './component/ButtonValidation'
 
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { FontAwesome5 } from '@expo/vector-icons'; 
-import { FontAwesome } from '@expo/vector-icons'; 
+
 import { ScrollView } from 'react-native-gesture-handler';
 
 
 
 function listTypeActivitySortie(props) {
-
-  let gradientSelected = ["#80d6ff","#42a5f5","#42a5f5","#80d6ff"]
+  props.navigation.setOptions({ title:"Sélection sortie" } )
+  let gradientSelected = gradient
   let noSelectGradient = ["#e2f1f8","#b0bec5","#808e95","#b0bec5","#e2f1f8"]
   
-  const [nbAdress,setNbAdress] = useState(15)
+ // const [nbAdress,setNbAdress] = useState(15)
   const [listActivityGoogleFromBdd,setlistActivityGoogleFromBdd] = useState([])
   const [listTypeGoogleFromBdd,setlistTypeGoogleFromBdd] = useState([])
-  const [typeFilter,setTypeFilter] = useState("Entre amis")
-
-
-  let typeActitySelected = "sport"
+  const [typeFilter,setTypeFilter] = useState("toutes")
+  const [changeFilter,setChangeFilter] = useState(false)
+  const [alertSelectActivity, setalertSelectActivity] =useState(<Text></Text>)
 
   let [copyListSortie,setListCopie] = useState([])
   //let copyListTypeSortie = [...listTypeGoogleFromBdd]
@@ -50,9 +46,8 @@ function listTypeActivitySortie(props) {
     },[])
 
     useEffect(()=>{
-    
-        let array = []
 
+        let array = []
         switch(typeFilter){
           case"toutes" : 
             listActivityGoogleFromBdd.map((item)=>{
@@ -117,10 +112,37 @@ function listTypeActivitySortie(props) {
           </View>
         )
       }    
-const [changeFilter,setChangeFilter] = useState(false)
+
+
+let goMap =()=>{
+  let search=[]
+  copyListSortie.map((item,i)=>{
+    if(item.setAffichageSortie){
+      search.push(item.google_label)
+    }
+  })
+
+
+  if(search.length==0){
+    setalertSelectActivity(<Text style={{color:"red",alignSelf:'center',fontSize:20}}>Veuillez selectionner une activité</Text>)
+
+  }else{
+    let item ={
+      typeActivity:"sortie",
+      activity:search,
+      filteredActivity:"sortie"
+    }
+    props.addActivity(item)
+    props.navigation.navigate("MapActivity")
+  }
+
+}
+
+
 
 let activeSelection = (selected)=>{ 
   setChangeFilter(!changeFilter)
+  setalertSelectActivity(<Text style={{color:"red",alignSelf:'center',fontSize:20}}></Text>)
 
   copyListSortie.map((item,i)=>{
    item.wording_fr == selected ? item.setAffichageSortie =!item.setAffichageSortie  : item.setAffichageSortie =item.setAffichageSortie 
@@ -165,22 +187,11 @@ let activeSelection = (selected)=>{
           </ScrollView>
       </View>
 
-
-      <View style={{marginBottom:15,alignSelf:"flex-start"}}> 
-      <TouchableOpacity style={styles.buttonContainer} onPress={()=>alert('findadress')}>
-            <LinearGradient
-            colors={gradient}
-            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-            style={{ height: 48, width: 400, alignItems: 'center', justifyContent: 'center', borderRadius:50,marginTop:20}}
-            >
-              <View style={{width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
-                <Text style={styles.buttonText}>
-                Valider
-                </Text>
-                <MaterialCommunityIcons name="send" size={28} color="white" />
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
+      {alertSelectActivity}
+      <View style={{marginBottom:15}}> 
+        <TouchableOpacity style={styles.buttonOpacity} onPress={()=>goMap()}>
+                <ButtonValidation wordingLabel="Valider participants"/> 
+        </TouchableOpacity>
       </View>
 
 
@@ -192,10 +203,10 @@ let activeSelection = (selected)=>{
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    alignContent:"flex-start"
+    alignContent:"flex-start",
+    backgroundColor: 'white', 
   },
   constainerFilterList:{
-  
     display:"flex",
     flexDirection :"row",
     flex:1,
@@ -222,21 +233,20 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { listAdress: state.listAdress }
+  return { listAdress: state.listAdress,rdvPoint:state.rdvPointAdress }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     deleteAdress: function(item) {
-        dispatch( {type: 'deleteAdress',item} )
+      dispatch( {type: 'deleteAdress',item} )
     },
     addActivity: function(item) {
       dispatch( {type: 'addActivity',item} )
-  },
-  deleteActivity: function(item) {
-    dispatch( {type: 'deleteAdress',item} )
-},
-
+    },
+    deleteActivity: function(item) {
+      dispatch( {type: 'deleteAdress',item} )
+    },
   }
 }
 

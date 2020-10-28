@@ -1,36 +1,55 @@
 import React,{useState,useEffect} from 'react';
-import { StyleSheet, View,Text,Image,StatusBar,Dimensions  } from 'react-native';
-import MapView, {Callout,Marker} from 'react-native-maps';
+import { StyleSheet, View,Text,Dimensions  } from 'react-native';
+import MapView, {Marker} from 'react-native-maps';
 import {connect} from 'react-redux';
-import {  Icon, Tab, Tabs, TabHeading, Header} from 'native-base';
+import {Icon, Tab, Tabs, TabHeading} from 'native-base';
 
 
-
-import * as Location from 'expo-location';
 
 
 //import components
-import ListType from './component/ListItemInfo';
-import MarkerMap from'./component/MarkerMap';
-import HeaderComponent from './component/Header'
+import ListType from '../component/ListItemInfo';
+import MarkerMap from'../component/MarkerMap';
+import HeaderComponent from '../component/Header'
 import { ScrollView } from 'react-native-gesture-handler';
 
 function MapActivity(props) {
-let lon
-let lat 
-let typeActivity 
+
+  props.navigation.setOptions({ title:"Affichage des activités" })
+
+
+console.log(console.log("recup initial", props.rdvPointAdress))
+
+
+let lon = props.rdvPointAdress.lon
+let lat =props.rdvPointAdress.lat
+let typeActivity = props.listType.activity
 let dist 
 
+/*
 lat = 48.7927087
 lon = 2.5133559
+*/
 
 const [listPoint,setListPoint] = useState([])
+
+
+console.log("rdvpoint",props.rdvPointAdress)
+console.log("type",props.listType)
+
 
 // List type part 
 useEffect(()=>{
   async function recupDonnée(){
 
-    var requestBDD = await fetch(`${ip}sport/mapactivity`,{
+    let urlType 
+    if(props.listType.typeActivity == "sortie"){
+      urlType='googleinfo/'
+    }else{
+      urlType='sport/'
+    }
+
+    var requestBDD = await fetch(`${ip}${urlType}mapactivity`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`lat=${lat}&long=${lon}&dist=${dist}&type=${typeActivity}`
@@ -43,6 +62,7 @@ useEffect(()=>{
 },[])
 
 let markerListMap =listPoint.map((item,i)=>{
+  console.log("recup item",item)
   return(
     <MarkerMap key={i} lat={item.lat} lon={item.lon} adress={item.adress} coloraction={"green"} name={item.name} item={item} type="goPlace" action="goPlaceDetail" screenShow="listActivity"/>
   )
@@ -54,13 +74,10 @@ let ListMap =listPoint.map((item,i)=>{
     <ListType key={i} lat={item.lat} sizeTitle1={20} color={color1} lon={item.lon} title2={item.adress} title1={item.name} item={item} type="goPlace" action="goPlaceDetail" screenShow="listActivity" />
   )
 })
-console.log(props)
   return (
 
   <View style={styles.containerAll}>
       <HeaderComponent/>
-
-
 
       <Tabs onChangeTab={(e)=>console.log(e.i)} tabBarUnderlineStyle={{borderBottomColor:color2,borderBottomWidth:5}}  >
           <Tab heading={ <TabHeading style={{backgroundColor: '#ffffff'}}  ><Icon name="map" style={{color: '#000000'}} />
@@ -156,24 +173,11 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { positionRecupState: state.positionInfo,listTypeFromState:state.listType,listActivityFromState:state.listActivity }
+  return { rdvPointAdress: state.rdvPointAdress,listType:state.listType,}
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    positionInfo: function(location) {
-    dispatch( {type: 'addPosition',location:location} )
-    },
-    listActivity: function(list) {
-    dispatch( {type: 'addList',list:list} )
-    },
-    listType: function(listType) {
-    dispatch( {type: 'changeTypeActivity',listType:listType} )
-    },
-  
-    changeTypeActivity: function(typeActivityToProps) {
-    dispatch( {type: 'changeTypeActivityPosition',typeActivityToProps:typeActivityToProps} )
-    },
     infoPlace: function(info) {
     dispatch( {type: 'callPlace',info:info} )
     },

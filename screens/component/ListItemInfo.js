@@ -1,10 +1,8 @@
-import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View, AsyncStorage, ScrollView,Text} from 'react-native';
+import React from 'react';
+import { StyleSheet, View,Text} from 'react-native';
 import { ListItem,Badge } from 'native-base';
 import {connect} from 'react-redux';
-
 import { useNavigation } from '@react-navigation/native';
-
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 
@@ -12,23 +10,14 @@ import { AntDesign } from '@expo/vector-icons';
 
 function ListType(props) {
 const navigation = useNavigation();
-let styleTitle1 = {fontSize:20,fontFamily: 'Baskerville-Medium'}
 
 let sizeTitle1 = props.sizetitle1
 let color=props.color
-let icon
-
+let icon= <Ionicons style={{flex:1}} name="ios-add-circle-outline" size={24} color="#42a5f5" />
 
 // add the switch to props
 
-let Wording= ()=>{
-  return (
-    <View style={{flex:15}}> 
-    <Text style={{fontSize:sizeTitle1,fontFamily: 'Baskerville-Medium'}}>{props.title1}</Text>
-    <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
-  </View>
-  )
-}
+let Wording
 
 
 let actionOnClick =()=>{
@@ -38,9 +27,43 @@ let actionOnClick =()=>{
 let badge
 
 switch(props.action){
+
+  case 'addParticipant':
+    color=props.color
+    Wording= ()=>{
+      return (
+        <View style={{flex:15}}> 
+          <Text style={{fontSize:props.sizeTitle1,fontFamily: 'Baskerville-Medium'}}>{props.title1}</Text>
+          <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
+        </View>
+      )
+      }
+
+      actionOnClick =()=>{
+        props.addParticipantList(props)
+        navigation.navigate("ParticipantListAdress")
+      }
+      
+
+
+  break
+
   case 'addSport':
     sizeTitle1 = props.sizeTitle1
     color=props.color
+    let search=[props.title1]
+
+
+    actionOnClick = ()=>{
+      let item ={
+        typeActivity:"sport",
+        activity:search,
+        filteredActivity:props.filterType
+      }
+      props.addActivity(item)
+      navigation.navigate("MapActivity")
+    }
+
     Wording= ()=>{
       return (
         <View style={{flex:15}}> 
@@ -49,6 +72,7 @@ switch(props.action){
       )
     }
 
+    break
     case 'goPlaceDetail':
       
       sizeTitle1 = props.sizeTitle1
@@ -70,24 +94,22 @@ switch(props.action){
       Wording= ()=>{
         return (
           <View style={{flex:15}}> 
-          <Text style={{fontSize:sizeTitle1,fontFamily: 'Baskerville-Medium',color:color}}>{props.title1}</Text>
-          <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
+            <Text style={{fontSize:sizeTitle1,fontFamily: 'Baskerville-Medium',color:color}}>{props.title1}</Text>
+            <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
           <View style={{flexDirection:"row",marginTop:5}}> 
-          {badge}
+            {badge}
           </View>
  
         </View>
         )
       }
 
-
   break
     default : 
-    icon = <Ionicons style={{flex:1}} name="ios-add-circle-outline" size={24} color="#42a5f5" />
 } 
 
 
-
+/*
 
 let envoiPropsInformation =()=>{
   switch(props.action){
@@ -99,7 +121,7 @@ let envoiPropsInformation =()=>{
       props.addParticipantList(props)
   } 
 }
-
+*/
   return (
       <ListItem key={props.i}   
             onPress={() =>actionOnClick()}>
@@ -127,21 +149,21 @@ const styles = StyleSheet.create({
 })
 
 
-function mapStateToProps(state) {
-  return { listActivity: state.listActivity}
-}
 
 function mapDispatchToProps(dispatch) {
   return {
-    infoPlace: function(info) {
-      dispatch( {type: 'callPlace',info:info} )
-  },
+  infoPlace: function(info) {
+    dispatch( {type: 'callPlace',info:info} )
+    },
   addParticipantList: function(info) {
     dispatch( {type: 'addNewParticipantAdress',info:info} )
-  },
+    },
   sportName: function(name) {
     dispatch( {type: 'addName',name:name} )
-  },
+    },
+    addActivity: function(item) {
+      dispatch( {type: 'addActivity',item} )
+    },
   }
   
 }
@@ -149,7 +171,7 @@ function mapDispatchToProps(dispatch) {
 
 
 export default connect(
-  mapStateToProps, 
+  null, 
   mapDispatchToProps
 )(ListType);
 

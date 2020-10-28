@@ -29,9 +29,19 @@ function  SearchAdress(props) {
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
-  const [adress,setAdress] = useState("16 rue saint hilaire")
+  const [adress,setAdress] = useState("")
   const [listAdressResult,setListAdressResult] = useState([])
 
+  let infoAdress = <Text></Text>
+
+  if(adress == ""){
+    infoAdress= (
+    <View style={{display:"flex",alignItems:"center",marginTop:15}}>
+    <AntDesign name="arrowup" size={28} color="#0077c2"  />
+    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:10,alignSelf:"center"}}> Veuillez saisir une adresse </Text>
+    </View>
+    )
+  }
 
   useEffect(()=>{
     async function recupDonnée(){
@@ -82,6 +92,7 @@ const [infoUserAsync,setinfoUserAsync] = useState(true)
   })
 
   
+  
   ListAdressSaved = contactAdress.map(function(item, i) {
     return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
   })
@@ -90,9 +101,6 @@ const [infoUserAsync,setinfoUserAsync] = useState(true)
 
     <View style={styles.container}>
 
-        <Tabs activeTabStyle={{backgroundColor:"red"}}>        
-            <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="search" size={24} color="white" /><Text style={styles.textInput}>  Recherche</Text></TabHeading>}
-            >
           <LinearGradient
             colors={gradient}
               start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
@@ -107,23 +115,14 @@ const [infoUserAsync,setinfoUserAsync] = useState(true)
 
           </LinearGradient>
 
+        {infoAdress}
+
+
           <ScrollView> 
             {ListResultSearchAdress}
           </ScrollView>
             
 
-          </Tab>
-          <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="blur-linear" size={24} color="white" /><Text style={styles.textInput}>  Adresses</Text></TabHeading>}>
-            <ScrollView>
-              <View style={{display:"flex",alignItems:"center"}}>   
-                {ListAdressSaved}
-              </View>    
-            </ScrollView>
-          </Tab>
-          <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="gps-not-fixed" size={24} color="white" /><Text  style={styles.textInput}>  Ma position</Text></TabHeading>}>
-          <Text> tab 3</Text>
-          </Tab>
-        </Tabs>
 
     </View>
   );

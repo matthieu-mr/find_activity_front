@@ -69,14 +69,14 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     deleteAdress: function(item) {
-        dispatch( {type: 'deleteAdress',item} )
-    },
-    addActivity: function(item) {
-      dispatch( {type: 'addActivity',item} )
-  },
-  deleteActivity: function(item) {
     dispatch( {type: 'deleteAdress',item} )
-},
+  },
+    addActivity: function(item) {
+    dispatch( {type: 'addActivity',item} )
+  },
+    deleteActivity: function(item) {
+    dispatch( {type: 'deleteAdress',item} )
+  },
   }
 }
 

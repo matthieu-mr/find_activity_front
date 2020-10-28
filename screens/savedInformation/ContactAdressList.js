@@ -1,14 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity,AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity,AsyncStorage } from 'react-native';
 import {connect} from 'react-redux';
-import { Button,Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content } from 'native-base';
 
-import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
 //Style
 import ListAdress from '../component/ListCardAdress'
 import BoutonNonConnecte from '../component/BoutonNonConnecte'
+import ButtonValidation from '../component/ButtonValidation'
 
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
@@ -58,44 +57,27 @@ AsyncStorage.getItem("userInformation",
     })
 
 
-
+/*
 if (infoUserAsync.pseudo =="aa"){
   ListAdressSaved = <BoutonNonConnecte />
   ButtonAddNewAdress = <Text> </Text>
 } 
+*/
 
 let ButtonAddNewAdress = () =>{
-  if (infoUserAsync.pseudo =="aa"){
-    return (
-      <Text> </Text>
-    )
 
-  } else{
     return (
       <View style={{marginBottom:15,alignSelf:"center"}}> 
-      <TouchableOpacity style={styles.buttonContainer} onPress={()=>{props.goToemptyFormAdress(),props.navigation.navigate('formChangeAdressInfo')}}>
-        <LinearGradient
-          colors={gradient}
-            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-            style={{ height: 48, width: 400, alignItems: 'center', justifyContent: 'center', borderRadius:50,marginTop:20}}
-          >
-            <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
-              <Text style={styles.buttonText}>
-                  Ajouter une adresse              
-                </Text>
-              <MaterialCommunityIcons name="send" size={28} color="white" />
-            </View>
-  
-             </LinearGradient>
-        </TouchableOpacity>
+      <ButtonValidation wordingLabel="Ajouter nouvelle adresse"/>
       </View>
     )
-  }
   
-
 }
 
-
+let navigationNewAdress =()=>{
+  props.goToemptyFormAdress(),
+  props.navigation.navigate('formChangeAdressInfo')
+}
 
   return (
   <View style={styles.container}>
@@ -106,8 +88,11 @@ let ButtonAddNewAdress = () =>{
     </View>
 
     </ScrollView>
-
-<ButtonAddNewAdress />
+    <View style={{marginBottom:15}}> 
+        <TouchableOpacity style={styles.buttonOpacity} onPress={()=>navigationNewAdress()}>
+                <ButtonValidation wordingLabel="Ajouter adresse"/>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

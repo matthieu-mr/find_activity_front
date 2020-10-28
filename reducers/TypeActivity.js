@@ -1,29 +1,9 @@
 export default function(typeActivity = [], action) {
-
-    if(action.type == 'changeTypeActivity') {
-      let newList = action.listType
-  
-      return newList;
-    
-    }
-    else if(action.type == 'selectedActivity'){
+     if(action.type == 'addActivity'){
       var typeActivite = action.item
 
       return typeActivite
     }
-
-    else if(action.type == 'addActivity'){
-      var typeActivite = action.item
-
-      return typeActivite
-    }
-    else if(action.type == 'deleteActivity'){
-      var typeActivite = action.item
-
-      return typeActivite
-    }
-
-
 
      else {
       return typeActivity;
