@@ -85,9 +85,7 @@ switch (fromScreen){
       if (!props.isFavorite) {
         firstAction =(
         <View> 
-          <TouchableOpacity onPress={() => alert("props")}>
-            <FontAwesome name="star-o" size={28} color="black" />
-          </TouchableOpacity>
+
         </View>
         )
         secondAction =(

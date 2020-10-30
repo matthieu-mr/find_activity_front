@@ -72,7 +72,7 @@ function DrawerContent(props){
         headerTintColor:'#fff',
       }} >
 
-        <Stack.Screen name="ParticipantListAdress" component={ParticipantListAdress} options={menuOnly} />
+        <Stack.Screen name="ParticipantListAdress" component={ParticipantListAdress}  />
         <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
 
 
