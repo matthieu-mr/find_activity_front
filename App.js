@@ -68,9 +68,9 @@ import sportName from './reducers/SportName'
 import listAdress from './reducers/ListAdressParticipant'
 import actionOnSaved from './reducers/AdressSaved'
 import infoFormAdress from './reducers/formInformationsAdress'
-import rdvPointAdress from './reducers/RdvPointAdress'
+import userInformation from './reducers/UserInformation'
 
-const store = createStore(combineReducers({listActivity,listType,infoPlace,listAdress,actionOnSaved,infoFormAdress,rdvPointAdress}))
+const store = createStore(combineReducers({listActivity, positionInfo,listType,infoPlace,sportName,listAdress,actionOnSaved,infoFormAdress,userInformation}))
 
 export default function App(navigation){
   const [dataLoaded,SetDataLoaded] = React.useState(false)

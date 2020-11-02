@@ -1,3 +1,5 @@
+
+
 const { setGlobalCssModule } = require("reactstrap/lib/utils")
 
 
@@ -9,6 +11,4 @@ global.gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 global.color1 = "#0077c2"
 global.color2 = "#42a5f5"
 global.color3 = "#80d6ff"
-
-
 

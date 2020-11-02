@@ -32,6 +32,9 @@ const _keyboardDidHide = () => {
 };
 
 
+
+
+
 let AffichageList = () =>{
   if(affichagelist){
     return(
@@ -39,10 +42,13 @@ let AffichageList = () =>{
     )
   }else{
     return(
-      <TouchableOpacity style={styles.buttonOpacity} onPress={()=>changeAffichageList()}>
-        <View style={{display:"flex",flexDirection:"row"}}> 
-        <Text  style={styles.inputStyle}> {props.infoFormAdress.adress}, {props.infoFormAdress.postcode}, {props.infoFormAdress.city}     </Text>
-        <FontAwesome name="edit" size={28} color="#0077c2" />
+      <TouchableOpacity style={styles.adress} onPress={()=>changeAffichageList()}>
+        <View style={{display:"flex",flexDirection:"row",alignContent:"stretch",justifyContent:"space-between"}}> 
+          <View> 
+            <Text  style={styles.title1}> {props.infoFormAdress.adress}  </Text>
+            <Text  style={styles.title2}> {props.infoFormAdress.postcode}, {props.infoFormAdress.city}   </Text>
+          </View>
+         <FontAwesome name="edit" style={{marginRight:5}}size={28} color="#0077c2" />
         </View>
 
       </TouchableOpacity>
@@ -51,6 +57,7 @@ let AffichageList = () =>{
 }
 
 let changeAffichageList = () =>{props.showList()}
+
 
 
 let ValidationButton = ()=>{ 
@@ -95,13 +102,15 @@ let newItem =props.infoFormAdress
       gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
     }else{
       let info = JSON.stringify(props)
-      alert('ok')
       if(props.infoFormAdress.action == "new"){
         await fetch(`${ip}users/savecontactadress`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
-          body:`info=${info}`
+          body:`info=${info}&type=contact`
         })
+
+        props.navigation.navigate()
+
       }else{
         /*
         await fetch(`${ip}users/deleteinfo`,{
@@ -121,21 +130,36 @@ let newItem =props.infoFormAdress
 
 return (
 <View style={styles.container}>
-<View style={{display:"flex",flex:8,width:"90%"}}> 
-    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Nom de l'adresse </Text>
-
-          <Item floatingLabel>
-            <Label>{props.infoFormAdress.name}</Label>
-            <Input                     
-                  autoCapitalize="none"
-                  placeholder="Email *"
-                  onChangeText={(text) => setName(text)}
-                  style={styles.inputStyle} />
-          </Item>
+<View style={{display:"flex",flex:12,width:"98%"}}> 
     
+  <Card style={styles.cardContainer}>
+    <View style={{display:"flex",flexDirection:"row",margin:15}}> 
+      <View style={{flex:1}}> 
+        <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:15}}> Nom de l'adresse </Text>
 
-<Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Adresse</Text>
-  <AffichageList/>
+        <Item floatingLabel>
+          <Label>{props.infoFormAdress.name}</Label>
+          <Input                     
+          autoCapitalize="none"
+          placeholder="Email *"
+          onChangeText={(text) => setName(text)}
+          style={styles.title1} />
+        </Item>
+
+
+
+
+
+      </View>
+    </View>
+  </Card>
+
+  <Card style={styles.adressContainer}>
+        <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,padding:15}}> Adresse </Text>
+        <AffichageList/>
+
+  </Card>
+
 </View>
 
 
@@ -151,10 +175,29 @@ return (
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:"white",
+    backgroundColor: '#80d6ff', 
     alignContent:"center",
     alignItems:"center",
   },
+  cardContainer:{
+    borderRadius:20,
+  },
+adressContainer:{
+  borderRadius:20,
+  flex:1
+},
+adress:{
+  padding:15
+},
+title1:{
+  fontSize:20,
+  fontFamily: 'Baskerville-Medium'
+},
+title2:{
+  fontSize:17,
+  fontFamily: 'Monserrat-Light'
+},
+
 
   buttonContainer: {
     display:"flex",
@@ -163,6 +206,7 @@ const styles = StyleSheet.create({
     alignItems:"center",
     marginBottom:15,
     width:"100%",
+    backgroundColor: '#80d6ff', 
 },
 buttonOpacity:{
     width:"90%"
@@ -174,13 +218,7 @@ buttonOpacity:{
     fontFamily: 'Baskerville-Black',
     marginRight:20
 },
-buttonTextByPass:{
-  textAlign: 'center',
-  color: 'black',
-  fontSize:20,
-  fontFamily: 'Baskerville-Black',
-  marginRight:20
-},
+
 inputStyle:{
   fontFamily:"Monserrat-Medium", 
   fontSize:17,

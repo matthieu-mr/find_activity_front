@@ -24,7 +24,7 @@ function  ListOneActivity(props) {
   
   
 
-  props.navigation.setOptions({ title:sportName })
+  //props.navigation.setOptions({ title:sportName })
 
 // recuperation des types d'activite 
 useEffect(()=>{

@@ -25,7 +25,7 @@ import ListType from '../component/ListItemInfo';
 
 
 function  SearchAdress(props) {
-  props.navigation.setOptions({ title:"Ajouter une adresse" })
+ // props.navigation.setOptions({ title:"Ajouter une adresse" })
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 

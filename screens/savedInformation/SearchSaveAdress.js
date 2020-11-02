@@ -40,7 +40,7 @@ function  SearchSaveAdress(props) {
   let ListResult =(
     <View style={{display:"flex",flex:1,alignItems:"center",alignContent:"space-around",justifyContent:"space-around"}}> 
       <Feather name="arrow-up" size={35} color="#0077c2" />
-      <Text  style={{color:"#0077c2",fontFamily: 'Sansita-Medium',fontSize:30}}> Veuillez saisir une adresse</Text>
+      <Text  style={{color:"#0077c2",fontFamily: 'Sansita-Medium',fontSize:30}}> Veuillez saisir une adresse2 </Text>
     </View>
     )
    

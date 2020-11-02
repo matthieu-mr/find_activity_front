@@ -38,24 +38,15 @@ useEffect(()=>{
 },[])
 
 
-const [infoUserAsync,setinfoUserAsync] = useState(false)
-  
-AsyncStorage.getItem("userInformation", 
-    function(error, data){
-      const info = JSON.parse(data)
-      setinfoUserAsync(info);
-    })
 
     var ListAdressSaved = contactAdress.map(function(item, i) {
       return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
     })
 
+    if (infoUserAsync.pseudo ==false){
+      ListAdressSaved = <BoutonNonConnecte />
+    } 
 
-
-if (infoUserAsync.pseudo =="aa"){
-  ListAdressSaved = <BoutonNonConnecte />
-  ButtonAddNewAdress = <Text> </Text>
-} 
 
 
   return (

@@ -17,8 +17,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 function  ListForActivity(props) {
 
  //let navigation=props.navigation
- props.navigation.setOptions({ title:"Selection du sport" } )
-  let gradientSelected =gradient
+ //props.navigation.setOptions({ title:"Selection du sport" })
+  let gradientSelected = ["#80d6ff","#42a5f5","#42a5f5","#80d6ff"]
   let noSelectGradient = ["#e2f1f8","#b0bec5","#b0bec5","#808e95","#e2f1f8"]
   let noSelectGradientWhite = ["#ffffff","#ffffff","#ffffff","#ffffff","#ffffff"]
 

@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
-import React from 'react';
-import {} from 'react-redux';
-import { View } from 'react-native';
+import React,{useState,useEffect} from 'react';
+import {connect} from 'react-redux';
+import { View,Text,AsyncStorage } from 'react-native';
 
 import { Icon } from 'native-base';
 
@@ -39,6 +39,17 @@ function DrawerContent(props){
   const Stack = createStackNavigator();
   //const navigation = useNavigation();
 
+  const Tab = createMaterialTopTabNavigator();
+  const [infoUserAsync,setinfoUserAsync] = useState(true)
+  
+
+  AsyncStorage.getItem("userInformation", 
+      function(error, data){
+        setinfoUserAsync(data);
+      })
+
+      console.log("recup connect ------",infoUserAsync )
+
 
   const Screens = ({navigation}) => {
     let goBack = {
@@ -63,6 +74,10 @@ function DrawerContent(props){
           ), 
       }
 
+
+      let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ParticipantListAdress} options={menuOnly}/>
+
+
     return (
     <Stack.Navigator
       screenOptions={{
@@ -72,7 +87,9 @@ function DrawerContent(props){
         headerTintColor:'#fff',
       }} >
 
-        <Stack.Screen name="ParticipantListAdress" component={ParticipantListAdress}  />
+{screenHomeLogged}
+
+
         <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
 
 
