@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React,{useState,useEffect} from 'react';
 import {connect} from 'react-redux';
-import { View,Text } from 'react-native';
+import { View,Text,AsyncStorage } from 'react-native';
 
 import { List,ListItem,Body,Left,Thumbnail,Right,Button,Icon,Content, Title  } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
@@ -48,8 +48,15 @@ function DrawerContent(props){
   //const navigation = useNavigation();
 
   const Tab = createMaterialTopTabNavigator();
+  const [infoUserAsync,setinfoUserAsync] = useState(true)
+  
 
+  AsyncStorage.getItem("userInformation", 
+      function(error, data){
+        setinfoUserAsync(data);
+      })
 
+      console.log("recup connect ------",infoUserAsync )
 
 
   const Screens = ({navigation}) => {
@@ -75,6 +82,10 @@ function DrawerContent(props){
           ), 
       }
 
+
+      let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ParticipantListAdress} options={menuOnly}/>
+
+
     return (
     <Stack.Navigator
       screenOptions={{
@@ -84,7 +95,8 @@ function DrawerContent(props){
         headerTintColor:'#fff',
       }} >
 
-      <Stack.Screen name="Accueil" component={ConnectScreen}/>
+{screenHomeLogged}
+
 
         <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
         <Stack.Screen name="Liste" component={ListForActivty} options={menu} />

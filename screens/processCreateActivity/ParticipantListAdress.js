@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { StyleSheet, Text, View,Paper,TouchableOpacity,AsyncStorage  } from 'react-native';
 import {connect} from 'react-redux';
 import { Button,Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content } from 'native-base';
 
@@ -19,17 +19,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 function AdressListParticipant(props) {
-props.navigation.setOptions({ title:"Liste des participants" })
+//props.navigation.setOptions({ title:"Liste des participants" })
 
 let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 const [nbAdress,setNbAdress] = useState(15)
 
 let AffichageAdress = []
-
-AffichageAdress =props.listAdress.map((item,i)=>{
-    return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="delParticipant" screenShow="listParticipantAdress" isFavorite={item.isFavorite}/>;
-})
-
 const [button, setButton] = useState(0)
 
 const [listButton,setListButton] = useState([
@@ -37,6 +32,21 @@ const [listButton,setListButton] = useState([
   {name:"Sport" , isSelected : false,  icon :<MaterialCommunityIcons name="run" size={24} color="white" />},
  
 ])
+useEffect(()=>{
+  AsyncStorage.getItem("userInformation", 
+  function(error, data){
+    const info = JSON.parse(data)
+    props.addInformationUser(info);
+  })
+
+},[])
+
+
+AffichageAdress =props.listAdress.map((item,i)=>{
+    return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="delParticipant" screenShow="listParticipantAdress" isFavorite={item.isFavorite}/>;
+})
+
+
 
 
 let ButtonCustomActivity = listButton.map((item,i)=>{
@@ -212,6 +222,9 @@ function mapDispatchToProps(dispatch) {
     SelectedActivity: function(item) {
       dispatch( {type: 'selectedActivity',item} )
   },
+  addInformationUser: function(item) {
+    dispatch( {type: 'informationUser',item} )
+},
   }
 }
 

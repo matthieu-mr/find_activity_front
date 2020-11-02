@@ -17,7 +17,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 function AdressList(props) {
 
-  props.navigation.setOptions({ title:"Adresses sauvegardées" })
+ // props.navigation.setOptions({ title:"Adresses sauvegardées" })
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
   const [nbAdress,setNbAdress] = useState(15)
@@ -34,38 +34,30 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}users/userinformation`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`email = m.michon@yahoo.fr`
+      body:`info= aa`
     })
     var listTypeRaw = await requestBDD.json()
     setUserInfo(listTypeRaw.user)
     setcontactAdress(listTypeRaw.user.contactInt)
-    
+    console.log("recup",listTypeRaw )
   }
   recupDonnée()
   
 },[props.actionOnSaved])
 
-const [infoUserAsync,setinfoUserAsync] = useState(false)
-  
-AsyncStorage.getItem("userInformation", 
-    function(error, data){
-      const info = JSON.parse(data)
-      setinfoUserAsync(info);
-    })
+let isConnected = props.userInfo.email
+console.log(isConnected)
 
     var ListAdressSaved = contactAdress.map(function(item, i) {
       return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
     })
 
-
-
-if (infoUserAsync.pseudo =="aa"){
+if (isConnected==false){
   ListAdressSaved = <BoutonNonConnecte />
-  ButtonAddNewAdress = <Text> </Text>
 } 
 
 let ButtonAddNewAdress = () =>{
-  if (infoUserAsync.pseudo =="aa"){
+  if (isConnected !=false){
     return (
       <Text> </Text>
     )
@@ -166,7 +158,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { actionOnSaved:state.actionOnSaved }
+  return { actionOnSaved:state.actionOnSaved,userInfo:state.userInformation }
 }
 
 function mapDispatchToProps(dispatch) {

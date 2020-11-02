@@ -11,28 +11,27 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 function ConnectScreen(props) {
-  props.navigation.setOptions({ title:"" })
+ // props.navigation.setOptions({ title:"" })
 
     let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
 
-    const [infoUserAsync,setinfoUserAsync] = useState(false)
-  
-    AsyncStorage.getItem("userInformation", 
-        function(error, data){
-          setinfoUserAsync(data);
-        })
-
 let sendToAsync=(email,pseudo) =>{
   var userData = {email:email,pseudo:pseudo}
   AsyncStorage.setItem('userInformation',JSON.stringify(userData))
-  props.navigation.navigate("ParticipantListAdress")
+  props.navigation.navigate("ContactAdressList")
 }
 
 
-if(infoUserAsync){
-  props.navigation.navigate("ParticipantListAdress")
-}
+useEffect(()=>{
+
+},[])
+
+
+
+
+
+
 
 
     const [showValidateButton,setShowValidateButton] = useState(true)
