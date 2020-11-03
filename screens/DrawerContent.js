@@ -87,15 +87,10 @@ function DrawerContent(props){
         headerTintColor:'#fff',
       }} >
 
-{screenHomeLogged}
+          {screenHomeLogged}
 
 
         <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
-
-
-      <Stack.Screen name="Accueil" component={Home}/>
-
-        
         <Stack.Screen name="SearchAdressParticipant" component={SearchAdressParticipant} options={goBack} />
 
         <Stack.Screen name="ListActivitySport" component={ListActivtySport} options={goBack} />

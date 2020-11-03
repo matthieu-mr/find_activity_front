@@ -12,7 +12,9 @@ import SearchAdress from "./SearchSaveAdress"
 function FormModifAdress(props) {
   const [showValidateButton,setShowValidateButton] = useState(true)
 
-  const[nameAdress,setName]=useState("null")
+  const[nameAdress,setName]=useState(props.infoFormAdress.name)
+
+  console.log(props)
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
   let affichagelist =props.infoFormAdress.showListSearch
@@ -102,16 +104,27 @@ let newItem =props.infoFormAdress
       gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
     }else{
       let info = JSON.stringify(props)
+
       if(props.infoFormAdress.action == "new"){
         await fetch(`${ip}users/savecontactadress`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
           body:`info=${info}&type=contact`
         })
+        props.actionOnSaved()
+        props.navigation.navigate("ContactAdressList")
 
-        props.navigation.navigate()
+      }else if(props.infoFormAdress.action == "modification"){
+        await fetch(`${ip}users/modifinfo`,{
+          method:"POST",
+          headers: {'Content-Type':'application/x-www-form-urlencoded'},
+          body:`info=${info}&type=contact`
+        })
+        props.actionOnSaved()
+      props.navigation.navigate("ContactAdressList")
 
-      }else{
+      }
+      else{
         /*
         await fetch(`${ip}users/deleteinfo`,{
           method:"POST",
@@ -135,7 +148,7 @@ return (
   <Card style={styles.cardContainer}>
     <View style={{display:"flex",flexDirection:"row",margin:15}}> 
       <View style={{flex:1}}> 
-        <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:15}}> Nom de l'adresse </Text>
+        <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:15}}> Nom de l'adresse 2 </Text>
 
         <Item floatingLabel>
           <Label>{props.infoFormAdress.name}</Label>

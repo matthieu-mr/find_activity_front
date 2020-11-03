@@ -41,7 +41,7 @@ switch(props.action){
 
       actionOnClick =()=>{
         props.addParticipantList(props)
-        navigation.navigate("ParticipantListAdress")
+        navigation.navigate("Accueil")
       }
       
 
@@ -103,6 +103,31 @@ switch(props.action){
         </View>
         )
       }
+
+      case 'showRdvPoint':
+      
+        sizeTitle1 = props.sizeTitle1
+        color=props.color
+        icon =<AntDesign name="rightcircleo" size={24} color="#42a5f5" />
+  
+        actionOnClick = ()=>{
+          props.infoPlace(props.item)
+          navigation.navigate("Place details")
+        }
+
+        Wording= ()=>{
+          return (
+            <View style={{flex:15}}> 
+              <Text style={{fontSize:sizeTitle1,fontFamily: 'Baskerville-Medium',color:color}}>Point de RDV</Text>
+              <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
+            <View style={{flexDirection:"row",marginTop:5}}> 
+           
+            </View>
+   
+          </View>
+          )
+        }
+
 
   break
     default : 

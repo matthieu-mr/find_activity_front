@@ -19,7 +19,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 function  PlaceDetail(props) {
 
-  props.navigation.setOptions({ title:"Détails du site" })
+ // props.navigation.setOptions({ title:"Détails du site" })
   const [infoPlace,setInfoPlace] = useState()
 
 // recuperation des POI 

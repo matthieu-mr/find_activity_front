@@ -15,7 +15,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 function MapActivity(props) {
 
-  props.navigation.setOptions({ title:"Affichage des activités" })
+ // props.navigation.setOptions({ title:"Affichage des activités" })
 
 
 console.log(console.log("recup initial", props.rdvPointAdress))

@@ -18,7 +18,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 function  PlaceDetail(props) {
 
-  props.navigation.setOptions({ title:"Détails du site", headerRight:()=>(
+ // props.navigation.setOptions({ title:"Détails du site", headerRight:()=>(
     <Icon reverse name="star-outlined" type='Entypo'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {alert('Parametres');}}  />
     ),  }
    )

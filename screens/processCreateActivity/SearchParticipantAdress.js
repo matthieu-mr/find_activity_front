@@ -101,6 +101,9 @@ const [infoUserAsync,setinfoUserAsync] = useState(true)
 
     <View style={styles.container}>
 
+        <Tabs activeTabStyle={{backgroundColor:"red"}}>        
+            <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="search" size={24} color="white" /><Text style={styles.textInput}>  Recherche</Text></TabHeading>}
+            >
           <LinearGradient
             colors={gradient}
               start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
@@ -115,14 +118,20 @@ const [infoUserAsync,setinfoUserAsync] = useState(true)
 
           </LinearGradient>
 
-        {infoAdress}
-
-
           <ScrollView> 
             {ListResultSearchAdress}
           </ScrollView>
             
 
+          </Tab>
+          <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="blur-linear" size={24} color="white" /><Text style={styles.textInput}>  Adresses</Text></TabHeading>}>
+            <ScrollView>
+              <View style={{display:"flex",alignItems:"center"}}>   
+                {ListAdressSaved}
+              </View>    
+            </ScrollView>
+          </Tab>
+        </Tabs>
 
     </View>
   );

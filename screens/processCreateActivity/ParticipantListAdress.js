@@ -2,19 +2,18 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
 import { StyleSheet, Text, View,Paper,TouchableOpacity,AsyncStorage  } from 'react-native';
 import {connect} from 'react-redux';
-import { Button,Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content } from 'native-base';
 
-import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-import { FontAwesome5 } from '@expo/vector-icons'; 
-import { FontAwesome } from '@expo/vector-icons'; 
 import { ScrollView } from 'react-native-gesture-handler';
+
 import ListAdress from '../component/ListCardAdress'
+import ListType from '../component/ListItemInfo';
 
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons'; 
 
 import ButtonValidation from '../component/ButtonValidation'
 
@@ -47,6 +46,18 @@ AffichageAdress =props.listAdress.map((item,i)=>{
     return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="delParticipant" screenShow="listParticipantAdress" isFavorite={item.isFavorite}/>;
 })
 
+
+let AffichageRdvPoint = <Text></Text>
+
+if (props.listAdress.length>0){
+  /*
+  let adress = JSON.stringify(props.listAdress)
+  let adressRdv = getRdvPoint(adress)
+  console.log(adressRdv)
+*/
+  AffichageRdvPoint = <ListType key={0} title1="test title" title2="{cityWording}" postcode="{item.properties.postcode}" city="{item.properties.city}" type="adress" action="showRdvPoint" screenShow="addParticipantAdress" lat="{item.geometry.coordinates[1]}" lon="{item.geometry.coordinates[0]}" />
+
+}
 
 
 
@@ -109,7 +120,7 @@ let getRdvPoint=async (adress)=>{
     body:`info=${adress}`
   })
   var listTypeRaw = await requestBDD.json()
-  console.log(listTypeRaw)
+ // console.log(listTypeRaw)
   props.AddRdvPoint(listTypeRaw)
 }
 
@@ -123,30 +134,34 @@ let getRdvPoint=async (adress)=>{
     {ButtonCustomActivity}
     </View>
 </View>
-
+{AffichageRdvPoint}
 
 <View style={styles.contentScreenList}>  
-<ScrollView>
+  <ScrollView>
 
-<Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20,alignSelf:"center"}}> Adresses </Text>
+  <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20,alignSelf:"center"}}> Adresses </Text>
 
-    <View style={styles.constainerList}> 
-          {AffichageAdress}  
-          <TouchableOpacity style={styles.buttonContainer} onPress={()=>props.navigation.navigate('SearchAdressParticipant')}>
+    <View style={{display:"flex",flexDirection:"row"}}> 
+      <TouchableOpacity style={styles.buttonContainer} onPress={()=>props.navigation.navigate('SearchAdressParticipant')}>
 
         <LinearGradient
         colors={gradient}
-          start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-          style={{ height: 48, width: 200, alignItems: 'center', justifyContent: 'center', borderRadius:50,marginTop:20}}
+        start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
+        style={{ height: 48, width: 200, alignItems: 'center', justifyContent: 'center', borderRadius:50}}
         >
-
+            <Ionicons name="ios-add-circle-outline" size={24} color="black" />
             <Text style={styles.buttonText}>
-              Ajouter une adresse
+            Ajouter une adresse
             </Text>
         </LinearGradient>
       </TouchableOpacity>
-        </View>
 
+    </View>
+
+    <View style={styles.constainerList}> 
+          {AffichageAdress}  
+
+        </View>
     </ScrollView>
       <View style={{marginBottom:15,}}> 
         <TouchableOpacity style={styles.buttonOpacity} onPress={()=>validateAction()}>
@@ -223,7 +238,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { listAdress: state.listAdress }
+  return { listAdress: state.listAdress}
 }
 
 function mapDispatchToProps(dispatch) {

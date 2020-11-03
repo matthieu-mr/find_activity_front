@@ -24,8 +24,6 @@ function AdressList(props) {
   const [userInfo,setUserInfo] = useState(null)
   const [contactAdress,setcontactAdress] = useState([])
 
-
-
 // List type part 
 useEffect(()=>{
   async function recupDonnée(){
@@ -44,14 +42,16 @@ useEffect(()=>{
   
 },[props.actionOnSaved])
 
+
+
+
 let isConnected = props.userInfo.email
-console.log(isConnected)
 
     var ListAdressSaved = contactAdress.map(function(item, i) {
       return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
     })
 
-if (isConnected==false){
+if (isConnected!=false){
   ListAdressSaved = <BoutonNonConnecte />
 } 
 
@@ -68,7 +68,8 @@ let ButtonAddNewAdress = () =>{
       </View>
     )
   
-}
+}}
+
 
 let navigationNewAdress =()=>{
   props.goToemptyFormAdress(),
@@ -86,7 +87,7 @@ let navigationNewAdress =()=>{
     </ScrollView>
     <View style={{marginBottom:15}}> 
         <TouchableOpacity style={styles.buttonOpacity} onPress={()=>navigationNewAdress()}>
-                <ButtonValidation wordingLabel="Ajouter adresse"/>
+                <ButtonValidation wordingLabel="Ajouter une adresse"/>
         </TouchableOpacity>
       </View>
     </View>
@@ -96,32 +97,30 @@ let navigationNewAdress =()=>{
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:"white"
+    backgroundColor: '#80d6ff', 
   },
-
   constainerList:{
     alignItems:"center",
-
+    backgroundColor:"red",
+    width:"98%",
+    backgroundColor: '#80d6ff', 
+    alignSelf:"center"
   },
-
   content:{
    width:"90%",
-
   },
   contentTextCard:{
     fontSize:16,
     color:"#819ca9",
     fontFamily: 'Monserrat-Light'
   },
-  
   contentCard:{
     display:"flex",
     flexDirection:"row",
     flex:1,
     justifyContent:"space-between",
     alignItems:"center",
-  
-},
+  },
   buttonInput:{
     textAlign: 'center',
     color: '#4C64FF',

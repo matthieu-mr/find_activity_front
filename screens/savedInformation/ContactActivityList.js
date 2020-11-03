@@ -4,11 +4,13 @@ import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,Keyboard,} from 'r
 import {connect} from 'react-redux';
 import { Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content,Button } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ScrollView } from 'react-native-gesture-handler';
 
 //import * as Analytics from 'expo-firebase-analytics';
 //import * as firebase from 'firebase'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-
+import BoutonNonConnecte from '../component/BoutonNonConnecte'
+import ListAdress from '../component/ListCardAdress'
 
 function ContactScreen(props) {
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
@@ -17,7 +19,7 @@ function ContactScreen(props) {
   const [userInfo,setUserInfo] = useState(null)
   const [contactAdress,setcontactAdress] = useState([])
 
-
+  let isConnected = props.userInfo.email
 
 // List type part 
 useEffect(()=>{
@@ -26,7 +28,7 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}users/userinformation`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`useremail = m.michon@yahoo.fr`
+      body:`useremail = aa`
     })
     var listTypeRaw = await requestBDD.json()
     setUserInfo(listTypeRaw.user)
@@ -35,15 +37,15 @@ useEffect(()=>{
   }
   recupDonnée()
   
-},[])
+},[props.actionOnSaved])
 
 
 
     var ListAdressSaved = contactAdress.map(function(item, i) {
-      return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
+      return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="activity" action="modification" screenShow="listSavedAdress"/>;
     })
 
-    if (infoUserAsync.pseudo ==false){
+    if (isConnected !=false){
       ListAdressSaved = <BoutonNonConnecte />
     } 
 
@@ -51,28 +53,26 @@ useEffect(()=>{
 
   return (
   <View style={styles.container}>
-        <ScrollView>
-
-    <View style={styles.constainerList}> 
-      {ListAdressSaved}
-    </View>
-
+    <ScrollView>
+      <View style={styles.constainerList}> 
+        {ListAdressSaved}
+      </View>
     </ScrollView>
-
-
-    </View>
+  </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:"white"
+    backgroundColor: '#80d6ff', 
   },
-
   constainerList:{
     alignItems:"center",
-
+    backgroundColor:"red",
+    width:"98%",
+    backgroundColor: '#80d6ff', 
+    alignSelf:"center"
   },
 
   content:{
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  return { listAdress: state.listAdress }
+  return { actionOnSaved:state.actionOnSaved,userInfo:state.userInformation }
 }
 
 function mapDispatchToProps(dispatch) {
