@@ -15,10 +15,13 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 function MapActivity(props) {
 
- // props.navigation.setOptions({ title:"Affichage des activités" })
+
+ useEffect(()=>{
+  props.navigation.setOptions({ title:"Affichage des activités" } )
+},[])
 
 
-console.log(console.log("recup initial", props.rdvPointAdress))
+console.log("recup initial", props)
 
 
 let lon = props.rdvPointAdress.lon
@@ -26,16 +29,16 @@ let lat =props.rdvPointAdress.lat
 let typeActivity = props.listType.activity
 let dist 
 
+
+
+
+
 /*
 lat = 48.7927087
 lon = 2.5133559
 */
 
 const [listPoint,setListPoint] = useState([])
-
-
-console.log("rdvpoint ------ ",props.rdvPointAdress)
-console.log("type",props.listType)
 
 
 // List type part 
@@ -173,7 +176,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { rdvPointAdress: state.rdvPointAdress,listType:state.listType,}
+  return {rdvPointAdress:state.rdvPointAdress,listType:state.listType,}
 }
 
 function mapDispatchToProps(dispatch) {

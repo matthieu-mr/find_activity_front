@@ -43,16 +43,14 @@ AffichageAdress =props.listAdress.map((item,i)=>{
 })
 
 
-
 let AffichageRdvPoint = <Text></Text>
 if (props.listAdress.length>0){
-  console.log("if adreesss from if",props.rdvPointAdress)
   
   //let adress = JSON.stringify(props.listAdress)
   //let adressRdv = getRdvPoint(adress)
-  let adressRdv = props.rdvPointAdress.adress
+  let adressRdv = `${props.rdvPointAdress.adress} - ${props.rdvPointAdress.postCode}`
 
-  AffichageRdvPoint = <ListType key={0} title1="test title" title2={adressRdv} postcode="{item.properties.postcode}" city="{item.properties.city}" type="adress" action="showRdvPoint" screenShow="addParticipantAdress" lat="{item.geometry.coordinates[1]}" lon="{item.geometry.coordinates[0]}" />
+  AffichageRdvPoint = <ListType key={props.rdvPointAdress.lat} title1="test title" title2={adressRdv} postcode="{item.properties.postcode}" city={props.rdvPointAdress.adress} type="adress" action="showRdvPoint" sizeTitle1={20} screenShow="ParticipantAdress" lat="{item.geometry.coordinates[1]}" lon="{item.geometry.coordinates[0]}" />
 
 }
 
@@ -91,7 +89,7 @@ let validateAction = () => {
   let activity = listButton[0].name
  // props.navigation.navigate("ListActivityType")
 
- getRdvPoint(adress)
+ //getRdvPoint(adress)
 
   if(nbAdress==0){
     alert("merci d'ajouter une adresse",activity)
@@ -109,6 +107,35 @@ let validateAction = () => {
 }
 
 
+useEffect(()=>{
+  async function recupDonnée(){
+
+    var requestBDD = await fetch(`${ip}adress/getrdvpoint`,{
+      method:"POST",
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body:`info=${adress}`
+    })
+    var listTypeRaw = await requestBDD.json()
+    console.log("recup point RDV",listTypeRaw)
+    props.AddRdvPoint(listTypeRaw)
+  }
+  recupDonnée()
+  
+},[props.listAdress])
+
+/*
+let getRdvPoint=async (adress)=>{
+  var requestBDD = await fetch(`${ip}adress/getrdvpoint`,{
+    method:"POST",
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body:`info=${adress}`
+  })
+  var listTypeRaw = await requestBDD.json()
+  console.log(listTypeRaw)
+  props.AddRdvPoint(listTypeRaw)
+}
+*/
+//getRdvPoint()
 
   return (
   <View style={styles.container}>
@@ -133,7 +160,7 @@ let validateAction = () => {
         start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
         style={{ height: 48, width: 200, alignItems: 'center', justifyContent: 'center', borderRadius:50}}
         >
-            <Ionicons name="ios-add-circle-outline" size={24} color="black" />
+            <Ionicons name="ios-add-circle-outline" size={24} color="white" />
             <Text style={styles.buttonText}>
             Ajouter une adresse
             </Text>

@@ -15,7 +15,14 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 
 function listTypeActivitySortie(props) {
-//props.navigation.setOptions({ title:"Sélection sortie" } )
+
+  useEffect(()=>{
+    props.navigation.setOptions({ title:"Sélection sortie" } )
+  },[])
+  
+  
+
+
   let gradientSelected = gradient
   let noSelectGradient = ["#e2f1f8","#b0bec5","#808e95","#b0bec5","#e2f1f8"]
   
@@ -28,6 +35,7 @@ function listTypeActivitySortie(props) {
 
   let [copyListSortie,setListCopie] = useState([])
   //let copyListTypeSortie = [...listTypeGoogleFromBdd]
+
 
 // get list of type 
 // List type part 

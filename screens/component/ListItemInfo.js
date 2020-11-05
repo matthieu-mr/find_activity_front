@@ -3,9 +3,10 @@ import { StyleSheet, View,Text} from 'react-native';
 import { ListItem,Badge } from 'native-base';
 import {connect} from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
-
+import { FontAwesome } from '@expo/vector-icons'; 
 //import module
 
 function ListType(props) {
@@ -103,16 +104,15 @@ switch(props.action){
         </View>
         )
       }
-
+      break
       case 'showRdvPoint':
       
         sizeTitle1 = props.sizeTitle1
         color=props.color
-        icon =<AntDesign name="rightcircleo" size={24} color="#42a5f5" />
+        icon =<FontAwesome name="map-o" size={24} color="#42a5f5" />
   
         actionOnClick = ()=>{
-          props.infoPlace(props.item)
-          navigation.navigate("Place details")
+          navigation.navigate("MapActivity")
         }
 
         Wording= ()=>{
@@ -127,8 +127,6 @@ switch(props.action){
           </View>
           )
         }
-
-
   break
     default : 
 } 
