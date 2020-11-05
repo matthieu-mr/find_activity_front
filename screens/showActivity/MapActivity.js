@@ -34,7 +34,7 @@ lon = 2.5133559
 const [listPoint,setListPoint] = useState([])
 
 
-console.log("rdvpoint",props.rdvPointAdress)
+console.log("rdvpoint ------ ",props.rdvPointAdress)
 console.log("type",props.listType)
 
 

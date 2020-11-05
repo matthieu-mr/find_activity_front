@@ -100,7 +100,7 @@ let newItem =props.infoFormAdress
     if(nameAdress != "null"){
       newItem.name=nameAdress
     }
-    if(newItem.name =="Veuillez saisir unn nom d'adresse"){
+    if(newItem.name =="Veuillez saisir un nom d'adresse"){
       gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
     }else{
       let info = JSON.stringify(props)

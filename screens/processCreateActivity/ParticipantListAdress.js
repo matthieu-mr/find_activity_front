@@ -11,6 +11,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ListAdress from '../component/ListCardAdress'
 import ListType from '../component/ListItemInfo';
 
+
+
+
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
@@ -32,14 +35,7 @@ const [listButton,setListButton] = useState([
   {name:"Sport" , isSelected : false,  icon :<MaterialCommunityIcons name="run" size={24} color="white" />},
  
 ])
-useEffect(()=>{
-  AsyncStorage.getItem("userInformation", 
-  function(error, data){
-    const info = JSON.parse(data)
-    props.addInformationUser(info);
-  })
 
-},[])
 
 
 AffichageAdress =props.listAdress.map((item,i)=>{
@@ -47,15 +43,16 @@ AffichageAdress =props.listAdress.map((item,i)=>{
 })
 
 
-let AffichageRdvPoint = <Text></Text>
 
+let AffichageRdvPoint = <Text></Text>
 if (props.listAdress.length>0){
-  /*
-  let adress = JSON.stringify(props.listAdress)
-  let adressRdv = getRdvPoint(adress)
-  console.log(adressRdv)
-*/
-  AffichageRdvPoint = <ListType key={0} title1="test title" title2="{cityWording}" postcode="{item.properties.postcode}" city="{item.properties.city}" type="adress" action="showRdvPoint" screenShow="addParticipantAdress" lat="{item.geometry.coordinates[1]}" lon="{item.geometry.coordinates[0]}" />
+  console.log("if adreesss from if",props.rdvPointAdress)
+  
+  //let adress = JSON.stringify(props.listAdress)
+  //let adressRdv = getRdvPoint(adress)
+  let adressRdv = props.rdvPointAdress.adress
+
+  AffichageRdvPoint = <ListType key={0} title1="test title" title2={adressRdv} postcode="{item.properties.postcode}" city="{item.properties.city}" type="adress" action="showRdvPoint" screenShow="addParticipantAdress" lat="{item.geometry.coordinates[1]}" lon="{item.geometry.coordinates[0]}" />
 
 }
 
@@ -87,11 +84,11 @@ if (i != button){ SelectedGradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#
   )
 })
 
+let adress = JSON.stringify(props.listAdress)
 
 let validateAction = () => { 
   let nbAdress = props.listAdress.length
   let activity = listButton[0].name
-  let adress = JSON.stringify(props.listAdress)
  // props.navigation.navigate("ListActivityType")
 
  getRdvPoint(adress)
@@ -113,19 +110,6 @@ let validateAction = () => {
 
 
 
-let getRdvPoint=async (adress)=>{
-  var requestBDD = await fetch(`${ip}adress/getrdvpoint`,{
-    method:"POST",
-    headers: {'Content-Type':'application/x-www-form-urlencoded'},
-    body:`info=${adress}`
-  })
-  var listTypeRaw = await requestBDD.json()
- // console.log(listTypeRaw)
-  props.AddRdvPoint(listTypeRaw)
-}
-
-
-
   return (
   <View style={styles.container}>
 <View style={{backgroundColor:"white",width:"95%",alignSelf:"center",padding:5,marginTop:10,borderRadius:20}}> 
@@ -141,7 +125,7 @@ let getRdvPoint=async (adress)=>{
 
   <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20,alignSelf:"center"}}> Adresses </Text>
 
-    <View style={{display:"flex",flexDirection:"row"}}> 
+    <View style={{display:"flex",flexDirection:"row",justifyContent:"center"}}> 
       <TouchableOpacity style={styles.buttonContainer} onPress={()=>props.navigation.navigate('SearchAdressParticipant')}>
 
         <LinearGradient
@@ -238,7 +222,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { listAdress: state.listAdress}
+  return { listAdress: state.listAdress,rdvPointAdress:state.rdvPointAdress}
 }
 
 function mapDispatchToProps(dispatch) {
@@ -251,6 +235,9 @@ function mapDispatchToProps(dispatch) {
   },
   addInformationUser: function(item) {
     dispatch( {type: 'informationUser',item} )
+},
+AddRdvPoint: function(item) {
+  dispatch( {type: 'addRdvPointAdress',item} )
 },
   }
 }

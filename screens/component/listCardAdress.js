@@ -1,25 +1,25 @@
-import React from 'react';
-import { StyleSheet, View, TouchableOpacity} from 'react-native';
-import { Text, Card, CardItem,   } from 'native-base';
+import React,{useState,useEffect,Component} from 'react';
+import { StyleSheet, View, AsyncStorage, ScrollView,TouchableOpacity} from 'react-native';
+import { Text, Card, CardItem, Item,  } from 'native-base';
 import {connect} from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 import { FontAwesome } from '@expo/vector-icons'; 
-import { Ionicons } from '@expo/vector-icons'; 
+
 //import module
 function AccordionComponent(props) {
   const navigation = useNavigation();
 
   let deleteAdress=async()=>{
-    console.log(props)
+/*    props.actionOnSaved()
+
     await fetch(`${ip}users/deleteinfo`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`useremail =aa@a.com&objectid=${props.id}&type=${props.type}`
     })
-    props.actionOnSaved()
-
+ */
   }
 
 
@@ -28,7 +28,10 @@ let changeInfo = ()=> {
   navigation.navigate("formChangeAdressInfo")
 }
 
-
+let addParticipantList =()=>{
+  props.addParticipant(props),
+  navigation.navigate("Accueil")
+}
 
 let firstAction =(
   <View> 
@@ -39,7 +42,7 @@ let firstAction =(
 )
 
 let secondAction =(
-  <TouchableOpacity onPress={() => deleteAdress({props})}>
+  <TouchableOpacity onPress={() => deleteAdress({id})}>
     <FontAwesome name="remove" size={20} color="red" />
   </TouchableOpacity>
 )
@@ -49,30 +52,13 @@ let secondAction =(
 let fromScreen = props.screenShow
 switch (fromScreen){
     case "listSavedAdress":
-
-      firstAction =(
-        <View> 
-        <TouchableOpacity onPress={() => alert("pas vu")}>
-          <Ionicons name="ios-eye" size={28} color="#0077c2" />
-        </TouchableOpacity>
-        </View>
-        )
-        secondAction =(
-      <View>
-        <TouchableOpacity onPress={() => deleteAdress()}>
-          <FontAwesome name="remove" size={20} color="red" />
-        </TouchableOpacity>
-      </View> 
-        )
-
-
       break
 
     case 'addParticipantAdress':
     
         firstAction =(
           <View> 
-          <TouchableOpacity onPress={() => props.addParticipant(props),navigation.navigate('Accueil')}>
+          <TouchableOpacity onPress={() =>addParticipantList()}>
             <FontAwesome name="plus-circle" size={28} color="#0077c2" />
           </TouchableOpacity>
         </View>
@@ -86,7 +72,7 @@ switch (fromScreen){
       if (props.isFavorite) {
         firstAction =(
         <View> 
-          <TouchableOpacity onPress={() => props.addParticipant(props),navigation.navigate('Accueil')}>
+          <TouchableOpacity onPress={() => props.addParticipant(props)}>
             <FontAwesome name="star" size={28} color="#0077c2" />
           </TouchableOpacity>
         </View>
@@ -205,7 +191,6 @@ function mapDispatchToProps(dispatch) {
   deleteParticipant: function(info) {
     dispatch( {type: 'deleteAdressParticipant',info:info} )
   },
-  
   }
 }
 

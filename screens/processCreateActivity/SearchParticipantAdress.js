@@ -75,6 +75,7 @@ useEffect(()=>{
     })
     var listTypeRaw = await requestBDD.json()
     setcontactAdress(listTypeRaw.user.contactInt)
+    console.log(listTypeRaw)
   }
   recupDonnée()
   
@@ -86,12 +87,6 @@ var ListAdressSaved
 
 const [infoUserAsync,setinfoUserAsync] = useState(true)
 
-  AsyncStorage.getItem("userInformation", 
-  function(error, data){
-    setinfoUserAsync(data);
-  })
-
-  
   
   ListAdressSaved = contactAdress.map(function(item, i) {
     return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
