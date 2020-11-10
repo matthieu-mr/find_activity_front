@@ -21,8 +21,6 @@ function MapActivity(props) {
 },[])
 
 
-console.log("recup initial", props)
-
 
 let lon = props.rdvPointAdress.lon
 let lat =props.rdvPointAdress.lat
@@ -65,7 +63,6 @@ useEffect(()=>{
 },[])
 
 let markerListMap =listPoint.map((item,i)=>{
-  console.log("recup item",item)
   return(
     <MarkerMap key={i} lat={item.lat} lon={item.lon} adress={item.adress} coloraction={"green"} name={item.name} item={item} type="goPlace" action="goPlaceDetail" screenShow="listActivity"/>
   )

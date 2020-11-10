@@ -36,7 +36,6 @@ useEffect(()=>{
     var listTypeRaw = await requestBDD.json()
     setUserInfo(listTypeRaw.user)
     setcontactAdress(listTypeRaw.user.contactInt)
-    console.log("recup",listTypeRaw )
   }
   recupDonnée()
   

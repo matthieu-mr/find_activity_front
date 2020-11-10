@@ -20,7 +20,6 @@ function MarkerMap(props) {
   const navigation = useNavigation();
   let goPlaceDetails = () => {
     props.infoPlace(props.item)
-    console.log("info marker ",props.item)
    navigation.navigate("Place details")
   }
 

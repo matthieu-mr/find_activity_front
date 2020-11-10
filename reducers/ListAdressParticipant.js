@@ -16,8 +16,6 @@ export default function(listAdress = [], action) {
       }
 
       newList.push(newAdress)
-
-      console.log("new list totoal",newList)
       return newList
     }
 
@@ -43,7 +41,6 @@ export default function(listAdress = [], action) {
     
     else if (action.type == 'deleteAdressParticipant'){
       let newList = [...listAdress]
-      console.log("delete",action.info)
       let idDelete = action.info.id-1
 
         newList.splice(idDelete,1)
@@ -58,7 +55,6 @@ export default function(listAdress = [], action) {
           }
          
         })
-console.log("result",newList)
       return newList
     }
      

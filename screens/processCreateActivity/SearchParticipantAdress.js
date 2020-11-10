@@ -21,6 +21,7 @@ import { Feather } from '@expo/vector-icons';
 
 import ListAdress from '../component/ListCardAdress'
 import ListType from '../component/ListItemInfo';
+import ButtonValidation from '../component/ButtonValidation'
 
 
 
@@ -31,6 +32,69 @@ function  SearchAdress(props) {
 
   const [adress,setAdress] = useState("")
   const [listAdressResult,setListAdressResult] = useState([])
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [buttonSetLocation,setButtonLocation] = useState(false)
+const [userActualLocation,setUserActualLocation] = useState()
+
+let pageTitle = "Recherche d'adresse"
+
+useEffect(()=>{
+  props.navigation.setOptions({ title:pageTitle } )
+},[])
+
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, [setButtonLocation]);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    return 
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
+  useEffect(()=>{
+    async function recupDonnée(){
+      var requestBDD = await fetch(`${ip}adress/adressesListCoord`,{
+        method:"POST",
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body:`lon=${location.coords.longitude}&lat=${location.coords.latitude}`
+      })
+      var adressRaw = await requestBDD.json()
+      setUserActualLocation(adressRaw)
+    }
+    recupDonnée()
+    
+  },[location])
+
+
+  let InfoUserLocation = ()=>{
+
+    if(!buttonSetLocation){
+      return (
+        <View style={{marginBottom:15,}}> 
+        <TouchableOpacity style={styles.buttonOpacity} onPress={()=>setButtonLocation(!buttonSetLocation)}>
+                <ButtonValidation wordingLabel="Récupérer mon adresse"/>
+        </TouchableOpacity>
+      </View>
+      )
+    }else{
+      console.log('user location actual', userActualLocation.response.features[0].properties)
+      return <ListAdress key="0" name="Votre Position" adress={userActualLocation.response.features[0].properties.name} postcode={userActualLocation.response.features[0].properties.postcode} city={userActualLocation.response.features[0].properties.city} id="33" lat={location.coords.latitude} lon={location.coords.longitude} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
+    }
+  
+  }
 
   let infoAdress = <Text></Text>
 
@@ -75,7 +139,6 @@ useEffect(()=>{
     })
     var listTypeRaw = await requestBDD.json()
     setcontactAdress(listTypeRaw.user.contactInt)
-    console.log(listTypeRaw)
   }
   recupDonnée()
   
@@ -86,8 +149,6 @@ useEffect(()=>{
 var ListAdressSaved
 
 const [infoUserAsync,setinfoUserAsync] = useState(true)
-
-  
   ListAdressSaved = contactAdress.map(function(item, i) {
     return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
   })
@@ -123,6 +184,13 @@ const [infoUserAsync,setinfoUserAsync] = useState(true)
             <ScrollView>
               <View style={{display:"flex",alignItems:"center"}}>   
                 {ListAdressSaved}
+              </View>    
+            </ScrollView>
+          </Tab>
+          <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="blur-linear" size={24} color="white" /><Text style={styles.textInput}>  Ma position</Text></TabHeading>}>
+            <ScrollView>
+              <View style={{display:"flex",alignItems:"center"}}>   
+                <InfoUserLocation/>
               </View>    
             </ScrollView>
           </Tab>

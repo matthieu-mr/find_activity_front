@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React,{useState,useEffect} from 'react';
 import {connect} from 'react-redux';
 import { View,Text,AsyncStorage } from 'react-native';
-
+import * as Linking from 'expo-linking';
 import { Icon } from 'native-base';
 
 // Ajout des modules de navigation 
@@ -15,6 +15,9 @@ import Home from './Home'
 import ConnectScreen from './login/ConnectScreen'
 import AdvancedParam from './AdvancedSearch'
 import siginScreen from './login/signin'
+import forgotPassword from './login/ForgotPassword'
+
+
 
 import ListActivitySortie from './listTypeActivitySortie'
 import ListActivtySport from './listTypeActivitySport';
@@ -48,9 +51,6 @@ function DrawerContent(props){
         setinfoUserAsync(data);
       })
 
-      console.log("recup connect ------",infoUserAsync )
-
-
   const Screens = ({navigation}) => {
     let goBack = {
       headerLeft:()=>(
@@ -75,8 +75,9 @@ function DrawerContent(props){
       }
 
 
-      let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ParticipantListAdress} options={menuOnly}/>
-
+     // let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ConnectScreen} options={menuOnly}/>
+      forgotPassword
+      let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={forgotPassword}/> : <Stack.Screen name="Accueil" component={forgotPassword} options={menuOnly}/>
 
     return (
     <Stack.Navigator

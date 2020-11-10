@@ -32,11 +32,9 @@ useEffect(()=>{
   let placeid = false
   if (props.item.place_id){
     placeid = props.item.place_id
- //   console.log('fromgoogle',placeid)
 }
 
 
-console.log("request",`lat=${lat}&long=${lon}&name=${name}`)
 
 
   async function recupDonnée(){
@@ -51,8 +49,6 @@ console.log("request",`lat=${lat}&long=${lon}&name=${name}`)
   recupDonnée()
   
 },[])
-
-console.log(infoPlace)
 
 // function share & other 
 let webSite = async()=>{
@@ -172,8 +168,6 @@ let comment =[]
       })
 */
 
-        console.log(photoPlaceLink)
-
       return(
         <View style={styles.allCard}>
 
@@ -222,11 +216,6 @@ let comment =[]
 
     } 
   }   
-
-
-
-
-//console.log("hours Test",infoPlace.response.opening_hours)
 
  return (
 <View style={styles.containerAll}> 

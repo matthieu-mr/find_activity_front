@@ -35,7 +35,6 @@ function  ListForActivity(props) {
 let latitude = props.rdvPoint.lat
 let longitude = props.rdvPoint.lon
 let distance = 5000
-console.log("------",props.rdvPoint)
 
 
 // recuperation des types d'activite 

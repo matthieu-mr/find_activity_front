@@ -10,12 +10,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 
-function signin(props) {
-  useEffect(()=>{
-    props.navigation.setOptions({ title:"" } )
-  },[])
-  
-    let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
+function forgotPassword(props) {
+
+    let gradient =["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
+
+    useEffect(()=>{
+        props.navigation.setOptions({ title:"Mot de passe oublié" } )
+      },[])
+      
+
 
     const [showValidateButton,setShowValidateButton] = useState(true)
     const [email,setEmail] = useState("")
@@ -51,8 +54,9 @@ function signin(props) {
 
 let ValidationButton = ()=>{ 
 
-    if(pseudo.length == 0 ||email.length == 0  ||password.length == 0 ){
-        gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
+    if(pseudo.length > 0 ||email.length > 0 ){
+
+        gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
     }
 
 
@@ -83,15 +87,10 @@ let ValidationButton = ()=>{
 
 let sendRequest =async ()=>{
 const expressionMail =/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const expressionPass = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/
-    // at least one number, one lowercase and one uppercase letter
-    // at least six characters
 
 let resultMail = expressionMail.test(email)
-let resultPass = expressionPass.test(password)
 
-
-if(!resultMail){
+if(!resultMail && email.length>0){
   setEmailError(
         <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Format d'email incorrect</Text>
     )
@@ -103,19 +102,14 @@ if(pseudo.length<3){
     )
 }else{setPseudoError()}
 
-if(!resultPass){
-  setPasswordError(
-        <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Le mot de passe doit contenir au moins 6 charactères, 1 majuscule et 1 chiffre</Text>
-    )
-}else{setPasswordError()}
 
 
-if (resultPass && pseudo.length>3 && resultMail){
+if (resultPass || pseudo.length>3 ){
 
-    let requestBDD =await fetch(`${ip}users/createuser`,{
+    let requestBDD =await fetch(`${ip}users/changepassword`,{
         method:"POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body:`email=${email}&pseudo=${pseudo}&password=${password}`
+        body:`email=${email}&pseudo=${pseudo}`
       })
 
       var retourCreatAccount = await requestBDD.json()
@@ -123,7 +117,7 @@ if (resultPass && pseudo.length>3 && resultMail){
 
       if( result ){
         var userData = {email:email,pseudo:pseudo}
-        AsyncStorage.setItem('userInformation',JSON.stringify(userData))
+      //  AsyncStorage.setItem('userInformation',JSON.stringify(userData))
         alert("ok")
     }
      else {
@@ -172,16 +166,6 @@ if (resultPass && pseudo.length>3 && resultMail){
                     onSubmitEditing={text => setPseudo(text)} />
             </Item>
             {pseudoError}
-            <Item floatingLabel style={{marginTop:20}} >
-              <Label>Password</Label>
-              <Input                     
-                    autoCapitalize="none"
-                    secureTextEntry={false}
-                    placeholder="Email *"
-                    onChangeText={text => setPassword(text)}
-                    onSubmitEditing={text => sendRequest(text)}/>
-            </Item>
-            {passwordError}
         <ErrorMessage />
     </Container>
 
@@ -243,5 +227,5 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps, 
   mapDispatchToProps
-)(signin);
+)(forgotPassword);
 

@@ -14,8 +14,6 @@ function FormModifAdress(props) {
 
   const[nameAdress,setName]=useState(props.infoFormAdress.name)
 
-  console.log(props)
-
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
   let affichagelist =props.infoFormAdress.showListSearch
 

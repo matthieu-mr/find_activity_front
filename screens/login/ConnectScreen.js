@@ -17,7 +17,6 @@ function ConnectScreen(props) {
 
 
 let sendToAsync=(email,pseudo) =>{
-  console.log("send to async",email,pseudo)
   var userData = {email:email,pseudo:pseudo}
   AsyncStorage.setItem('userInformation',JSON.stringify(userData))
   props.navigation.navigate("ContactAdressList")
@@ -159,7 +158,6 @@ let sendRequest =async ()=>{
       var result = retourCreatAccount.login
 
       if( result ){
-        console.log("retour create",retourCreatAccount.user.email,retourCreatAccount.user.pseudo)
         sendToAsync(retourCreatAccount.user.email,retourCreatAccount.user.pseudo)
     }
      else {

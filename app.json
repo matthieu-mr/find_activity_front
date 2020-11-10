@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "description": "Trouvez une activité proche de vous",
+    "scheme": "quoifaire",
     "splash": {
       "image": "./assets/splash_t.png",
       "resizeMode": "contain",

@@ -32,8 +32,6 @@ useEffect(()=>{
   let lon = props.item.lon
   let name =  props.item.name
 
-console.log("request",`lat=${lat}&long=${lon}&name=${name}`)
-
 
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}pointinformation`,{
@@ -42,16 +40,12 @@ console.log("request",`lat=${lat}&long=${lon}&name=${name}`)
       body:`lat=${lat}&long=${lon}&name=${name}`
     })
     var placeRaw = await requestBDD.json()
-    console.log("recup bdd",placeRaw)
    setInfoPlace(placeRaw)
   }
   recupDonnée()
   
 },[])
 
-
-
-//console.log("hours Test",infoPlace.response.opening_hours)
 
 let Affichage = () => {
   if (infoPlace == undefined){

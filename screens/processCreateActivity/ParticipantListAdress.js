@@ -10,7 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import ListAdress from '../component/ListCardAdress'
 import ListType from '../component/ListItemInfo';
-
+import ButtonValidation from '../component/ButtonValidation'
 
 
 
@@ -18,7 +18,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
 
-import ButtonValidation from '../component/ButtonValidation'
+
 
 
 function AdressListParticipant(props) {
@@ -109,33 +109,18 @@ let validateAction = () => {
 
 useEffect(()=>{
   async function recupDonnée(){
-
     var requestBDD = await fetch(`${ip}adress/getrdvpoint`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body:`info=${adress}`
     })
     var listTypeRaw = await requestBDD.json()
-    console.log("recup point RDV",listTypeRaw)
     props.AddRdvPoint(listTypeRaw)
   }
   recupDonnée()
   
 },[props.listAdress])
 
-/*
-let getRdvPoint=async (adress)=>{
-  var requestBDD = await fetch(`${ip}adress/getrdvpoint`,{
-    method:"POST",
-    headers: {'Content-Type':'application/x-www-form-urlencoded'},
-    body:`info=${adress}`
-  })
-  var listTypeRaw = await requestBDD.json()
-  console.log(listTypeRaw)
-  props.AddRdvPoint(listTypeRaw)
-}
-*/
-//getRdvPoint()
 
   return (
   <View style={styles.container}>
