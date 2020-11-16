@@ -87,9 +87,11 @@ switch (fromScreen){
       }
       if (!props.isFavorite) {
         firstAction =(
-        <View> 
-
-        </View>
+            <View> 
+                <TouchableOpacity onPress={() => changeInfo("save")}>
+                <FontAwesome name="star-o" size={32} color="#0077c2" />
+              </TouchableOpacity>
+            </View>
         )
         secondAction =(
       <View>
@@ -185,6 +187,10 @@ function mapDispatchToProps(dispatch) {
   goToFormAdress: function(info) {
     dispatch( {type: 'infoFormAdress',info:info} )
 },
+saveAdressContact: function(info) {
+  dispatch( {type: 'saveAdressContact',info:info} )
+},
+
   addParticipant: function(info) {
     dispatch( {type: 'addNewAdressContact',info:info} )
   },

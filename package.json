@@ -46,8 +46,7 @@
     "react-navigation-tabs": "^2.9.0",
     "react-redux": "^7.2.1",
     "reactstrap": "^8.5.1",
-    "redux": "^4.0.5",
-    "expo-asset": "~8.1.7"
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

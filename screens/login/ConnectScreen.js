@@ -12,6 +12,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 function ConnectScreen(props) {
  // props.navigation.setOptions({ title:"" })
+ useEffect(()=>{
+  props.navigation.setOptions({ title:"Bienvenue" } )
+},[])
 
     let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
@@ -19,12 +22,8 @@ function ConnectScreen(props) {
 let sendToAsync=(email,pseudo) =>{
   var userData = {email:email,pseudo:pseudo}
   AsyncStorage.setItem('userInformation',JSON.stringify(userData))
-  props.navigation.navigate("ContactAdressList")
+  props.navigation.navigate("ParticipantListAdress")
 }
-
-
-
-
 
 
     const [showValidateButton,setShowValidateButton] = useState(true)
@@ -71,10 +70,10 @@ let ValidationButton = ()=>{
             start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
             style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
             >
-
-                <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
+    
+                <View style={{flex:1,width:300,padding:5,flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
                     <Text style={styles.buttonText}>
-                       Se connecter
+                  Se connecter
                     </Text>
                     <MaterialCommunityIcons name="send" size={28} color="white" />
                 </View>
@@ -97,11 +96,11 @@ let Create= ()=>{
         <LinearGradient
         colors={["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]}
         start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-        style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
+        style={{ height: 48, width:350, alignItems: 'center', justifyContent: 'center', borderRadius:50}}
         >
 
-            <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                <Text style={styles.buttonText}>
+              <View style={{flex:1,width:"100%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
+                  <Text style={styles.buttonCreate}>
                 Créer un compte
                 </Text>
                 <MaterialCommunityIcons name="send" size={28} color="white" />
@@ -126,10 +125,10 @@ let CreateOrByPassButton = ()=>{
           <LinearGradient
           colors={gradient}
           start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-          style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
+          style={{ height: 48, width:350, alignItems: 'center', justifyContent: 'center', borderRadius:50}}
           >
 
-              <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
+              <View style={{flex:1,width:"100%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
                   <Text style={styles.buttonTextByPass}>
                     Utiliser sans compte
                   </Text>
@@ -184,15 +183,13 @@ let sendRequest =async ()=>{
 
   return (
   <View style={styles.container}>
-    <Container style={styles.formContainer}>
-
-      <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Connexion</Text>
-       
+    <Card style={styles.formContainer}>      
+    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,}}> Connexion</Text>
             <Item floatingLabel>
-              <Label>Email</Label>
+              <Label>Email / Pseudo</Label>
               <Input                     
                     autoCapitalize="none"
-                    placeholder="Email *"
+                    placeholder="Email / Pseudo *"
                     onChangeText={text => setEmail(text)}
                     onSubmitEditing={text => setEmail(text)} />
             </Item>
@@ -216,24 +213,29 @@ let sendRequest =async ()=>{
         </View>
 
         <View style={{marginTop:20,alignItems:"center"}} > 
-          <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > Ou </Text>
+          <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > ----------------------- </Text>
         </View>
+        <TouchableOpacity onPress={()=>props.navigation.navigate("ForgotPassword")}>
+          <View style={{marginTop:10,marginBottom:20,alignItems:"center"}} > 
+            <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > Mot de passe oublié ? </Text>
+          </View>
+      </TouchableOpacity>
+    </Card>
 
 
-        <View style={{marginTop:20,alignItems:"center"}} > 
+    <Card style={styles.bottomButtonContainer}>      
+
+
+    <View style={{marginTop:10,alignItems:"center"}} > 
           <Create/>
         </View>
-    
-    </Container>
 
-      <View style={{marginTop:20,marginBottom:20,alignItems:"center"}} > 
-        <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > Mot de passe oublié ? </Text>
-      </View>
+        <View style={{marginTop:10,alignItems:"center"}} > 
+        <CreateOrByPassButton />
+        </View>
 
+    </Card>
 
-    <Container style={styles.buttonContainer}> 
-      <CreateOrByPassButton />
-    </Container>
 </View>
   );
 }
@@ -241,22 +243,32 @@ let sendRequest =async ()=>{
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:"white",
+    backgroundColor:"#80d6ff",
     alignContent:"center",
     alignItems:"center",
   },
   formContainer:{
-    width:"90%",
-    flex:10
-  },    
-  buttonContainer: {
-    display:"flex",
-    flex:1,
-    justifyContent:"flex-end",
+    flex:3,
+    alignContent:"center",
     alignItems:"center",
-    marginBottom:15,
-    width:"100%",
-},
+    marginTop:20,
+    paddingTop:40,
+    width:"94%",
+    borderRadius:20,
+    padding:10,
+    backgroundColor:"#FFF",
+  }, 
+  
+  bottomButtonContainer: {
+    flex:1,
+    alignContent:"space-around",
+    justifyContent:"space-around",
+    alignItems:"center",
+    width:"94%",
+    borderRadius:20,
+    padding:20,
+    backgroundColor:"#FFF",
+  }, 
   buttonOpacity:{
       width:"90%"
   },
@@ -273,6 +285,13 @@ const styles = StyleSheet.create({
     fontSize:20,
     fontFamily: 'Baskerville-Black',
     marginRight:20
+  },
+  buttonCreate:{
+    textAlign: 'center',
+    color: 'white',
+    fontSize:20,
+    fontFamily: 'Baskerville-Black',
+    marginRight:20 
   }
 
 });

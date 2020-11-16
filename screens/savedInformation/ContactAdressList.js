@@ -16,6 +16,11 @@ import { FontAwesome } from '@expo/vector-icons';
 
 function AdressList(props) {
 
+  useEffect(()=>{
+    props.navigation.setOptions({ title:"Adresses sauvegardées" } )
+  },[])
+
+
  // props.navigation.setOptions({ title:"Adresses sauvegardées" })
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
@@ -31,7 +36,7 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}users/userinformation`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`info= aa`
+      body:`email=${props.userInfo.email}`
     })
     var listTypeRaw = await requestBDD.json()
     setUserInfo(listTypeRaw.user)

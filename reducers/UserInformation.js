@@ -1,7 +1,8 @@
 export default function(userInformation = "", action) {
     if(action.type == 'informationUser') {
-      let infoUser = action.item
-      return infoUser;
+      let userInformation = action.item
+      console.log("info in props", userInformation)
+      return userInformation;
     
     } else {
       return userInformation;

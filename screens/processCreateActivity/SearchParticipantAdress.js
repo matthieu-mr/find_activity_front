@@ -22,6 +22,7 @@ import { Feather } from '@expo/vector-icons';
 import ListAdress from '../component/ListCardAdress'
 import ListType from '../component/ListItemInfo';
 import ButtonValidation from '../component/ButtonValidation'
+import BoutonNonConnecte from '../component/BoutonNonConnecte'
 
 
 
@@ -35,7 +36,7 @@ function  SearchAdress(props) {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [buttonSetLocation,setButtonLocation] = useState(false)
-const [userActualLocation,setUserActualLocation] = useState()
+const [userActualLocation,setUserActualLocation] = useState([])
 
 let pageTitle = "Recherche d'adresse"
 
@@ -50,7 +51,6 @@ useEffect(()=>{
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
       }
-
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();
@@ -90,7 +90,6 @@ useEffect(()=>{
       </View>
       )
     }else{
-      console.log('user location actual', userActualLocation.response.features[0].properties)
       return <ListAdress key="0" name="Votre Position" adress={userActualLocation.response.features[0].properties.name} postcode={userActualLocation.response.features[0].properties.postcode} city={userActualLocation.response.features[0].properties.city} id="33" lat={location.coords.latitude} lon={location.coords.longitude} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
     }
   
@@ -131,11 +130,10 @@ const [contactAdress,setcontactAdress] = useState([])
   // List type part 
 useEffect(()=>{
   async function recupDonnée(){
-
     var requestBDD = await fetch(`${ip}users/userinformation`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`email=aa@a.co`
+      body:`email=${props.userInfo.email}`
     })
     var listTypeRaw = await requestBDD.json()
     setcontactAdress(listTypeRaw.user.contactInt)
@@ -147,12 +145,15 @@ useEffect(()=>{
 
 
 var ListAdressSaved
+let isConnected = props.userInfo.email
 
-const [infoUserAsync,setinfoUserAsync] = useState(true)
+
   ListAdressSaved = contactAdress.map(function(item, i) {
     return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
   })
-
+  if (isConnected ==false){
+    ListAdressSaved = <BoutonNonConnecte />
+  } 
   return (
 
     <View style={styles.container}>
@@ -168,7 +169,11 @@ const [infoUserAsync,setinfoUserAsync] = useState(true)
             <View style={styles.searchInput}>
               <Item >
               <AntDesign name="search1" size={20} color="white" />
-                <Input style={styles.textInput} placeholder="Recherche" onChangeText={text => setAdress(text)} />
+                <Input 
+                style={styles.textInput} 
+                placeholder="Recherche" 
+                textContentType="fullStreetAddress"
+                onChangeText={text => setAdress(text)} />
               </Item>
             </View>
 
@@ -181,15 +186,18 @@ const [infoUserAsync,setinfoUserAsync] = useState(true)
 
           </Tab>
           <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="blur-linear" size={24} color="white" /><Text style={styles.textInput}>  Adresses</Text></TabHeading>}>
+          <View style={{display:"flex",flex:1,backgroundColor:"#80d6ff"}}>  
             <ScrollView>
-              <View style={{display:"flex",alignItems:"center"}}>   
+
+              <View style={{display:"flex",alignItems:"center",backgroundColor:"#80d6ff"}}>   
                 {ListAdressSaved}
               </View>    
             </ScrollView>
+          </View>
           </Tab>
           <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="blur-linear" size={24} color="white" /><Text style={styles.textInput}>  Ma position</Text></TabHeading>}>
             <ScrollView>
-              <View style={{display:"flex",alignItems:"center"}}>   
+              <View style={{display:"flex",alignItems:"center",padding:20}}>   
                 <InfoUserLocation/>
               </View>    
             </ScrollView>
@@ -220,6 +228,11 @@ const styles = StyleSheet.create({
   }
 });
 
+
+function mapStateToProps(state) {
+  return { userInfo:state.userInformation }
+}
+
 function mapDispatchToProps(dispatch) {
   return {
     addAdress: function(location) {
@@ -230,7 +243,7 @@ function mapDispatchToProps(dispatch) {
 
   
   export default connect(
-    null, 
+    mapStateToProps,  
     mapDispatchToProps
   )(SearchAdress);
 

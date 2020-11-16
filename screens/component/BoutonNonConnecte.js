@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View,Paper,TouchableOpacity } from 'react-native';
 import {connect} from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import {Card} from 'native-base';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -24,21 +25,19 @@ let gradient = gradientSelected
 
   return (
 
-    <View style={styles.container} > 
-    <Text style={styles.wordingTitle} > Pour utiliser cette fonctionnalité </Text>
-    <Text style={styles.wordingTitle} > Merci de : </Text>
+    <Card style={styles.container} > 
+      <Text style={styles.wordingTitle} > Pour utiliser cette fonctionnalité </Text>
+      <Text style={styles.wordingTitle} > Merci de : </Text>
+  
+      <TouchableOpacity onPress={()=>{navigation.navigate("siginScreen")}}>
+          <ButtonType ley={i} width={width} color={color}  fontSize={fontSize} gradient={gradient} wording_fr={"Créer un compte"}/>
+        </TouchableOpacity>
+          <Text style={styles.wording} > Ou </Text>
 
-    <TouchableOpacity onPress={()=>{navigation.navigate("siginScreen")}}>
-                    <ButtonType ley={i} width={width} color={color}  fontSize={fontSize} gradient={gradient} wording_fr={"Créer un compte"}/>
-                </TouchableOpacity>
-                <Text style={styles.wording} > Ou </Text>
-
-                <TouchableOpacity onPress={()=>{navigation.navigate("Accueil")}}>
-                    <ButtonType ley={i} width={width} color={color}  fontSize={fontSize} gradient={gradient} wording_fr={"Vous connecter"}/>
-                </TouchableOpacity>
-
-
-  </View>
+      <TouchableOpacity onPress={()=>{navigation.navigate("Accueil")}}>
+          <ButtonType ley={i} width={width} color={color}  fontSize={fontSize} gradient={gradient} wording_fr={"Vous connecter"}/>
+      </TouchableOpacity>
+    </Card>
     
   );
 }
@@ -48,7 +47,11 @@ const styles = StyleSheet.create({
     flex:1,
     alignContent:"center",
     alignItems:"center",
-    marginTop:20
+    marginTop:20,
+    width:"94%",
+    borderRadius:20,
+    padding:20,
+    backgroundColor:"#FFF",
   },
   wordingTitle:{
     alignItems:"center",

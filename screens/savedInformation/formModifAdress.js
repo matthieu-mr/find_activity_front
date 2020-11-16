@@ -66,6 +66,7 @@ let ValidationButton = ()=>{
     gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
   }
   if (showValidateButton){
+    console.log("validation",props.infoFormAdress)
     return ( 
       <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendModification()}>
           <LinearGradient
@@ -107,7 +108,7 @@ let newItem =props.infoFormAdress
         await fetch(`${ip}users/savecontactadress`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
-          body:`info=${info}&type=contact`
+          body:`info=${info}&type=contact&email=${props.userInfo.email}`
         })
         props.actionOnSaved()
         props.navigation.navigate("ContactAdressList")
@@ -116,7 +117,7 @@ let newItem =props.infoFormAdress
         await fetch(`${ip}users/modifinfo`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
-          body:`info=${info}&type=contact`
+          body:`info=${info}&type=contact&email=${props.userInfo.email}`
         })
         props.actionOnSaved()
       props.navigation.navigate("ContactAdressList")
@@ -156,10 +157,6 @@ return (
           onChangeText={(text) => setName(text)}
           style={styles.title1} />
         </Item>
-
-
-
-
 
       </View>
     </View>
@@ -240,7 +237,7 @@ inputStyle:{
 
 
 function mapStateToProps(state) {
-    return { infoFormAdress:state.infoFormAdress }
+    return { infoFormAdress:state.infoFormAdress,userInfo:state.userInformation }
 }
 function mapDispatchToProps(dispatch) {
   return {

@@ -13,13 +13,17 @@ import BoutonNonConnecte from '../component/BoutonNonConnecte'
 import ListAdress from '../component/ListCardAdress'
 
 function ContactScreen(props) {
+  useEffect(()=>{
+    props.navigation.setOptions({ title:"Activités sauvegardées" } )
+  },[])
+  
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
-  const [nbAdress,setNbAdress] = useState(15)
-
-  const [userInfo,setUserInfo] = useState(null)
   const [contactAdress,setcontactAdress] = useState([])
 
   let isConnected = props.userInfo.email
+
+
+  console.log(isConnected)
 
 // List type part 
 useEffect(()=>{
@@ -28,26 +32,43 @@ useEffect(()=>{
     var requestBDD = await fetch(`${ip}users/userinformation`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`useremail = aa`
+      body:`email=${props.userInfo.email}`
     })
     var listTypeRaw = await requestBDD.json()
-    setUserInfo(listTypeRaw.user)
     setcontactAdress(listTypeRaw.user.favoritesplaces)
-    
+
   }
   recupDonnée()
   
 },[props.actionOnSaved])
 
+let NoAdress = ()=>{
+  return (
+    <View style={styles.containerNoAdress}> 
+    <Text>Bonjour : {props.userInfo.pseudo}</Text>
+    <Text>Vous n'avez actuellement aucune activité sauvegardé</Text>
+    <Text>Pour ajouter une activité cliquez sur l'étoile en haut à droite de la description de slieux lors de votre recherche</Text>
+    </View>
+
+  )
+}
 
 
-    var ListAdressSaved = contactAdress.map(function(item, i) {
-      return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="activity" action="modification" screenShow="listSavedAdress"/>;
-    })
+console.log(contactAdress.length)
 
-    if (isConnected !=false){
+    var ListAdressSaved 
+    if (isConnected ==false){
       ListAdressSaved = <BoutonNonConnecte />
     } 
+    if (contactAdress.length == 0){
+      console.log("ok length")
+     ListAdressSaved =  <NoAdress />
+     
+    }else{
+      ListAdressSaved = contactAdress.map(function(item, i) {
+        return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="activity" action="modification" screenShow="listSavedAdress"/>;
+      })
+    }
 
 
 
@@ -74,6 +95,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#80d6ff', 
     alignSelf:"center"
   },
+  containerNoAdress: {
+    flex:1,
+    alignContent:"center",
+    alignItems:"center",
+    marginTop:20,
+    width:"94%",
+    borderRadius:20,
+    padding:20,
+    backgroundColor:"#FFF",
+  },
+
 
   content:{
    width:"90%",
@@ -117,7 +149,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  return { actionOnSaved:state.actionOnSaved,userInfo:state.userInformation }
+  return { actionOnSaved:state.actionOnSaved,userInfo:state.userInformation}
 }
 
 function mapDispatchToProps(dispatch) {

@@ -55,11 +55,8 @@ function forgotPassword(props) {
 let ValidationButton = ()=>{ 
 
     if(pseudo.length > 0 ||email.length > 0 ){
-
         gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
     }
-
-
 
     if (showValidateButton){
       return ( 
@@ -86,47 +83,21 @@ let ValidationButton = ()=>{
 }
 
 let sendRequest =async ()=>{
-const expressionMail =/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-let resultMail = expressionMail.test(email)
-
-if(!resultMail && email.length>0){
-  setEmailError(
-        <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Format d'email incorrect</Text>
-    )
-}else{setEmailError()}
-
-if(pseudo.length<3){
-    setPseudoError(
-        <Text style={{color:"red",fontFamily:"Monserrat-Italic"}}>Veuillez saisir un pseudo de 4 charactères minimum </Text>
-    )
-}else{setPseudoError()}
-
-
-
-if (resultPass || pseudo.length>3 ){
-
-    let requestBDD =await fetch(`${ip}users/changepassword`,{
+    let requestBDD =await fetch(`${ip}users/sendmailnewpassword`,{
         method:"POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body:`email=${email}&pseudo=${pseudo}`
+        body:`email=${email}`
       })
 
-      var retourCreatAccount = await requestBDD.json()
-      var result = retourCreatAccount.login
-
-      if( result ){
-        var userData = {email:email,pseudo:pseudo}
-      //  AsyncStorage.setItem('userInformation',JSON.stringify(userData))
-        alert("ok")
-    }
-     else {
-         let wording = retourCreatAccount.retour
-          setIsError(true)
-          setError(wording)
-      }
-
-    }
+      var retourSendMail = await requestBDD.json()
+     console.log(retourSendMail.result)
+     if(retourSendMail.result){
+      setEmailError(
+        <Text style={{color:"#0077c2",fontFamily:"Monserrat-Italic",fontSize:20}}>Un email avec le lien de réinitialisation vient de vous être envoyé</Text>
+    )
+     }
+    
 }
 
 
@@ -146,10 +117,10 @@ if (resultPass || pseudo.length>3 ){
   <View style={styles.container}>
     <Container style={styles.formContainer}>
 
-      <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Créer votre compte</Text>
+      <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Veuillez saisir votre email ou pseudo : </Text>
        
             <Item floatingLabel>
-              <Label>Email</Label>
+              <Label>Email / Pseudo</Label>
               <Input                     
                     autoCapitalize="none"
                     placeholder="Email *"
@@ -157,15 +128,6 @@ if (resultPass || pseudo.length>3 ){
                     onSubmitEditing={text => setEmail(text)} />
             </Item>
             {emailError}
-            <Item floatingLabel style={{marginTop:20}}>
-              <Label>Pseudo</Label>
-              <Input                     
-                    autoCapitalize="none"
-                    placeholder="Email *"
-                    onChangeText={text => setPseudo(text)}
-                    onSubmitEditing={text => setPseudo(text)} />
-            </Item>
-            {pseudoError}
         <ErrorMessage />
     </Container>
 

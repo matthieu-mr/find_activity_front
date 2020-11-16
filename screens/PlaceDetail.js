@@ -22,6 +22,47 @@ function  PlaceDetail(props) {
  // props.navigation.setOptions({ title:"Détails du site" })
   const [infoPlace,setInfoPlace] = useState()
 
+  
+ useEffect(()=>{
+  props.navigation.setOptions({ title:"Détails du site",         
+  headerRight:()=>(
+    <Icon reverse name='ios-star-outline' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {saveActivity('Parametres');}}  />
+    ),  })
+},[])
+
+
+let saveActivity = async()=>{
+//console.log("info console log ----------------------------------------------------- ",infoPlace)
+let adress = infoPlace.address_components[0].short_name +", "+ infoPlace.address_components[1].short_name
+
+
+
+  let info ={
+    date : "undefined",
+    name:infoPlace.name,
+    category:props.listType.typeActivity,
+    adress:"adress",
+    type:props.listType.activity[0],
+    city: infoPlace.address_components[2].short_name, 
+    postcode:infoPlace.address_components[6].short_name,
+    lat:infoPlace.geometry.location.lat, 
+    lon:infoPlace.geometry.location.lng,
+    icon:infoPlace.icon,
+    googleIdPlace:infoPlace.place_id,
+  }
+  console.log(infoPlace.place_id)
+  console.log("get user info",props.userInfo)
+
+  /*
+
+  await fetch(`${ip}users/modifinfo`,{
+    method:"POST",
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body:`info=${info}&type=adress&email=${props.userInfo.email}`
+  })
+  */
+} 
+
 // recuperation des POI 
 useEffect(()=>{
 
@@ -30,12 +71,10 @@ useEffect(()=>{
   let lon = props.item.lon
   let name =  props.item.name
   let placeid = false
+  
   if (props.item.place_id){
     placeid = props.item.place_id
 }
-
-
-
 
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}pointinformation`,{
@@ -268,7 +307,7 @@ cardContainer:{
 
 
 function mapStateToProps(state) {
-  return { position: state.position,item:state.infoPlace }
+  return { position: state.position,item:state.infoPlace,listType:state.listType,userInfo:state.userInformation }
 }
 
 function mapDispatchToProps(dispatch) {

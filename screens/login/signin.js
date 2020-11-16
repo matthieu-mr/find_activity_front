@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
 import { StyleSheet, Text, View,Paper,TouchableOpacity, Keyboard,AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
-import { Item, Input, Label, Container, } from 'native-base';
+import { Item, Input, Label, Container,Card } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 
 //import * as Analytics from 'expo-firebase-analytics';
@@ -109,8 +109,10 @@ if(!resultPass){
     )
 }else{setPasswordError()}
 
+console.log("reusltpass",resultPass,"pseudo length",pseudo.length,"resutl mail",resultMail)
 
-if (resultPass && pseudo.length>3 && resultMail){
+if (resultPass && pseudo.length>2 && resultMail){
+  console.log("send mail")
 
     let requestBDD =await fetch(`${ip}users/createuser`,{
         method:"POST",
@@ -119,12 +121,14 @@ if (resultPass && pseudo.length>3 && resultMail){
       })
 
       var retourCreatAccount = await requestBDD.json()
-      var result = retourCreatAccount.login
+      let result=retourCreatAccount.created
+console.log("result",retourCreatAccount)
 
       if( result ){
         var userData = {email:email,pseudo:pseudo}
+        console.log(userData)
         AsyncStorage.setItem('userInformation',JSON.stringify(userData))
-        alert("ok")
+        props.navigation.navigate("ParticipantListAdress")
     }
      else {
          let wording = retourCreatAccount.retour
@@ -150,7 +154,7 @@ if (resultPass && pseudo.length>3 && resultMail){
 
   return (
   <View style={styles.container}>
-    <Container style={styles.formContainer}>
+    <Card style={styles.formContainer}>
 
       <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Créer votre compte</Text>
        
@@ -158,6 +162,9 @@ if (resultPass && pseudo.length>3 && resultMail){
               <Label>Email</Label>
               <Input                     
                     autoCapitalize="none"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                    autoFocus={true}
                     placeholder="Email *"
                     onChangeText={text => setEmail(text)}
                     onSubmitEditing={text => setEmail(text)} />
@@ -168,6 +175,7 @@ if (resultPass && pseudo.length>3 && resultMail){
               <Input                     
                     autoCapitalize="none"
                     placeholder="Email *"
+                    textContentType="username"
                     onChangeText={text => setPseudo(text)}
                     onSubmitEditing={text => setPseudo(text)} />
             </Item>
@@ -178,12 +186,13 @@ if (resultPass && pseudo.length>3 && resultMail){
                     autoCapitalize="none"
                     secureTextEntry={false}
                     placeholder="Email *"
+                    textContentType="password"
                     onChangeText={text => setPassword(text)}
                     onSubmitEditing={text => sendRequest(text)}/>
             </Item>
             {passwordError}
         <ErrorMessage />
-    </Container>
+    </Card>
 
     <Container style={styles.buttonContainer}> 
         <ValidationButton />
@@ -198,10 +207,14 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
     alignContent:"center",
     alignItems:"center",
+    backgroundColor:color3
   },
   formContainer:{
     width:"90%",
-    flex:10
+    flex:10,
+    borderRadius:20,
+    padding:20,
+    
   },    
   buttonContainer: {
     display:"flex",
@@ -210,17 +223,20 @@ const styles = StyleSheet.create({
     alignItems:"center",
     marginBottom:15,
     width:"100%",
+    backgroundColor:color3
    
 },
 buttonOpacity:{
-    width:"90%"
+    width:"90%",
+    backgroundColor:color3
 },
  buttonText: {
     textAlign: 'center',
     color: 'white',
     fontSize:20,
     fontFamily: 'Baskerville-Black',
-    marginRight:20
+    marginRight:20,
+    
 }
 
 });

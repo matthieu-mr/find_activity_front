@@ -22,7 +22,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 
 function AdressListParticipant(props) {
-//props.navigation.setOptions({ title:"Liste des participants" })
 
 let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 const [nbAdress,setNbAdress] = useState(15)
@@ -35,7 +34,15 @@ const [listButton,setListButton] = useState([
   {name:"Sport" , isSelected : false,  icon :<MaterialCommunityIcons name="run" size={24} color="white" />},
  
 ])
-
+useEffect(()=>{
+  AsyncStorage.getItem("userInformation",
+  function(err, data) { 
+    var userData = JSON.parse(data); 
+    console.log(userData);
+    props.addInformationUser(userData)
+  } 
+)
+},[])
 
 
 AffichageAdress =props.listAdress.map((item,i)=>{
@@ -93,12 +100,14 @@ let validateAction = () => {
 
   if(nbAdress==0){
     alert("merci d'ajouter une adresse",activity)
+  }else{
+    if(button==0){
+      props.navigation.navigate("ListActivitySortie")
+       }else if(button==1){
+      props.navigation.navigate("ListActivitySport")
+      }
   }
-  if(button==0){
-  props.navigation.navigate("ListActivitySortie")
-   }else if(button==1){
-  props.navigation.navigate("ListActivitySport")
-  }
+
   /*
   else{
     props.SelectedActivity(activity)

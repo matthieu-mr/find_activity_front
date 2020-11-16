@@ -51,7 +51,12 @@ function DrawerContent(props){
         setinfoUserAsync(data);
       })
 
+
+ 
+
+
   const Screens = ({navigation}) => {
+
     let goBack = {
       headerLeft:()=>(
       <Icon reverse name='arrow-back' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress ={()=> navigation.goBack()}  />        ),
@@ -66,7 +71,7 @@ function DrawerContent(props){
           <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />),
       }
 
-      let menu ={
+      let menuWithSetting ={
         headerLeft:()=>(
           <Icon reverse name='ios-menu' type='Ionicons'  color="#009387" size={25} style={{ marginLeft: 10, color:"white" }} onPress={()=>{navigation.openDrawer();}}   />),
           headerRight:()=>(
@@ -75,9 +80,11 @@ function DrawerContent(props){
       }
 
 
-     // let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ConnectScreen} options={menuOnly}/>
-      forgotPassword
-      let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={forgotPassword}/> : <Stack.Screen name="Accueil" component={forgotPassword} options={menuOnly}/>
+      let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ParticipantListAdress} options={menuOnly}/>
+      // screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={forgotPassword}/> : <Stack.Screen name="Accueil" component={forgotPassword} options={menuOnly}/>
+
+
+
 
     return (
     <Stack.Navigator
@@ -94,6 +101,11 @@ function DrawerContent(props){
         <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
         <Stack.Screen name="SearchAdressParticipant" component={SearchAdressParticipant} options={goBack} />
 
+        <Stack.Screen name="ConnectScreen" component={ConnectScreen}/> 
+        <Stack.Screen name="ForgotPassword" component={forgotPassword} options={goBack} /> 
+
+        <Stack.Screen name="ParticipantListAdress" component={ParticipantListAdress} options={menuOnly}/>
+
         <Stack.Screen name="ListActivitySport" component={ListActivtySport} options={goBack} />
         <Stack.Screen name="ListActivitySortie" component={ListActivitySortie} options={goBack} />
 
@@ -104,13 +116,9 @@ function DrawerContent(props){
         <Stack.Screen name="formChangeAdressInfo" component={FormChangeInfoAdress} options={goBack} />
         <Stack.Screen name="Parametres" component={AdvancedParam} options={goBack} />
        
-
-
         <Stack.Screen name="MapActivity" component={MapActivity} options={goBack} />
 
-        
-
-
+      
     </Stack.Navigator>
     )
 
@@ -119,8 +127,26 @@ function DrawerContent(props){
 
 
 const CustomDrawerContent = (props) => {
-  return (
 
+  let Disconnect = ()=>{
+    console.log("home user async",infoUserAsync)
+    AsyncStorage.removeItem("userInformation")
+
+    AsyncStorage.getItem("userInformation",
+            function(err, data) { 
+
+              var userData = JSON.parse(data); 
+
+              console.log(userData);
+            } 
+          )
+    console.log("home user async after",infoUserAsync)
+    props.navigation.navigate("Accueil")
+  }
+
+
+
+  return (
     <DrawerContentScrollView {...props} screenOptions ={{
       headerStyle:{
         backgroundColor:"#5c6bc0"
@@ -131,34 +157,34 @@ const CustomDrawerContent = (props) => {
 
     <DrawerItem 
       label ="Accueil"
-      labelStyle={{marginLeft:-16}}
+      labelStyle={{color:"#0077c2"}}
       onPress={()=>{props.navigation.navigate("Accueil");}}
-      icon ={()=> <Icon reverse name='ios-home' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
+      icon ={()=> <Icon reverse name='ios-home' type='Ionicons' style={{fontSize: 30, color:"#0077c2" }} />}
       />
 
     <DrawerItem 
       label ="Vos adresses"
-      labelStyle={{marginLeft:-16}}
+      labelStyle={{color:"#0077c2"}}
       onPress={()=>{props.navigation.navigate("ContactAdressList");}}
-      icon ={()=> <Icon reverse name='ios-list' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
+      icon ={()=> <Icon reverse name='ios-contacts' type='Ionicons' style={{fontSize: 30, color:"#0077c2" }} />}
       />
     
     <DrawerItem 
-      label ="Vos sorties"
-      labelStyle={{marginLeft:-16}}
+      label ="  Vos sorties"
+      labelStyle={{color:"#0077c2"}}
       onPress={()=>{props.navigation.navigate("ContactActivityList");}}
-      icon ={()=> <Icon reverse name='ios-list' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
+      icon ={()=> <Icon reverse name='ios-restaurant' type='Ionicons' style={{fontSize: 30, color:"#0077c2"}} />}
       />
 
-    <DrawerItem 
-      label ="Parametres"
-      labelStyle={{marginLeft:-16}}
-      onPress={()=>{props.navigation.navigate("Parametres");}}
-      icon ={()=> <Icon reverse name='ios-settings' type='Ionicons' style={{fontSize: 30, color:"#009387" }} />}
+<DrawerItem 
+style={{ marginTop:20,borderTopWidth:2,borderTopColor: "#42a5f5"}}
+      label ="Deconnection"
+      labelStyle={{color:"#0077c2"}}
+      onPress={()=>Disconnect()}
+      icon ={()=> <Icon reverse name='ios-log-out' type='Ionicons' style={{fontSize: 30, color:"#0077c2"}} />}
       />
 
     </DrawerContentScrollView>
-
   )
 }
 
@@ -174,9 +200,6 @@ const CustomDrawerContent = (props) => {
 
   )
 } ;
-
-
-
 
 
 export default DrawerContent
