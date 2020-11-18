@@ -44,14 +44,9 @@ import './global'
 import { NavigationContainer } from '@react-navigation/native';
 
 
-//import icon and Style
-import { Icon } from 'react-native-elements'
-
-
-
 // import screen
 
-import DrawerScreen from './screens/DrawerContent'
+import Navigation from './screens/Navigation'
 
 // import redux 
 import {createStore, combineReducers} from 'redux';
@@ -59,19 +54,15 @@ import {Provider} from 'react-redux';
 
 // import reducer 
 import listActivity from './reducers/Activity'
-import positionInfo from './reducers/Position'
 import listType from './reducers/TypeActivity'
-
 import infoPlace from './reducers/InfoPlace'
-import sportName from './reducers/SportName'
-
 import listAdress from './reducers/ListAdressParticipant'
-import actionOnSaved from './reducers/AdressSaved'
+import actionOnSaved from './reducers/Bool_Modification'
 import infoFormAdress from './reducers/formInformationsAdress'
 import userInformation from './reducers/UserInformation'
 import rdvPointAdress from './reducers/RdvPointAdress'
 
-const store = createStore(combineReducers({listActivity, positionInfo,listType,infoPlace,sportName,listAdress,actionOnSaved,infoFormAdress,userInformation,rdvPointAdress}))
+const store = createStore(combineReducers({listActivity,listType,infoPlace,listAdress,actionOnSaved,infoFormAdress,userInformation,rdvPointAdress}))
 //const store = createStore(combineReducers({listActivity,listType,infoPlace,listAdress,actionOnSaved,infoFormAdress,userInformation,rdvPointAdress}))
 
 
@@ -90,7 +81,7 @@ export default function App(navigation){
   return(
     <Provider store={store}>
     <NavigationContainer>
-        <DrawerScreen/>
+        <Navigation/>
       </NavigationContainer>  
     </Provider>
 

@@ -31,7 +31,7 @@ function  SearchAdress(props) {
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
-  const [adress,setAdress] = useState("")
+  const [adress,setAdress] = useState("16 rue saint hilaire")
   const [listAdressResult,setListAdressResult] = useState([])
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -90,7 +90,7 @@ useEffect(()=>{
       </View>
       )
     }else{
-      return <ListAdress key="0" name="Votre Position" adress={userActualLocation.response.features[0].properties.name} postcode={userActualLocation.response.features[0].properties.postcode} city={userActualLocation.response.features[0].properties.city} id="33" lat={location.coords.latitude} lon={location.coords.longitude} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
+      return <ListAdress key="0" name="Votre Position" adress={userActualLocation.response.features[0].properties.name} postcode={userActualLocation.response.features[0].properties.postcode} city={userActualLocation.response.features[0].properties.city} id="33" lat={location.coords.latitude} lon={location.coords.longitude} type="contact" action="addParticipantNotFav" screenShow="addUserActualLocation"/>;
     }
   
   }

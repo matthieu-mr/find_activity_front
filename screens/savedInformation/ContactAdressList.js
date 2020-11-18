@@ -16,23 +16,23 @@ import { FontAwesome } from '@expo/vector-icons';
 
 function AdressList(props) {
 
+
   useEffect(()=>{
     props.navigation.setOptions({ title:"Adresses sauvegardées" } )
   },[])
 
-
- // props.navigation.setOptions({ title:"Adresses sauvegardées" })
-
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
-  const [nbAdress,setNbAdress] = useState(15)
+  const [modif,setModif] = useState(props.actionOnSaved)
 
   const [userInfo,setUserInfo] = useState(null)
   const [contactAdress,setcontactAdress] = useState([])
 
+  let isConnected = props.userInfo.email
 // List type part 
+let allList=[]
 useEffect(()=>{
   async function recupDonnée(){
-
+    console.log('send info')
     var requestBDD = await fetch(`${ip}users/userinformation`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -41,44 +41,46 @@ useEffect(()=>{
     var listTypeRaw = await requestBDD.json()
     setUserInfo(listTypeRaw.user)
     setcontactAdress(listTypeRaw.user.contactInt)
+    console.log(listTypeRaw.user.contactInt)
+
   }
   recupDonnée()
   
 },[props.actionOnSaved])
+console.log(props.actionOnSaved)
 
-
-
-
-let isConnected = props.userInfo.email
-
-    var ListAdressSaved = contactAdress.map(function(item, i) {
+    let ListAdressSaved = contactAdress.map(function(item, i) {
       return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
     })
 
-if (isConnected!=false){
+    let NoAdress = ()=>{
+      return (
+        <View style={styles.containerNoAdress}> 
+        <Text>Bonjour : {props.userInfo.pseudo}</Text>
+        <Text>Vous n'avez actuellement aucune activité sauvegardé</Text>
+        <Text>Pour ajouter une activité cliquez sur l'étoile en haut à droite de la description de slieux lors de votre recherche</Text>
+        </View>
+    
+      )
+    }
+    
+
+
+if (contactAdress.length == 0){
+  ListAdressSaved=<NoAdress />
+}
+
+
+if (isConnected==false){
   ListAdressSaved = <BoutonNonConnecte />
 } 
-
-
-let ButtonAddNewAdress = () =>{
-  if (isConnected !=false){
-    return (
-      <Text> </Text>
-    )
-
-    return (
-      <View style={{marginBottom:15,alignSelf:"center"}}> 
-      <ButtonValidation wordingLabel="Ajouter nouvelle adresse"/>
-      </View>
-    )
-  
-}}
-
 
 let navigationNewAdress =()=>{
   props.goToemptyFormAdress(),
   props.navigation.navigate('formChangeAdressInfo')
 }
+
+
 
   return (
   <View style={styles.container}>

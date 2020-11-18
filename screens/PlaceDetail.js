@@ -22,11 +22,12 @@ function  PlaceDetail(props) {
  // props.navigation.setOptions({ title:"Détails du site" })
   const [infoPlace,setInfoPlace] = useState()
 
+  let iconHeader = 'ios-star-outline'
   
  useEffect(()=>{
   props.navigation.setOptions({ title:"Détails du site",         
   headerRight:()=>(
-    <Icon reverse name='ios-star-outline' type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {saveActivity('Parametres');}}  />
+    <Icon reverse name={iconHeader} type='Ionicons'  color="#009387" size={25} style={{ marginRight: 10, color:"white" }} onPress ={()=> {saveActivity();}}  />
     ),  })
 },[])
 
@@ -35,14 +36,12 @@ let saveActivity = async()=>{
 //console.log("info console log ----------------------------------------------------- ",infoPlace)
 let adress = infoPlace.address_components[0].short_name +", "+ infoPlace.address_components[1].short_name
 
-
-
-  let info ={
+  let infoToSend ={
     date : "undefined",
     name:infoPlace.name,
     category:props.listType.typeActivity,
-    adress:"adress",
-    type:props.listType.activity[0],
+    adress:adress,
+    type:"bar",
     city: infoPlace.address_components[2].short_name, 
     postcode:infoPlace.address_components[6].short_name,
     lat:infoPlace.geometry.location.lat, 
@@ -50,28 +49,37 @@ let adress = infoPlace.address_components[0].short_name +", "+ infoPlace.address
     icon:infoPlace.icon,
     googleIdPlace:infoPlace.place_id,
   }
-  console.log(infoPlace.place_id)
-  console.log("get user info",props.userInfo)
 
-  /*
 
-  await fetch(`${ip}users/modifinfo`,{
+
+ 
+let info = JSON.stringify(infoToSend)
+
+await fetch(`${ip}users/savecontactadress`,{
     method:"POST",
     headers: {'Content-Type':'application/x-www-form-urlencoded'},
     body:`info=${info}&type=adress&email=${props.userInfo.email}`
   })
-  */
+
+  iconHeader = 'ios-star'
 } 
 
 // recuperation des POI 
 useEffect(()=>{
 
+  console.log(props.item)
 
   let lat =  props.item.lat
   let lon = props.item.lon
   let name =  props.item.name
   let placeid = false
   
+  lat= 48.7937035,
+  lon= 2.5143257,
+  name= "Café de Paris",
+  placeid="ChIJra2v7EEM5kcR1d3z8DpMdAc"
+
+
   if (props.item.place_id){
     placeid = props.item.place_id
 }

@@ -19,14 +19,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
 
 
-
-
 function AdressListParticipant(props) {
 
 let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
-const [nbAdress,setNbAdress] = useState(15)
-
 let AffichageAdress = []
+
 const [button, setButton] = useState(0)
 
 const [listButton,setListButton] = useState([
@@ -38,7 +35,6 @@ useEffect(()=>{
   AsyncStorage.getItem("userInformation",
   function(err, data) { 
     var userData = JSON.parse(data); 
-    console.log(userData);
     props.addInformationUser(userData)
   } 
 )
@@ -46,7 +42,7 @@ useEffect(()=>{
 
 
 AffichageAdress =props.listAdress.map((item,i)=>{
-    return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="delParticipant" screenShow="listParticipantAdress" isFavorite={item.isFavorite}/>;
+    return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="modifParticipant" screenShow="listParticipantAdress" isFavorite={item.isFavorite}/>;
 })
 
 
@@ -57,7 +53,7 @@ if (props.listAdress.length>0){
   //let adressRdv = getRdvPoint(adress)
   let adressRdv = `${props.rdvPointAdress.adress} - ${props.rdvPointAdress.postCode}`
 
-  AffichageRdvPoint = <ListType key={props.rdvPointAdress.lat} title1="test title" title2={adressRdv} postcode="{item.properties.postcode}" city={props.rdvPointAdress.adress} type="adress" action="showRdvPoint" sizeTitle1={20} screenShow="ParticipantAdress" lat="{item.geometry.coordinates[1]}" lon="{item.geometry.coordinates[0]}" />
+  AffichageRdvPoint = <ListType key={99999} title1="test title" title2={adressRdv} postcode="{item.properties.postcode}" city={props.rdvPointAdress.adress} type="adress" action="showRdvPoint" sizeTitle1={20} screenShow="ParticipantAdress" lat="{item.geometry.coordinates[1]}" lon="{item.geometry.coordinates[0]}" />
 
 }
 
@@ -115,7 +111,7 @@ let validateAction = () => {
  */
 }
 
-
+console.log('recup adress from list particpant ',props.listAdress)
 useEffect(()=>{
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}adress/getrdvpoint`,{
@@ -140,6 +136,7 @@ useEffect(()=>{
     </View>
 </View>
 {AffichageRdvPoint}
+
 
 <View style={styles.contentScreenList}>  
   <ScrollView>

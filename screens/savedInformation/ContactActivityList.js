@@ -23,8 +23,6 @@ function ContactScreen(props) {
   let isConnected = props.userInfo.email
 
 
-  console.log(isConnected)
-
 // List type part 
 useEffect(()=>{
   async function recupDonnée(){
@@ -53,15 +51,11 @@ let NoAdress = ()=>{
   )
 }
 
-
-console.log(contactAdress.length)
-
     var ListAdressSaved 
     if (isConnected ==false){
       ListAdressSaved = <BoutonNonConnecte />
     } 
     if (contactAdress.length == 0){
-      console.log("ok length")
      ListAdressSaved =  <NoAdress />
      
     }else{

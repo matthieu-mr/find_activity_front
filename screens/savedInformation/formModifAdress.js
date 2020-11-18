@@ -17,7 +17,10 @@ function FormModifAdress(props) {
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
   let affichagelist =props.infoFormAdress.showListSearch
 
-
+  useEffect(()=>{
+    props.navigation.setOptions({ title:`Modification ${props.infoFormAdress.type}`} )
+  },[])
+  
 useEffect(() => {
   Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
   Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
@@ -31,11 +34,7 @@ const _keyboardDidHide = () => {
   setShowValidateButton(true)
 };
 
-
-
-
-
-let AffichageList = () =>{
+let AffichageAdress = () =>{
   if(affichagelist){
     return(
       < SearchAdress />
@@ -66,7 +65,6 @@ let ValidationButton = ()=>{
     gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
   }
   if (showValidateButton){
-    console.log("validation",props.infoFormAdress)
     return ( 
       <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendModification()}>
           <LinearGradient
@@ -90,11 +88,12 @@ let ValidationButton = ()=>{
   
 }
 
-
+console.log("recup from form",props.infoFormAdress)
 
 let sendModification =async ()=>{ 
 
 let newItem =props.infoFormAdress
+
 
     if(nameAdress != "null"){
       newItem.name=nameAdress
@@ -102,43 +101,48 @@ let newItem =props.infoFormAdress
     if(newItem.name =="Veuillez saisir un nom d'adresse"){
       gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
     }else{
-      let info = JSON.stringify(props)
+      let info = JSON.stringify(props.infoFormAdress)
 
-      if(props.infoFormAdress.action == "new"){
+
+      if(props.infoFormAdress.action=="modifParticipant"){
+        console.log("not fav")
+  
         await fetch(`${ip}users/savecontactadress`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
           body:`info=${info}&type=contact&email=${props.userInfo.email}`
         })
-        props.actionOnSaved()
-        props.navigation.navigate("ContactAdressList")
+        
+        props.deleteParticipant(info)
+        props.addParticipantToFav(props.infoFormAdress)
+        props.actionOnSaved(info)
+        props.navigation.navigate("ParticipantListAdress")
 
-      }else if(props.infoFormAdress.action == "modification"){
+      }else{
+        console.log("fav",info)
+
         await fetch(`${ip}users/modifinfo`,{
           method:"POST",
           headers: {'Content-Type':'application/x-www-form-urlencoded'},
-          body:`info=${info}&type=contact&email=${props.userInfo.email}`
+          body:`info=${info}&type=${props.infoFormAdress.type}&email=${props.userInfo.email}`
         })
         props.actionOnSaved()
-      props.navigation.navigate("ContactAdressList")
 
-      }
-      else{
-        /*
-        await fetch(`${ip}users/deleteinfo`,{
-          method:"POST",
-          headers: {'Content-Type':'application/x-www-form-urlencoded'},
-          body:`useremail =aa@a.com&objectid=${props.id}&type=${props.type}`
-        })*/
-
+      if(props.infoFormAdress.type=="contact"){
+        props.navigation.navigate("ContactAdressList")
+      }  else {
+       props.navigation.navigate("ContactActivityList")
       }
 
+
+      }
     }
 //  props.actionOnSaved()
 
 }
 
-
+let title = "Modification de l'adresse"
+if(props.infoFormAdress.type=="contact"){title ='Nom du contact'}
 
 return (
 <View style={styles.container}>
@@ -147,7 +151,7 @@ return (
   <Card style={styles.cardContainer}>
     <View style={{display:"flex",flexDirection:"row",margin:15}}> 
       <View style={{flex:1}}> 
-        <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:15}}> Nom de l'adresse 2 </Text>
+        <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:15}}>{title}</Text>
 
         <Item floatingLabel>
           <Label>{props.infoFormAdress.name}</Label>
@@ -164,7 +168,7 @@ return (
 
   <Card style={styles.adressContainer}>
         <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,padding:15}}> Adresse </Text>
-        <AffichageList/>
+        <AffichageAdress/>
 
   </Card>
 
@@ -246,6 +250,12 @@ function mapDispatchToProps(dispatch) {
   },    
   showList: function(info) {
     dispatch( {type: 'showListSearchAdress',info:info} )
+  },
+  deleteParticipant: function(info) {
+    dispatch( {type: 'deleteAdressParticipant',info:info} )
+  },
+  addParticipantToFav:function(info) {
+    dispatch( {type: 'addNewAdressContact',info:info} )
   },
 
   }

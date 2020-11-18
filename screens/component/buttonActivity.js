@@ -62,27 +62,7 @@ const styles = StyleSheet.create({
 });
 
 
-function mapStateToProps(state) {
-  return { listAdress: state.listAdress }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    deleteAdress: function(item) {
-    dispatch( {type: 'deleteAdress',item} )
-  },
-    addActivity: function(item) {
-    dispatch( {type: 'addActivity',item} )
-  },
-    deleteActivity: function(item) {
-    dispatch( {type: 'deleteAdress',item} )
-  },
-  }
-}
 
 
-export default connect(
-  mapStateToProps, 
-  mapDispatchToProps
-)(ButtonActivity);
+export default ButtonActivity;
 

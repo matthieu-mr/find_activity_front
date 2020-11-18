@@ -143,7 +143,6 @@ let goMap =()=>{
     props.addActivity(item)
     props.navigation.navigate("MapActivity")
   }
-
 }
 
 
@@ -252,9 +251,7 @@ function mapDispatchToProps(dispatch) {
     addActivity: function(item) {
       dispatch( {type: 'addActivity',item} )
     },
-    deleteActivity: function(item) {
-      dispatch( {type: 'deleteAdress',item} )
-    },
+
   }
 }
 

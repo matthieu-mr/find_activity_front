@@ -12,14 +12,13 @@ import { FontAwesome } from '@expo/vector-icons';
 function ListType(props) {
 const navigation = useNavigation();
 
-let sizeTitle1 = props.sizetitle1
+let sizeTitle1 = 18
 let color=props.color
 let icon= <Ionicons style={{flex:1}} name="ios-add-circle-outline" size={24} color="#42a5f5" />
 
 // add the switch to props
 
 let Wording
-
 
 let actionOnClick =()=>{
   envoiPropsInformation(props)
@@ -34,7 +33,7 @@ switch(props.action){
     Wording= ()=>{
       return (
         <View style={{flex:15}}> 
-          <Text style={{fontSize:props.sizeTitle1,fontFamily: 'Baskerville-Medium'}}>{props.title1}</Text>
+          <Text style={{fontSize:sizeTitle1,fontFamily: 'Baskerville-Medium'}}>{props.title1}</Text>
           <Text style={{fontSize:17,fontFamily: 'Monserrat-Light'}}>{props.title2} </Text>
         </View>
       )
@@ -50,7 +49,7 @@ switch(props.action){
   break
 
   case 'addSport':
-    sizeTitle1 = props.sizeTitle1
+
     color=props.color
     let search=[props.title1]
 
@@ -75,8 +74,6 @@ switch(props.action){
 
     break
     case 'goPlaceDetail':
-      
-      sizeTitle1 = props.sizeTitle1
       color=props.color
       icon =<AntDesign name="rightcircleo" size={24} color="#42a5f5" />
 

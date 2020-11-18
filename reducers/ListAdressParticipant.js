@@ -3,25 +3,34 @@ export default function(listAdress = [], action) {
     if(action.type == 'addNewParticipantAdress') {
       let newList = [...listAdress]
       let nbAdress = newList.length +1
-
+      let adressWording = action.info.title1
+      if(adressWording== undefined){
+        console.log("je ne te connaiu apas ",action.info)
+        adressWording=action.info.adress
+      }
+      
       let newAdress ={ 
         id:nbAdress,
         name:`Adresse ${nbAdress}`,
-        adress:action.info.title1,
+        adress:adressWording,
         city:action.info.city,
         postcode:action.info.postcode,
         lat:action.info.lat,
         lon:action.info.lon,
         isFavorite:false
       }
+      console.log(newAdress)
 
       newList.push(newAdress)
       return newList
     }
 
     else if(action.type == 'addNewAdressContact') {
+
       let newList = [...listAdress]
       let nbAdress = newList.length +1
+
+      console.log('r"reducer',action)
 
       let newAdress ={ 
         id:nbAdress,

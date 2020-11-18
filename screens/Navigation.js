@@ -11,13 +11,10 @@ import { createDrawerNavigator,DrawerContentScrollView,DrawerItem } from '@react
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 
-import Home from './Home'
 import ConnectScreen from './login/ConnectScreen'
 import AdvancedParam from './AdvancedSearch'
 import siginScreen from './login/signin'
 import forgotPassword from './login/ForgotPassword'
-
-
 
 import ListActivitySortie from './listTypeActivitySortie'
 import ListActivtySport from './listTypeActivitySport';
@@ -52,9 +49,6 @@ function DrawerContent(props){
       })
 
 
- 
-
-
   const Screens = ({navigation}) => {
 
     let goBack = {
@@ -81,9 +75,7 @@ function DrawerContent(props){
 
 
       let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ParticipantListAdress} options={menuOnly}/>
-      // screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={forgotPassword}/> : <Stack.Screen name="Accueil" component={forgotPassword} options={menuOnly}/>
-
-
+     // let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={PlaceDetail} options={menuOnly}/>
 
 
     return (
@@ -110,9 +102,9 @@ function DrawerContent(props){
         <Stack.Screen name="ListActivitySortie" component={ListActivitySortie} options={goBack} />
 
         <Stack.Screen name="siginScreen" component={siginScreen} options={goBack} />
-        <Stack.Screen name="ContactAdressList" component={ContactAdressList} options={goBack} />
+        <Stack.Screen name="ContactAdressList" component={ContactAdressList} options={menuOnly} />
         <Stack.Screen name="SearchSaveAdress" component={SearchSaveAdress} options={goBack} />
-        <Stack.Screen name="ContactActivityList" component={ContactActivityList} options={goBack} />
+        <Stack.Screen name="ContactActivityList" component={ContactActivityList} options={menuOnly} />
         <Stack.Screen name="formChangeAdressInfo" component={FormChangeInfoAdress} options={goBack} />
         <Stack.Screen name="Parametres" component={AdvancedParam} options={goBack} />
        
@@ -129,18 +121,13 @@ function DrawerContent(props){
 const CustomDrawerContent = (props) => {
 
   let Disconnect = ()=>{
-    console.log("home user async",infoUserAsync)
     AsyncStorage.removeItem("userInformation")
 
     AsyncStorage.getItem("userInformation",
             function(err, data) { 
-
               var userData = JSON.parse(data); 
-
-              console.log(userData);
             } 
           )
-    console.log("home user async after",infoUserAsync)
     props.navigation.navigate("Accueil")
   }
 

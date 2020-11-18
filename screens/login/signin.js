@@ -109,10 +109,8 @@ if(!resultPass){
     )
 }else{setPasswordError()}
 
-console.log("reusltpass",resultPass,"pseudo length",pseudo.length,"resutl mail",resultMail)
 
 if (resultPass && pseudo.length>2 && resultMail){
-  console.log("send mail")
 
     let requestBDD =await fetch(`${ip}users/createuser`,{
         method:"POST",
@@ -122,11 +120,9 @@ if (resultPass && pseudo.length>2 && resultMail){
 
       var retourCreatAccount = await requestBDD.json()
       let result=retourCreatAccount.created
-console.log("result",retourCreatAccount)
 
       if( result ){
         var userData = {email:email,pseudo:pseudo}
-        console.log(userData)
         AsyncStorage.setItem('userInformation',JSON.stringify(userData))
         props.navigation.navigate("ParticipantListAdress")
     }

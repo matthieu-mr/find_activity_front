@@ -91,7 +91,6 @@ let sendRequest =async ()=>{
       })
 
       var retourSendMail = await requestBDD.json()
-     console.log(retourSendMail.result)
      if(retourSendMail.result){
       setEmailError(
         <Text style={{color:"#0077c2",fontFamily:"Monserrat-Italic",fontSize:20}}>Un email avec le lien de réinitialisation vient de vous être envoyé</Text>

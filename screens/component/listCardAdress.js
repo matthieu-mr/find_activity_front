@@ -12,26 +12,23 @@ function AccordionComponent(props) {
   const navigation = useNavigation();
 
   let deleteAdress=async()=>{
-/*    props.actionOnSaved()
-
+    props.actionOnSaved()
+   // props.infoFormAdress
     await fetch(`${ip}users/deleteinfo`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`useremail =aa@a.com&objectid=${props.id}&type=${props.type}`
+      body:`email=${props.userInfo.email}&objectid=${props.id}&type=${props.type}`
     })
- */
+    props.actionOnSaved()
   }
 
 
 let changeInfo = ()=> {
+
   props.goToFormAdress(props)
   navigation.navigate("formChangeAdressInfo")
 }
 
-let addParticipantList =()=>{
-  props.addParticipant(props),
-  navigation.navigate("Accueil")
-}
 
 let firstAction =(
   <View> 
@@ -42,7 +39,7 @@ let firstAction =(
 )
 
 let secondAction =(
-  <TouchableOpacity onPress={() => deleteAdress({id})}>
+  <TouchableOpacity onPress={() => deleteAdress()}>
     <FontAwesome name="remove" size={20} color="red" />
   </TouchableOpacity>
 )
@@ -51,14 +48,29 @@ let secondAction =(
 
 let fromScreen = props.screenShow
 switch (fromScreen){
-    case "listSavedAdress":
-      break
+
+      case "listSavedAdress":
+        break
+
+        case 'addUserActualLocation':
+      props.title1=props.adress
+          firstAction =(
+            <View> 
+           <TouchableOpacity onPress={() =>{props.addNewParticipant(props); navigation.navigate("ParticipantListAdress")}}>
+              <FontAwesome name="plus-circle" size={28} color="#0077c2" />
+            </TouchableOpacity>
+          </View>
+          )
+          secondAction =(<View></View> )
+          
+          break;
+  
 
     case 'addParticipantAdress':
     
         firstAction =(
           <View> 
-          <TouchableOpacity onPress={() =>addParticipantList()}>
+          <TouchableOpacity onPress={() =>{props.addParticipant(props); navigation.navigate("ParticipantListAdress")}}>
             <FontAwesome name="plus-circle" size={28} color="#0077c2" />
           </TouchableOpacity>
         </View>
@@ -72,7 +84,7 @@ switch (fromScreen){
       if (props.isFavorite) {
         firstAction =(
         <View> 
-          <TouchableOpacity onPress={() => props.addParticipant(props)}>
+          <TouchableOpacity onPress={() => console.log("other")}>
             <FontAwesome name="star" size={28} color="#0077c2" />
           </TouchableOpacity>
         </View>
@@ -178,6 +190,11 @@ const styles = StyleSheet.create({
 })
 
 
+function mapStateToProps(state) {
+  return { userInfo:state.userInformation }
+}
+
+
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -194,6 +211,9 @@ saveAdressContact: function(info) {
   addParticipant: function(info) {
     dispatch( {type: 'addNewAdressContact',info:info} )
   },
+  addNewParticipant: function(info) {
+    dispatch( {type: 'addNewParticipantAdress',info:info} )
+  },
   deleteParticipant: function(info) {
     dispatch( {type: 'deleteAdressParticipant',info:info} )
   },
@@ -203,7 +223,7 @@ saveAdressContact: function(info) {
 
 
 export default connect(
-  null, 
+  mapStateToProps, 
   mapDispatchToProps
 )(AccordionComponent);
 
