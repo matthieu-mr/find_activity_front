@@ -16,7 +16,7 @@ Application de recherche de lieux à équidistance de plusieurs adresses.
 * Partage des informations depuis toutes les applications le permettant sur le smartphone
 
 ## Présentation du projet
-### ajout des adresses 
+### Ajout des adresses des participants 
 1. Selectionnez le type d'activité : Sortie ou Sport
 2. Ajoutez une ou plusieurs adresses :
 * En saisissant directement l'adress
@@ -34,7 +34,7 @@ Application de recherche de lieux à équidistance de plusieurs adresses.
 ![Affichage des activités ](http://matthieu-michon.fr/imagesprojet/quoifaire/activite.jpg)
 
 ### Affichage de la carte
-1. Naviguez entre les marker sur la carte qui affichent les résultats
+1. Naviguez entre les markers sur la carte qui affichent les résultats
 2. Cliquez sur le marker pour afficher l'adresse, la note globale (si disponible) et le prix (si disponible) 
 
 ou via la liste :
