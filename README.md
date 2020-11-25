@@ -19,9 +19,9 @@ Application de recherche de lieux à équidistance de plusieurs adresses.
 ### ajout des adresses 
 1. Selectionnez le type d'activité : Sortie ou Sport
 2. Ajoutez une ou plusieurs adresses,
-* En saisissant directement l'adresse,
-* Parmis vos contact 
-* Localisez votre position
+`* En saisissant directement l'adress :
+`* Parmis vos contact 
+`* Localisez votre position
 3. L'application calcul le point de RDV entre les participants séléctionnés
 * Sauvegardez depuis cet écran vos adresses favorites
 
