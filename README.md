@@ -2,7 +2,25 @@
 
 #### Version 2.0
 Application de recherche de lieux a équidistance de plusieurs adresses. 
+Lien du back  end : https://github.com/matthieu-mr/find_activity_back/ 
+Lien vers le store google : https://play.google.com/store/apps/details?id=com.matthieumichon.quoifaire
 
 ## Fonctionnnalités
 * Recherched'adresses en utilisant l'adresse et les coordonnées GPS via [GEO API GOUV ] https://geo.api.gouv.fr/adresse
-* Recherche de lieux via google place API https://geo.api.gouv.fr/adresse
+* Recherche des sorties et informations relativesaux lieux via google place & search place API https://developers.google.com/places/web-service/search
+* Calcul d'un point central entre plusieurs coordoonées GPS 
+* Sauvegarde des adresses et des lieux favoris
+* Guidage vers un lieu via google map, waze etc ...
+* Recherche sur le web ou consultation directe du site internet du lieux
+* Partage des informations depuis toutes les applications le permettant sur le smartphone
+
+## Présentation du projet
+
+* Ajoutez une ou plusieurs adresses, l'application calcul le point de RDV entre ces dernières
+
+![Ajout des adresses](http://matthieu-michon.fr/imagesprojet/quoifaire/participants.jpghttp://simplon.co/wp-content/uploads/2015/04/if-coder-keep-coding-else-learn-with-simplon-2-600x675.png)
+
+
+
+
+
