@@ -49,15 +49,15 @@ function MarkerMap(props) {
 
   return (
     <Marker
-    key={1}
-    coordinate=
-    {{
-    latitude: props.lat,
-    longitude: props.lon}}
-    title=""
-    description=""
-    pinColor="blue"
-    style={styles.marker}
+      key={1}
+      coordinate=
+      {{
+      latitude: props.lat,
+      longitude: props.lon}}
+      title=""
+      description=""
+      pinColor="blue"
+      style={styles.marker}
     >
 
 

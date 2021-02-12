@@ -8,12 +8,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 //import * as Analytics from 'expo-firebase-analytics';
 //import * as firebase from 'firebase'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import ButtonValidation from '../component/ButtonValidation'
 
 
 function ConnectScreen(props) {
  // props.navigation.setOptions({ title:"" })
  useEffect(()=>{
-  props.navigation.setOptions({ title:"Bienvenue" } )
+  props.navigation.setOptions({ title:"" } )
 },[])
 
     let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
@@ -45,7 +46,6 @@ let sendToAsync=(email,pseudo) =>{
       }, []);
     
       const _keyboardDidShow = () => {
-
         setShowValidateButton(!showValidateButton)
       };
     
@@ -55,30 +55,29 @@ let sendToAsync=(email,pseudo) =>{
     
 
 let ValidationButton = ()=>{ 
-    let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
-
+  let buttonIsValidated ="true"
     if(email.length == 0  ||password.length == 0 ){
-        gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
-    }
-
+      buttonIsValidated ="false"    }
     if (showValidateButton){
       return ( 
-    
+        <View> 
         <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendRequest()}>
-            <LinearGradient
-            colors={gradient}
-            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-            style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
-            >
-    
                 <View style={{flex:1,width:300,padding:5,flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                    <Text style={styles.buttonText}>
-                  Se connecter
-                    </Text>
-                    <MaterialCommunityIcons name="send" size={28} color="white" />
+                <ButtonValidation wordingLabel="Connexion" icon="key" isValidated={buttonIsValidated}/>
                 </View>
-            </LinearGradient>
         </TouchableOpacity>
+
+        <View style={{marginTop:20,alignItems:"center"}} > 
+          <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > ----------------------- </Text>
+        </View>
+        <TouchableOpacity onPress={()=>props.navigation.navigate("ForgotPassword")}>
+          <View style={{marginTop:10,marginBottom:20,alignItems:"center"}} > 
+            <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > Mot de passe oublié ? </Text>
+          </View>
+      </TouchableOpacity>
+        </View>
+
+        
 
       ) 
     } else {
@@ -87,54 +86,28 @@ let ValidationButton = ()=>{
     
 }
 
-let Create= ()=>{ 
-  let gradient = ["#ffffff","#fafafa","#c7c7c7","#fafafa","#ffffff"]
-  if (showValidateButton){
-    return ( 
- 
-      <TouchableOpacity style={styles.buttonOpacity} onPress={()=>props.navigation.navigate("siginScreen")}>
-        <LinearGradient
-        colors={["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]}
-        start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-        style={{ height: 48, width:350, alignItems: 'center', justifyContent: 'center', borderRadius:50}}
-        >
+let CreateAccount =()=>{
+  let buttonIsValidated ="true"
+  return ( 
 
-              <View style={{flex:1,width:"100%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                  <Text style={styles.buttonCreate}>
-                Créer un compte
-                </Text>
-                <MaterialCommunityIcons name="send" size={28} color="white" />
+    <TouchableOpacity style={styles.buttonOpacity} onPress={()=>props.navigation.navigate("siginScreen")}>
+            <View style={{flex:1,width:300,padding:5,flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
+            <ButtonValidation wordingLabel="Créer un compte" icon="account-plus-outline" isValidated={buttonIsValidated}/>
             </View>
-        </LinearGradient>
-      </TouchableOpacity>
-    ) 
-  } else {
-      return <Text>  </Text>
-  }
-  
+            
+    </TouchableOpacity>
+
+  ) 
 }
 
-
 let CreateOrByPassButton = ()=>{ 
-  let gradient = ["#ffffff","#fafafa","#c7c7c7","#fafafa","#ffffff"]
-
-
+  let buttonIsValidated ="false"
   if (showValidateButton){
     return ( 
       <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendToAsync(false,false)}>
-          <LinearGradient
-          colors={gradient}
-          start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-          style={{ height: 48, width:350, alignItems: 'center', justifyContent: 'center', borderRadius:50}}
-          >
-
-              <View style={{flex:1,width:"100%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                  <Text style={styles.buttonTextByPass}>
-                    Utiliser sans compte
-                  </Text>
-                  <MaterialCommunityIcons name="send" size={28} color="black" />
-              </View>
-          </LinearGradient>
+          <View style={{marginTop:10,marginBottom:20,alignItems:"center"}} > 
+            <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > Utiliser sans compte </Text>
+          </View>
       </TouchableOpacity>
      
     ) 
@@ -147,7 +120,6 @@ let CreateOrByPassButton = ()=>{
 
 
 let sendRequest =async ()=>{
-
     let requestBDD =await fetch(`${ip}users/login`,{
         method:"POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -168,27 +140,51 @@ let sendRequest =async ()=>{
 
 }
 
-
-  let ErrorMessage = (errorWording)=>{ 
-      if (isError){
-        return (
-        <View style={{display:"flex",flexDirection:"row",alignItems:"center",justifyContent:"center"}}> 
-            <MaterialCommunityIcons name="alert-octagon-outline" size={24} color="red" />
-             <Text style={{ color:"red",fontSize:18,fontFamily:"Baskerville-Black",marginTop:15}}> {error} </Text>
+let ShowSecondCard=()=>{
+  if (showValidateButton){
+    return ( 
+      <Card style={styles.bottomButtonContainer}>      
+      <View style={{marginTop:20, display:"flex",alignItems:"center"}}>  
+          <CreateAccount/>
         </View>
-             )
-      }
+        <View style={{marginTop:20,alignItems:"center"}} > 
+         <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > ----------------------- </Text>
+        </View>
+        <View style={{marginTop:0,alignItems:"center"}} > 
+          <CreateOrByPassButton />
+        </View>
+  
+      </Card>
+
+    ) 
+  } else {
       return <Text>  </Text>
   }
+}
+
+
+let ErrorMessage = (errorWording)=>{ 
+  if (isError){
+    return (
+    <View style={{display:"flex",flexDirection:"row",alignItems:"center",justifyContent:"center"}}> 
+        <MaterialCommunityIcons name="alert-octagon-outline" size={24} color="red" />
+         <Text style={{ color:"red",fontSize:18,fontFamily:"Baskerville-Black",marginTop:15}}> {error} </Text>
+    </View>
+         )
+  }
+  return <Text>  </Text>
+}
 
   return (
   <View style={styles.container}>
     <Card style={styles.formContainer}>      
-    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,}}> Connexion</Text>
+      <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,}}> Connexion</Text>
             <Item floatingLabel>
               <Label>Email / Pseudo</Label>
               <Input                     
                     autoCapitalize="none"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
                     placeholder="Email / Pseudo *"
                     onChangeText={text => setEmail(text)}
                     onSubmitEditing={text => setEmail(text)} />
@@ -212,29 +208,10 @@ let sendRequest =async ()=>{
           <ValidationButton />
         </View>
 
-        <View style={{marginTop:20,alignItems:"center"}} > 
-          <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > ----------------------- </Text>
-        </View>
-        <TouchableOpacity onPress={()=>props.navigation.navigate("ForgotPassword")}>
-          <View style={{marginTop:10,marginBottom:20,alignItems:"center"}} > 
-            <Text style={{alignItems:"center",fontFamily:"Sansita-Bold", color:"#42a5f5",fontSize:20}} > Mot de passe oublié ? </Text>
-          </View>
-      </TouchableOpacity>
     </Card>
 
+<ShowSecondCard />
 
-    <Card style={styles.bottomButtonContainer}>      
-
-
-    <View style={{marginTop:10,alignItems:"center"}} > 
-          <Create/>
-        </View>
-
-        <View style={{marginTop:10,alignItems:"center"}} > 
-        <CreateOrByPassButton />
-        </View>
-
-    </Card>
 
 </View>
   );
@@ -248,7 +225,7 @@ const styles = StyleSheet.create({
     alignItems:"center",
   },
   formContainer:{
-    flex:3,
+    flex:2,
     alignContent:"center",
     alignItems:"center",
     marginTop:20,

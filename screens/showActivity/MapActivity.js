@@ -89,6 +89,7 @@ let ListMap =listPoint.map((item,i)=>{
               latitudeDelta: 0.5,
               longitudeDelta: 0.5,
               }}
+              moveOnMarkerPress={true}
           >
            <MapView.Circle
                 key = { 1}

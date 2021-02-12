@@ -2,37 +2,27 @@
   "expo": {
     "name": "Quoi Faire",
     "slug": "Quoi-Faire",
-    "version": "9.1.1",
+    "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "description": "Trouvez une activité proche de vous",
-    "scheme": "quoifaire",
     "splash": {
       "image": "./assets/splash_t.png",
       "resizeMode": "contain",
       "backgroundColor": "#0077c2"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/favicon.png"
     },
     "android": {
       "package": "com.matthieumichon.quoifaire",
-      "versionCode": 12,
+      "permissions": ["ACCESS_COARSE_LOCATION","ACCESS_FINE_LOCATION"],
+      "versionCode": 15,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCXI24AWr0Cv2AXnbh29nVA9Ge7SPIvYBo"
-        } 
+        }
+      }
     }
-  }
-  
   }
 }

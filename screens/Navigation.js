@@ -24,6 +24,7 @@ import PlaceDetail from './PlaceDetail'
 
 import ParticipantListAdress from './processCreateActivity/ParticipantListAdress'
 import SearchAdressParticipant from './processCreateActivity/SearchParticipantAdress'
+import MapAllParticipant from './processCreateActivity/mapAllParticipant'
 
 import ContactAdressList from "./savedInformation/ContactAdressList"
 import SearchSaveAdress from './savedInformation/SearchSaveAdress'
@@ -73,11 +74,17 @@ function DrawerContent(props){
           ), 
       }
 
+      let nothing ={
+        headerLeft:()=>(
+          <Icon/>),
+          headerRight:()=>(
+          <Icon  />
+          ), 
+      }
 
-      let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ParticipantListAdress} options={menuOnly}/>
      // let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={PlaceDetail} options={menuOnly}/>
 
-
+      let screenHomeLogged = infoUserAsync ==null ? <Stack.Screen name="Accueil" component={ConnectScreen}/> : <Stack.Screen name="Accueil" component={ParticipantListAdress} options={menuOnly}/>
     return (
     <Stack.Navigator
       screenOptions={{
@@ -87,16 +94,16 @@ function DrawerContent(props){
         headerTintColor:'#fff',
       }} >
 
-          {screenHomeLogged}
-
-
+        {screenHomeLogged}
         <Stack.Screen name="Place details" component={PlaceDetail} options={goBack} />
         <Stack.Screen name="SearchAdressParticipant" component={SearchAdressParticipant} options={goBack} />
 
-        <Stack.Screen name="ConnectScreen" component={ConnectScreen}/> 
+        <Stack.Screen name="ConnectScreen" component={ConnectScreen} options={nothing}/> 
         <Stack.Screen name="ForgotPassword" component={forgotPassword} options={goBack} /> 
 
         <Stack.Screen name="ParticipantListAdress" component={ParticipantListAdress} options={menuOnly}/>
+
+        <Stack.Screen name="mapParticipant" component={MapAllParticipant} options={goBack}/>
 
         <Stack.Screen name="ListActivitySport" component={ListActivtySport} options={goBack} />
         <Stack.Screen name="ListActivitySortie" component={ListActivitySortie} options={goBack} />
@@ -128,7 +135,7 @@ const CustomDrawerContent = (props) => {
               var userData = JSON.parse(data); 
             } 
           )
-    props.navigation.navigate("Accueil")
+    props.navigation.navigate("ConnectScreen")
   }
 
 
@@ -145,7 +152,7 @@ const CustomDrawerContent = (props) => {
     <DrawerItem 
       label ="Accueil"
       labelStyle={{color:"#0077c2"}}
-      onPress={()=>{props.navigation.navigate("Accueil");}}
+      onPress={()=>{props.navigation.navigate("ParticipantListAdress");}}
       icon ={()=> <Icon reverse name='ios-home' type='Ionicons' style={{fontSize: 30, color:"#0077c2" }} />}
       />
 

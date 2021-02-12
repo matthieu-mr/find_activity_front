@@ -26,88 +26,6 @@ let latitudeDelta
 let longitudeDelta 
 
 
-switch(dist){
-  case "5000":
-    latitudeDelta = 0.07
-    longitudeDelta =0.07
-    break;
-
-  case "10000":
-      latitudeDelta =0.25
-      longitudeDelta = 0.35
-    break;
-
-  case "15000":
-    latitudeDelta = 1.50
-    longitudeDelta =1.50
-    break;
-
-  case "30000":
-    latitudeDelta = 1.50
-    longitudeDelta =1.50
-    break;
-
-  case "50000":
-    latitudeDelta = 1.50
-    longitudeDelta =1.50
-    break;
-
-    default:
-      latitudeDelta = 0.07
-      longitudeDelta =0.07
-}
-
-
-
-let markerListMap   
-
-
-
-let goPlaceDetails = (name,lat,lon,item) => {
-    let infoToSend = {
-      name:name,
-      lat:lat,
-      long:lon,
-      item:item
-    }
-    props.infoPlace(infoToSend)
-    navigation.navigate("Place details")
-  }
-  
-markerListMap = markerList.map((item,i)=>{
-    
-    let actlib = item.fields.actlib
-    let name = item.fields.insnom
-    let lat = item.fields.gps[0]
-    let lon = item.fields.gps[1]
-
-    return (
-        <Marker Button
-        key={i}
-        coordinate={{latitude: lat,
-        longitude: lon}}
-        title={actlib}
-        description={name}
-        pinColor="blue"
-    >
-
-      <Callout tooltip onPress={() => {goPlaceDetails(name,lat, lon,item);}}>
-        <View style={{backgroundColor:'white',padding:20}} > 
-            <Text style={{fontSize:20}} > {name}</Text>
-            <Text  style={{fontSize:15}}> Activité proposée : {actlib}</Text>
-        </View>
-
-      </Callout> 
-  
-    </Marker>
-      )
-
-
-
-})
-
-
-
 
 if (lat != undefined ){
     carte = (
@@ -160,7 +78,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  return { listActivity: state.listActivity, positionRecupState: state.positionInfo}
+  return { listAdress: state.listAdress,rdvPointAdress:state.rdvPointAdress}
 }
 
 function mapDispatchToProps(dispatch) {

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,Keyboard,} from 'react-native';
+import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,} from 'react-native';
 import {connect} from 'react-redux';
 import { Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content,Button } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,18 +9,30 @@ import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import SearchAdress from "./SearchSaveAdress"
 
-function FormModifAdress(props) {
-  const [showValidateButton,setShowValidateButton] = useState(true)
+import ButtonValidation from '../component/ButtonValidation'
 
+
+
+function FormModifAdress(props) {
+
+  const [showValidateButton,setShowValidateButton] = useState(true)
   const[nameAdress,setName]=useState(props.infoFormAdress.name)
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
   let affichagelist =props.infoFormAdress.showListSearch
 
   useEffect(()=>{
-    props.navigation.setOptions({ title:`Modification ${props.infoFormAdress.type}`} )
+    let wording = `Modification ${props.infoFormAdress.type}`
+    if(props.infoFormAdress.action == "SaveNewAdressFromListContact"){
+      wording=`Ajout ${props.infoFormAdress.type}`
+    }
+    props.navigation.setOptions({ title:wording} )
   },[])
-  
+ 
+console.log(props.infoFormAdress)
+
+/*  
+
 useEffect(() => {
   Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
   Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
@@ -33,7 +45,7 @@ const _keyboardDidShow = () => {
 const _keyboardDidHide = () => {
   setShowValidateButton(true)
 };
-
+*/
 let AffichageAdress = () =>{
   if(affichagelist){
     return(
@@ -49,7 +61,6 @@ let AffichageAdress = () =>{
           </View>
          <FontAwesome name="edit" style={{marginRight:5}}size={28} color="#0077c2" />
         </View>
-
       </TouchableOpacity>
     )
   }
@@ -58,13 +69,14 @@ let AffichageAdress = () =>{
 let changeAffichageList = () =>{props.showList()}
 
 
-
 let ValidationButton = ()=>{ 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
   if(props.infoFormAdress.name =="Veuillez saisir une adresse" && nameAdress =="null"){
     gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
   }
+
   if (showValidateButton){
+    let wording = `Valider ${props.infoFormAdress.type}`
     return ( 
       <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendModification()}>
           <LinearGradient
@@ -72,13 +84,8 @@ let ValidationButton = ()=>{
           start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
           style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
           >
+            <ButtonValidation wordingLabel={wording} icon="check"/>
 
-              <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                  <Text style={styles.buttonText}>
-                      Valider 
-                  </Text>
-                  <MaterialCommunityIcons name="check" size={28} color="white" />
-              </View>
           </LinearGradient>
       </TouchableOpacity>
     ) 
@@ -88,12 +95,8 @@ let ValidationButton = ()=>{
   
 }
 
-console.log("recup from form",props.infoFormAdress)
-
 let sendModification =async ()=>{ 
-
 let newItem =props.infoFormAdress
-
 
     if(nameAdress != "null"){
       newItem.name=nameAdress
@@ -104,8 +107,7 @@ let newItem =props.infoFormAdress
       let info = JSON.stringify(props.infoFormAdress)
 
 
-      if(props.infoFormAdress.action=="modifParticipant"){
-        console.log("not fav")
+      if(props.infoFormAdress.action=="SaveNewAdressFromParticipant"){
   
         await fetch(`${ip}users/savecontactadress`,{
           method:"POST",
@@ -118,8 +120,31 @@ let newItem =props.infoFormAdress
         props.actionOnSaved(info)
         props.navigation.navigate("ParticipantListAdress")
 
+      }else if(props.infoFormAdress.action=="SaveNewAdressFromListContact"){
+
+        console.log(`info=${info}&type=contact&email=${props.userInfo.email}`)
+        if(info.name="Veuillez saisir un nom de contact" || info.adress==false){
+          Alert.alert(
+            "Il manque des informations",
+            "Veuillez Saisir un nom de contact et une adresse",
+            [
+      
+              { text: 'OK', onPress: () => console.log('OK Pressed') }
+            ],
+            { cancelable: false }
+          );
+        }else{
+    
+          await fetch(`${ip}users/savecontactadress`,{
+            method:"POST",
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body:`info=${info}&type=contact&email=${props.userInfo.email}`
+          })        
+          props.actionOnSaved(info)
+          props.navigation.navigate("ContactAdressList")
+        }
+        
       }else{
-        console.log("fav",info)
 
         await fetch(`${ip}users/modifinfo`,{
           method:"POST",
@@ -133,11 +158,9 @@ let newItem =props.infoFormAdress
       }  else {
        props.navigation.navigate("ContactActivityList")
       }
-
-
       }
     }
-//  props.actionOnSaved()
+ props.actionOnSaved()
 
 }
 

@@ -11,15 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 function ButtonValidation(props) {
     const [showValidateButton,setShowValidateButton] = useState(true)
 
-    let gradientSelected = ["#80d6ff","#42a5f5","#42a5f5","#80d6ff"]
-    let noSelectGradient = ["#e2f1f8","#b0bec5","#b0bec5","#808e95","#e2f1f8"]
-    let noSelectGradientWhite = ["#ffffff","#ffffff","#ffffff","#ffffff","#ffffff"]
-
-    let sizeTitle1 = 15
-    let colorTypo = "blue"
-
     let wordingLabel =props.wordingLabel
-
 
     useEffect(() => {
         Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
@@ -33,7 +25,26 @@ function ButtonValidation(props) {
       const _keyboardDidHide = () => {
         setShowValidateButton(true)
       };
+
+let nameIcon = "send"      
+if(props.icon){
+  nameIcon=props.icon
+}    
+
+switch(props.isValidated){
+  case 'true':
+    gradient=["#80d6ff","#42a5f5","#42a5f5","#80d6ff"]
     
+  break;
+  case 'false':
+    gradient=["#e2f1f8","#b0bec5","#b0bec5","#808e95","#e2f1f8"]
+  break;
+  case 'none':
+    gradient=["#e2f1f8","#b0bec5","#b0bec5","#808e95","#e2f1f8"]
+    break;
+}
+
+
 let ValidationButton = ()=>{ 
 
         if (showValidateButton){
@@ -48,7 +59,7 @@ let ValidationButton = ()=>{
                         <Text style={styles.buttonText}>
                             {wordingLabel} 
                         </Text>
-                        <MaterialCommunityIcons name="send" size={28} style={{marginLeft:15}} color="white" />
+                        <MaterialCommunityIcons name={nameIcon} size={28} style={{marginLeft:15}} color="white" />
                     </View>
                 </LinearGradient>
           ) 
@@ -71,7 +82,6 @@ const styles = StyleSheet.create({
   },
   constainerFilterList:{
     backgroundColor:"#80d6ff",
-    
     display:"flex",
     flexDirection :"row",
     flex:1,
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     color: 'white',
-    fontSize:15,
+    fontSize:20,
     fontFamily: 'Baskerville-Black',
 }
 

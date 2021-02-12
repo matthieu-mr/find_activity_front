@@ -3,16 +3,14 @@ import React, { useState,useEffect } from 'react';
 import { StyleSheet, Text, View,TouchableOpacity,AsyncStorage } from 'react-native';
 import {connect} from 'react-redux';
 
-import { LinearGradient } from 'expo-linear-gradient';
 //Style
 import ListAdress from '../component/ListCardAdress'
 import BoutonNonConnecte from '../component/BoutonNonConnecte'
 import ButtonValidation from '../component/ButtonValidation'
+import NoAdressComponent from '../component/NoAdressSaved'
 
 
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { ScrollView } from 'react-native-gesture-handler';
-import { FontAwesome } from '@expo/vector-icons'; 
 
 function AdressList(props) {
 
@@ -28,52 +26,55 @@ function AdressList(props) {
   const [contactAdress,setcontactAdress] = useState([])
 
   let isConnected = props.userInfo.email
-// List type part 
-let allList=[]
-useEffect(()=>{
-  async function recupDonnée(){
-    console.log('send info')
-    var requestBDD = await fetch(`${ip}users/userinformation`,{
-      method:"POST",
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`email=${props.userInfo.email}`
-    })
-    var listTypeRaw = await requestBDD.json()
-    setUserInfo(listTypeRaw.user)
-    setcontactAdress(listTypeRaw.user.contactInt)
-    console.log(listTypeRaw.user.contactInt)
 
-  }
-  recupDonnée()
+
   
-},[props.actionOnSaved])
-console.log(props.actionOnSaved)
+    useEffect(()=>{
+      async function recupDonnée(){
+        var requestBDD = await fetch(`${ip}users/userinformation`,{
+          method:"POST",
+          headers: {'Content-Type':'application/x-www-form-urlencoded'},
+          body:`email=${props.userInfo.email}`
+        })
+        var listTypeRaw = await requestBDD.json()
+        setUserInfo(listTypeRaw.user)
+        setcontactAdress(listTypeRaw.user.contactInt)
+      }
+      recupDonnée()
+      
+    },[props.actionOnSaved])
 
-    let ListAdressSaved = contactAdress.map(function(item, i) {
-      return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
-    })
 
+    let ListAdressSaved 
     let NoAdress = ()=>{
       return (
-        <View style={styles.containerNoAdress}> 
-        <Text>Bonjour : {props.userInfo.pseudo}</Text>
-        <Text>Vous n'avez actuellement aucune activité sauvegardé</Text>
-        <Text>Pour ajouter une activité cliquez sur l'étoile en haut à droite de la description de slieux lors de votre recherche</Text>
-        </View>
-    
+    <NoAdressComponent />
       )
     }
     
-
-
-if (contactAdress.length == 0){
-  ListAdressSaved=<NoAdress />
-}
-
-
-if (isConnected==false){
-  ListAdressSaved = <BoutonNonConnecte />
-} 
+    let ShowAddAdress = ()=>{
+      return (
+        <View style={{marginBottom:15}}> 
+        <TouchableOpacity style={styles.buttonOpacity} onPress={()=>navigationNewAdress()}>
+                <ButtonValidation wordingLabel="Ajouter une adresee" />
+        </TouchableOpacity>
+      </View>
+      )
+    }
+    
+    if (isConnected ==false){
+      ListAdressSaved = <BoutonNonConnecte />
+      ShowAddAdress=<View></View>
+    } else {
+      if (contactAdress.length == 0 ){
+        ListAdressSaved =  <NoAdress />
+       }else{
+         ListAdressSaved = contactAdress.map(function(item, i) {
+           return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="contact" action="modification" screenShow="listSavedAdress"/>;
+         })
+       }
+    }
+ 
 
 let navigationNewAdress =()=>{
   props.goToemptyFormAdress(),
@@ -91,11 +92,8 @@ let navigationNewAdress =()=>{
     </View>
 
     </ScrollView>
-    <View style={{marginBottom:15}}> 
-        <TouchableOpacity style={styles.buttonOpacity} onPress={()=>navigationNewAdress()}>
-                <ButtonValidation wordingLabel="Ajouter une adresse"/>
-        </TouchableOpacity>
-      </View>
+    {ShowAddAdress}
+
     </View>
   );
 }

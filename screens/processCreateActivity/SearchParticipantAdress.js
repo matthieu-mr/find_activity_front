@@ -8,21 +8,17 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
 let gradient = {gradient}
 
-import { FontAwesome5 } from '@expo/vector-icons'; 
-import { FontAwesome } from '@expo/vector-icons'; 
-
-import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 
-
-import * as Font from 'expo-font';
-import { Feather } from '@expo/vector-icons'; 
 
 import ListAdress from '../component/ListCardAdress'
 import ListType from '../component/ListItemInfo';
 import ButtonValidation from '../component/ButtonValidation'
 import BoutonNonConnecte from '../component/BoutonNonConnecte'
+
+// get center coordinates : 
+// https://www.npmjs.com/package/geolib
 
 
 
@@ -31,7 +27,7 @@ function  SearchAdress(props) {
 
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
-  const [adress,setAdress] = useState("16 rue saint hilaire")
+  const [adress,setAdress] = useState("")
   const [listAdressResult,setListAdressResult] = useState([])
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -41,7 +37,7 @@ const [userActualLocation,setUserActualLocation] = useState([])
 let pageTitle = "Recherche d'adresse"
 
 useEffect(()=>{
-  props.navigation.setOptions({ title:pageTitle } )
+  props.navigation.setOptions({ title:"Ajouter des Participants" } )
 },[])
 
 
@@ -55,6 +51,9 @@ useEffect(()=>{
       setLocation(location);
     })();
   }, [setButtonLocation]);
+
+
+
 
   let text = 'Waiting..';
   if (errorMsg) {
@@ -79,14 +78,15 @@ useEffect(()=>{
   },[location])
 
 
-  let InfoUserLocation = ()=>{
+let InfoUserLocation = ()=>{
+let buttonIsValidated = "true"
 
     if(!buttonSetLocation){
       return (
-        <View style={{marginBottom:15,}}> 
-        <TouchableOpacity style={styles.buttonOpacity} onPress={()=>setButtonLocation(!buttonSetLocation)}>
-                <ButtonValidation wordingLabel="Récupérer mon adresse"/>
-        </TouchableOpacity>
+        <View> 
+        <TouchableOpacity onPress={()=>setButtonLocation(!buttonSetLocation)}>
+          <ButtonValidation wordingLabel="Ma position" icon="crosshairs-gps" isValidated={buttonIsValidated}/>        
+          </TouchableOpacity>
       </View>
       )
     }else{
@@ -195,9 +195,9 @@ let isConnected = props.userInfo.email
             </ScrollView>
           </View>
           </Tab>
-          <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="blur-linear" size={24} color="white" /><Text style={styles.textInput}>  Ma position</Text></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor:"#0077c2"}}><MaterialIcons name="room" size={24} color="white" /><Text style={styles.textInput}>  Ma position</Text></TabHeading>}>
             <ScrollView>
-              <View style={{display:"flex",alignItems:"center",padding:20}}>   
+              <View style={{display:"flex",alignItems:"center",padding:20,width:"100%"}}>   
                 <InfoUserLocation/>
               </View>    
             </ScrollView>

@@ -11,8 +11,6 @@ export default function(infoPlaceForm = "", action) {
     } else if(action.type == 'changeAdressFromFormSaved') {
       let infoPlace = action.info
 
-      console.log("reducer change adress saved",action.info)
-
       let newPlaceInfo = {...infoPlaceForm}
       newPlaceInfo.adress = infoPlace.properties.name
       newPlaceInfo.postcode = infoPlace.properties.postcode
@@ -32,11 +30,13 @@ export default function(infoPlaceForm = "", action) {
       return newPlaceInfo;
     }
     else if(action.type == 'EmptyFormAdress') {
+     
       let emptyForm={
-        name:"Veuillez saisir une adresse",
+        name:"Veuillez saisir un nom de contact",
         showListSearch:true,
-        action:"new",
-        type:"contact"
+        action:"SaveNewAdressFromListContact",
+        type:"contact",
+        adress:false
       }
       
       return emptyForm;

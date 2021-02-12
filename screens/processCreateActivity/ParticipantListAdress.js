@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity,AsyncStorage  } from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity,AsyncStorage,Alert } from 'react-native';
 import {connect} from 'react-redux';
 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,20 +11,26 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ListAdress from '../component/ListCardAdress'
 import ListType from '../component/ListItemInfo';
 import ButtonValidation from '../component/ButtonValidation'
+import HeaderComponent from '../component/Header'
 
 
 
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { Ionicons } from '@expo/vector-icons'; 
 
 
 function AdressListParticipant(props) {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(()=>{
+    props.navigation.setOptions({ title:"Liste des Participants" } )
+  },[])
 
 let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 let AffichageAdress = []
 
 const [button, setButton] = useState(0)
+
 
 const [listButton,setListButton] = useState([
   {name:"Sortie" , isSelected : false, icon :<AntDesign name="isv" size={24} color="white" /> },
@@ -41,8 +47,36 @@ useEffect(()=>{
 },[])
 
 
+let AlertSportLimitation = ()=>{
+  if(button==1){
+    return(
+      <View view={{display:"flex",flex:1,alignContent:"center"}}>
+        <Text style={{color:"red",alignSelf:"center"}}> <MaterialCommunityIcons name="alert-circle-outline" size={24} color="red" /> Sport uniquement disponibles pour l'ile de france</Text>
+      </View>
+    )
+  }else{
+    return (<Text> </Text>)
+  }
+}
+
+
 AffichageAdress =props.listAdress.map((item,i)=>{
-    return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="modifParticipant" screenShow="listParticipantAdress" isFavorite={item.isFavorite}/>;
+    return (
+    <ListAdress 
+      key={i}
+      name={item.name} 
+      adress={item.adress}
+      postcode={item.postcode}
+      city={item.city}
+      id={item.id} 
+      lat={item.lat} 
+      lon={item.lon} 
+      type="contact" 
+      action="SaveNewAdressFromParticipant" 
+      screenShow="listParticipantAdress" 
+      isFavorite={item.isFavorite}
+    />
+    );
 })
 
 
@@ -78,7 +112,6 @@ if (i != button){ SelectedGradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#
             <Text style={styles.buttonText}>
                 {item.name}
             </Text>
-          
         </View>
     </LinearGradient>
   </TouchableOpacity>
@@ -95,7 +128,20 @@ let validateAction = () => {
  //getRdvPoint(adress)
 
   if(nbAdress==0){
-    alert("merci d'ajouter une adresse",activity)
+    Alert.alert(
+      "Aucune adresse ajoutée",
+      "Pour consulter les activités vous devez saisir au moins une adresse.",
+      [
+        {
+          text: 'Ajouter une adresse',
+          onPress: () => props.navigation.navigate('SearchAdressParticipant')
+        },
+
+        { text: 'OK', onPress: () => console.log('OK Pressed') }
+      ],
+      { cancelable: false }
+    );
+
   }else{
     if(button==0){
       props.navigation.navigate("ListActivitySortie")
@@ -110,8 +156,6 @@ let validateAction = () => {
   }
  */
 }
-
-console.log('recup adress from list particpant ',props.listAdress)
 useEffect(()=>{
   async function recupDonnée(){
     var requestBDD = await fetch(`${ip}adress/getrdvpoint`,{
@@ -129,65 +173,49 @@ useEffect(()=>{
 
   return (
   <View style={styles.container}>
-<View style={{backgroundColor:"white",width:"95%",alignSelf:"center",padding:5,marginTop:10,borderRadius:20}}> 
-    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,alignSelf:"center"}}> Type d'activité</Text>
-    <View style={{display:"flex",flexDirection:"row",marginBottom:20 }}> 
-    {ButtonCustomActivity}
-    </View>
-</View>
-{AffichageRdvPoint}
-
-
-<View style={styles.contentScreenList}>  
-  <ScrollView>
-
-  <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20,alignSelf:"center"}}> Adresses </Text>
-
-    <View style={{display:"flex",flexDirection:"row",justifyContent:"center"}}> 
-      <TouchableOpacity style={styles.buttonContainer} onPress={()=>props.navigation.navigate('SearchAdressParticipant')}>
-
-        <LinearGradient
-        colors={gradient}
-        start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-        style={{ height: 48, width: 200, alignItems: 'center', justifyContent: 'center', borderRadius:50}}
-        >
-            <Ionicons name="ios-add-circle-outline" size={24} color="white" />
-            <Text style={styles.buttonText}>
-            Ajouter une adresse
-            </Text>
-        </LinearGradient>
-      </TouchableOpacity>
-
-    </View>
-
-    <View style={styles.constainerList}> 
-          {AffichageAdress}  
-
+  <HeaderComponent/>
+    <View style={{backgroundColor:"white",width:"95%",alignSelf:"center",padding:5,marginTop:10,borderRadius:20}}> 
+        <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,alignSelf:"center"}}> Quoi Faire ?</Text>
+        <View style={{display:"flex",flexDirection:"row",marginBottom:20 }}> 
+          {ButtonCustomActivity}
         </View>
-    </ScrollView>
-      <View style={{marginBottom:15,}}> 
-        <TouchableOpacity style={styles.buttonOpacity} onPress={()=>validateAction()}>
-                <ButtonValidation wordingLabel="Valider participants"/>
+      < AlertSportLimitation />
+    </View>
+
+
+    <View style={styles.contentScreenList}>  
+      <ScrollView>
+      <View style={{backgroundColor:"white",alignSelf:"center",padding:5,marginTop:10,borderRadius:20}}> 
+      {AffichageRdvPoint}
+      <View style={{display:"flex",flexDirection:"row",justifyContent:"center"}}> 
+        <TouchableOpacity style={styles.buttonContainer} onPress={()=>props.navigation.navigate('SearchAdressParticipant')}>
+          <ButtonValidation wordingLabel="Ajouter participants" icon="plus" isValidated="true"/>
         </TouchableOpacity>
       </View>
+    </View>
+        {AffichageAdress}  
+      </ScrollView>
+
+      <View style={{marginBottom:15,}}> 
+        <TouchableOpacity style={styles.buttonOpacity} onPress={()=>validateAction()}>
+          <ButtonValidation wordingLabel="Valider participants"/>
+        </TouchableOpacity>
       </View>
     </View>
+  </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor: 'white', 
+    backgroundColor: '#80d6ff', 
+
   },
   contentScreenList:{
-    backgroundColor:"white",
     flex:1,
     width:'95%',
     alignSelf:"center",
-
-
-
   },
   constainerList:{
     alignItems:"center",
@@ -197,7 +225,6 @@ const styles = StyleSheet.create({
   contentTextCard:{
     fontSize:16,
     color:"#819ca9",
-
   },
   
   contentCard:{
@@ -223,7 +250,9 @@ const styles = StyleSheet.create({
   buttonContainer: {
     display:"flex",
     flexDirection:"row",
-    justifyContent:"center"
+    justifyContent:"center",
+    marginTop:20,
+    marginBottom:20
 },
   buttonText: {
     display:"flex",

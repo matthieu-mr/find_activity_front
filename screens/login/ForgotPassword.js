@@ -2,13 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
 import { StyleSheet, Text, View,Paper,TouchableOpacity, Keyboard,AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
-import { Item, Input, Label, Container, } from 'native-base';
+import { Item, Input, Label, Container, Card} from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 
 //import * as Analytics from 'expo-firebase-analytics';
 //import * as firebase from 'firebase'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-
+import ButtonValidation from '../component/ButtonValidation'
 
 function forgotPassword(props) {
 
@@ -23,7 +23,6 @@ function forgotPassword(props) {
     const [showValidateButton,setShowValidateButton] = useState(true)
     const [email,setEmail] = useState("")
     const [pseudo,setPseudo] = useState("")
-    const [password,setPassword] = useState("")
     
     // Error wording
         //Global
@@ -32,8 +31,7 @@ function forgotPassword(props) {
 
         //item
     const[emailError, setEmailError] =useState()
-    const[passwordError,setPasswordError] = useState()
-    const[pseudoError,setPseudoError] = useState()
+ 
 
     useEffect(() => {
         Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
@@ -61,19 +59,7 @@ let ValidationButton = ()=>{
     if (showValidateButton){
       return ( 
         <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendRequest()}>
-            <LinearGradient
-            colors={gradient}
-            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-            style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
-            >
-
-                <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                    <Text style={styles.buttonText}>
-                        Valider 
-                    </Text>
-                    <MaterialCommunityIcons name="send" size={28} color="white" />
-                </View>
-            </LinearGradient>
+          <ButtonValidation wordingLabel="Envoyer la demande " icon="send" isValidated={"true"}/>
         </TouchableOpacity>
       ) 
     } else {
@@ -116,7 +102,7 @@ let sendRequest =async ()=>{
   <View style={styles.container}>
     <Container style={styles.formContainer}>
 
-      <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:20}}> Veuillez saisir votre email ou pseudo : </Text>
+    <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,}}> Saisir Email ou Pseudo</Text>
        
             <Item floatingLabel>
               <Label>Email / Pseudo</Label>
@@ -130,9 +116,10 @@ let sendRequest =async ()=>{
         <ErrorMessage />
     </Container>
 
-    <Container style={styles.buttonContainer}> 
+      <View style={{marginTop:20, display:"flex",alignItems:"center",width:400,marginBottom:20}}>  
         <ValidationButton />
-    </Container>
+        </View>
+
 </View>
   );
 }
@@ -140,33 +127,41 @@ let sendRequest =async ()=>{
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:"white",
+    backgroundColor:"#80d6ff",
     alignContent:"center",
     alignItems:"center",
   },
   formContainer:{
-    width:"90%",
-    flex:10
-  },    
-  buttonContainer: {
-    display:"flex",
-    flex:1,
-    justifyContent:"flex-end",
-    alignItems:"center",
-    marginBottom:15,
-    width:"100%",
    
-},
-buttonOpacity:{
-    width:"90%"
-},
- buttonText: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize:20,
-    fontFamily: 'Baskerville-Black',
-    marginRight:20
-}
+    alignContent:"center",
+    alignItems:"center",
+    marginTop:20,
+    paddingTop:40,
+    width:"94%",
+    borderRadius:20,
+    padding:10,
+    backgroundColor:"#FFF",
+  },     
+  bottomButtonContainer: {
+    flex:1,
+    alignContent:"space-around",
+    justifyContent:"space-around",
+    alignItems:"center",
+    width:"94%",
+    borderRadius:20,
+    padding:20,
+    backgroundColor:"#FFF",
+  }, 
+  buttonOpacity:{
+      width:"90%"
+  },
+  buttonText: {
+      textAlign: 'center',
+      color: 'white',
+      fontSize:20,
+      fontFamily: 'Baskerville-Black',
+      marginRight:20
+  },
 
 });
 

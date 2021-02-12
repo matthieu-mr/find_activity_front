@@ -1,5 +1,5 @@
 import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View, AsyncStorage, ScrollView,TouchableOpacity} from 'react-native';
+import { StyleSheet, View, AsyncStorage, ScrollView,TouchableOpacity,Alert} from 'react-native';
 import { Text, Card, CardItem, Item,  } from 'native-base';
 import {connect} from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 //import module
 function AccordionComponent(props) {
   const navigation = useNavigation();
+
 
   let deleteAdress=async()=>{
     props.actionOnSaved()
@@ -44,30 +45,23 @@ let secondAction =(
   </TouchableOpacity>
 )
 
-
-
 let fromScreen = props.screenShow
 switch (fromScreen){
-
       case "listSavedAdress":
         break
-
         case 'addUserActualLocation':
-      props.title1=props.adress
+          props.title1=props.adress
           firstAction =(
             <View> 
-           <TouchableOpacity onPress={() =>{props.addNewParticipant(props); navigation.navigate("ParticipantListAdress")}}>
-              <FontAwesome name="plus-circle" size={28} color="#0077c2" />
+            <TouchableOpacity onPress={() =>{props.addNewParticipant(props); navigation.navigate("ParticipantListAdress")}}>
+            <FontAwesome name="plus-circle" size={28} color="#0077c2" />
             </TouchableOpacity>
-          </View>
-          )
+            </View>
+            )
           secondAction =(<View></View> )
-          
-          break;
+        break;
   
-
     case 'addParticipantAdress':
-    
         firstAction =(
           <View> 
           <TouchableOpacity onPress={() =>{props.addParticipant(props); navigation.navigate("ParticipantListAdress")}}>
@@ -76,35 +70,54 @@ switch (fromScreen){
         </View>
         )
         secondAction =(<View></View> )
-        
         break;
 
     case 'listParticipantAdress':
-     
-      if (props.isFavorite) {
-        firstAction =(
-        <View> 
-          <TouchableOpacity onPress={() => console.log("other")}>
-            <FontAwesome name="star" size={28} color="#0077c2" />
-          </TouchableOpacity>
-        </View>
-        )
-        secondAction =(
-        <View>
-          <TouchableOpacity onPress={() => props.deleteParticipant(props)}>
-            <FontAwesome name="remove" size={20} color="red" />
-          </TouchableOpacity>
-        </View> 
-        )
-      }
-      if (!props.isFavorite) {
-        firstAction =(
+      let createButtonAlert = () =>
+      Alert.alert(
+        "Vous n'etes pas connecté",
+        "Connectez-vous ou créer un compte pour sauvegarder une adresse.",
+        [
+          {
+            text: 'Aller à la page connexion',
+            onPress: () => navigation.navigate('ConnectScreen')
+          },
+ 
+          { text: 'OK', onPress: () => console.log('OK Pressed') }
+        ],
+        { cancelable: false }
+      );
+  
+      let action1 =()=>{changeInfo("save")}  
+          if(props.userInfo.email==false){
+            action1 =()=>{createButtonAlert()}  
+          }
+
+          if (props.isFavorite) {
+            firstAction =(
             <View> 
-                <TouchableOpacity onPress={() => changeInfo("save")}>
-                <FontAwesome name="star-o" size={32} color="#0077c2" />
+              <TouchableOpacity onPress={() => console.log("other")}>
+                <FontAwesome name="star" size={28} color="#0077c2" />
               </TouchableOpacity>
             </View>
-        )
+            )
+            secondAction =(
+            <View>
+              <TouchableOpacity onPress={() => props.deleteParticipant(props)}>
+                <FontAwesome name="remove" size={20} color="red" />
+              </TouchableOpacity>
+            </View> 
+            )
+          }
+          if (!props.isFavorite) {
+          // <TouchableOpacity onPress={() => changeInfo("save")}>
+            firstAction =(
+                <View> 
+                    <TouchableOpacity onPress={() => action1()}>
+                    <FontAwesome name="star-o" size={32} color="#0077c2" />
+                  </TouchableOpacity>
+                </View>
+            )
         secondAction =(
       <View>
         <TouchableOpacity onPress={() => props.deleteParticipant(props)}>
@@ -113,9 +126,7 @@ switch (fromScreen){
       </View> 
         )
       }
-
       break;
-
     default:
 }
 
@@ -123,6 +134,7 @@ switch (fromScreen){
   return (
     
     <View style={{marginTop:15,borderRadius:500,width:"98%"}} key="0">
+    
     <LinearGradient
     colors={gradient}
     start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}

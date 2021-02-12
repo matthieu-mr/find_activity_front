@@ -1,5 +1,5 @@
 import React,{useState,useEffect,Component} from 'react';
-import { StyleSheet, View,Dimensions,Text,Image,Share  } from 'react-native';
+import { StyleSheet, View,Dimensions,Text,Image,Share,Alert  } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
@@ -15,6 +15,7 @@ import * as Location from 'expo-location';
 
 //import components
 import { ScrollView } from 'react-native-gesture-handler';
+
 
 
 function  PlaceDetail(props) {
@@ -33,52 +34,65 @@ function  PlaceDetail(props) {
 
 
 let saveActivity = async()=>{
-//console.log("info console log ----------------------------------------------------- ",infoPlace)
-let adress = infoPlace.address_components[0].short_name +", "+ infoPlace.address_components[1].short_name
+  console.log(props.userInfo)
+// check if user is connected
+  if(props.userInfo.email==false){
+    Alert.alert(
+      "Vous n'êtes pas connecté",
+      "Connectez-vous ou créez un compte pour sauvegarder une activité.",
+      [
+        {
+          text: 'Aller à la page connexion',
+          onPress: () => navigation.navigate('ConnectScreen')
+        },
 
-  let infoToSend ={
-    date : "undefined",
-    name:infoPlace.name,
-    category:props.listType.typeActivity,
-    adress:adress,
-    type:"bar",
-    city: infoPlace.address_components[2].short_name, 
-    postcode:infoPlace.address_components[6].short_name,
-    lat:infoPlace.geometry.location.lat, 
-    lon:infoPlace.geometry.location.lng,
-    icon:infoPlace.icon,
-    googleIdPlace:infoPlace.place_id,
+        { text: 'OK'}
+      ],
+      { cancelable: false }
+    );
+  }else {
+    let adress = infoPlace.address_components[0].short_name +", "+ infoPlace.address_components[1].short_name
+
+    let infoToSend ={
+      date : "undefined",
+      name:infoPlace.name,
+      category:props.listType.typeActivity,
+      adress:adress,
+      type:"bar",
+      city: infoPlace.address_components[2].short_name, 
+      postcode:infoPlace.address_components[6].short_name,
+      lat:infoPlace.geometry.location.lat, 
+      lon:infoPlace.geometry.location.lng,
+      icon:infoPlace.icon,
+      googleIdPlace:infoPlace.place_id,
+    }
+  
+    let info = JSON.stringify(infoToSend)
+    
+    await fetch(`${ip}users/savecontactadress`,{
+        method:"POST",
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body:`info=${info}&type=adress&email=${props.userInfo.email}`
+      })
+    
+      iconHeader = 'ios-star'
   }
 
-
-
- 
-let info = JSON.stringify(infoToSend)
-
-await fetch(`${ip}users/savecontactadress`,{
-    method:"POST",
-    headers: {'Content-Type':'application/x-www-form-urlencoded'},
-    body:`info=${info}&type=adress&email=${props.userInfo.email}`
-  })
-
-  iconHeader = 'ios-star'
 } 
 
 // recuperation des POI 
 useEffect(()=>{
 
-  console.log(props.item)
-
   let lat =  props.item.lat
   let lon = props.item.lon
   let name =  props.item.name
   let placeid = false
-  
+  /*
   lat= 48.7937035,
   lon= 2.5143257,
   name= "Café de Paris",
   placeid="ChIJra2v7EEM5kcR1d3z8DpMdAc"
-
+*/
 
   if (props.item.place_id){
     placeid = props.item.place_id
@@ -160,7 +174,6 @@ let comment =[]
       let photoPlaceLink
       let comment= <Text style={{flex:1}}>Aucun commentaire</Text> 
   
-
       // custom photo if find 
       if (photoId !== undefined ){
       let photoIdGet = infoPlace.photos[0].photo_reference

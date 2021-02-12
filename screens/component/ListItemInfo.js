@@ -109,7 +109,7 @@ switch(props.action){
         icon =<FontAwesome name="map-o" size={24} color="#42a5f5" />
   
         actionOnClick = ()=>{
-          navigation.navigate("MapActivity")
+          navigation.navigate("mapParticipant")
         }
 
         Wording= ()=>{

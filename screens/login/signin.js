@@ -8,6 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 //import * as Analytics from 'expo-firebase-analytics';
 //import * as firebase from 'firebase'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import ButtonValidation from '../component/ButtonValidation'
 
 
 function signin(props) {
@@ -47,32 +48,17 @@ function signin(props) {
       };
     
  
-
+let buttonIsValidated ="true"
 
 let ValidationButton = ()=>{ 
-
-    if(pseudo.length == 0 ||email.length == 0  ||password.length == 0 ){
-        gradient = ["#c1d5e0","#90a4ae","#62757f","#90a4ae","#c1d5e0"]
-    }
-
-
+    if(pseudo.length > 2 ||email.length  > 2  ||password.length  > 2  ){
+      buttonIsValidated ="false"}
 
     if (showValidateButton){
+
       return ( 
         <TouchableOpacity style={styles.buttonOpacity} onPress={()=>sendRequest()}>
-            <LinearGradient
-            colors={gradient}
-            start={{x: 0.0, y: 1.0}} end={{x: 2.0, y: 2.0}}
-            style={{ height: 48, width:"100%", alignItems: 'center', justifyContent: 'center', borderRadius:50}}
-            >
-
-                <View style={{flex:1,width:"80%",flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                    <Text style={styles.buttonText}>
-                        Valider 
-                    </Text>
-                    <MaterialCommunityIcons name="send" size={28} color="white" />
-                </View>
-            </LinearGradient>
+            <ButtonValidation wordingLabel="Créer un compte" icon="account-plus-outline" isValidated={buttonIsValidated}/>
         </TouchableOpacity>
       ) 
     } else {
@@ -210,6 +196,7 @@ const styles = StyleSheet.create({
     flex:10,
     borderRadius:20,
     padding:20,
+    marginTop:20
     
   },    
   buttonContainer: {

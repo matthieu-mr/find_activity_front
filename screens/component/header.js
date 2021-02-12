@@ -5,7 +5,6 @@ function  HeaderComponent(props) {
 
   return (
     <StatusBar barStyle="light-content" backgroundColor="#0077c2" />
-
   );
 }
 

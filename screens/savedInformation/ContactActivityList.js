@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Paper,TouchableOpacity, Alert,Keyboard,} from 'react-native';
+import { StyleSheet, Text, View,Image} from 'react-native';
 import {connect} from 'react-redux';
 import { Form,Item, Input, Label, Card, CardItem, Body,Container,Header,Content,Button } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,7 +14,7 @@ import ListAdress from '../component/ListCardAdress'
 
 function ContactScreen(props) {
   useEffect(()=>{
-    props.navigation.setOptions({ title:"Activités sauvegardées" } )
+    props.navigation.setOptions({ title:"Sorties sauvegardées" } )
   },[])
   
   let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
@@ -40,24 +40,30 @@ useEffect(()=>{
   
 },[props.actionOnSaved])
 
+ 
+
 let NoAdress = ()=>{
+ //let photoPlace = <Image source={require('../assets/img-404.png')}  style={{height: 200, width: null, flex: 1}}/>
+// http://matthieu-michon.fr/imagesprojet/quoifaire/fleche.jpg
   return (
     <View style={styles.containerNoAdress}> 
-    <Text>Bonjour : {props.userInfo.pseudo}</Text>
-    <Text>Vous n'avez actuellement aucune activité sauvegardé</Text>
-    <Text>Pour ajouter une activité cliquez sur l'étoile en haut à droite de la description de slieux lors de votre recherche</Text>
+      <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,padding:15}}> Bonjour : {props.userInfo.pseudo} </Text>
+      <Text style={styles.contentDescritptionCardNoAdress}>Vous n'avez actuellement aucune activité sauvegardé.</Text>
+      <Text style={styles.contentDescritptionCardNoAdress}>Pour ajouter une activité, cliquez sur l'étoile en haut à droite de la description des lieux.</Text>
+
+      <Image source = {{uri:'http://matthieu-michon.fr/imagesprojet/quoifaire/fleche.jpg'}}
+      style = {{ width:"100%", height: 200,marginTop:20 }}
+      />
     </View>
 
   )
 }
 
-    var ListAdressSaved 
+    let  ListAdressSaved 
     if (isConnected ==false){
       ListAdressSaved = <BoutonNonConnecte />
-    } 
-    if (contactAdress.length == 0){
+    } else if (contactAdress.length == 0 ){
      ListAdressSaved =  <NoAdress />
-     
     }else{
       ListAdressSaved = contactAdress.map(function(item, i) {
         return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item._id} lat={item.lat} lon={item.lon} type="activity" action="modification" screenShow="listSavedAdress"/>;
@@ -100,45 +106,19 @@ const styles = StyleSheet.create({
     backgroundColor:"#FFF",
   },
 
-
-  content:{
-   width:"90%",
-
-  },
-  contentTextCard:{
-    fontSize:16,
-    color:"#819ca9",
+  contentTitleCardNoAdress:{
+    fontSize:22,
+    color:"#0077c2",
     fontFamily: 'Monserrat-Light'
   },
   
-  contentCard:{
-    display:"flex",
-    flexDirection:"row",
-    flex:1,
-    justifyContent:"space-between",
-    alignItems:"center",
+  contentDescritptionCardNoAdress:{
+    fontSize:16,
+    marginTop:20,
+    fontFamily: 'Monserrat-Light'
+  },
   
-},
-  buttonInput:{
-    textAlign: 'center',
-    color: '#4C64FF',
-    padding: 15,
-    marginLeft: 1,
-    marginRight: 1,
-    width: 198,
-    alignItems: 'center',
-    },
-    
-  buttonContainer: {
-    display:"flex",
-    flexDirection:"row",
-},
-  buttonText: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize:17,
-    fontFamily: 'Baskerville-Black'
-}
+
 
 });
 
