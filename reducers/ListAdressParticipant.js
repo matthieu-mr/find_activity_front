@@ -57,16 +57,7 @@ export default function(listAdress = [], action) {
 
         newList.splice(idDelete,1)
 
-        newList.map((item,i)=>{
 
-          if (item.isFavorite){
-            item.id=i
-          }else{
-            item.name=`Adresse ${i+1}`
-            item.id=i
-          }
-         
-        })
       return newList
     }
      
