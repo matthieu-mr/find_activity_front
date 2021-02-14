@@ -34,7 +34,8 @@ let gradient = gradientSelected
         </TouchableOpacity>
           <Text style={styles.wording} > Ou </Text>
 
-      <TouchableOpacity onPress={()=>{navigation.navigate("Accueil")}}>
+
+      <TouchableOpacity onPress={()=>{navigation.navigate("ConnectScreen")}}>
           <ButtonType ley={i} width={width} color={color}  fontSize={fontSize} gradient={gradient} wording_fr={"Vous connecter"}/>
       </TouchableOpacity>
     </Card>

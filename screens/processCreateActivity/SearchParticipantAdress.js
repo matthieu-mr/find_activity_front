@@ -31,7 +31,7 @@ function  SearchAdress(props) {
   const [listAdressResult,setListAdressResult] = useState([])
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [buttonSetLocation,setButtonLocation] = useState(false)
+  const [buttonSetLocation,setButtonLocation] = useState()
 const [userActualLocation,setUserActualLocation] = useState([])
 
 let pageTitle = "Recherche d'adresse"
@@ -90,20 +90,25 @@ let buttonIsValidated = "true"
       </View>
       )
     }else{
-      return <ListAdress key="0" name="Votre Position" adress={userActualLocation.response.features[0].properties.name} postcode={userActualLocation.response.features[0].properties.postcode} city={userActualLocation.response.features[0].properties.city} id="33" lat={location.coords.latitude} lon={location.coords.longitude} type="contact" action="addParticipantNotFav" screenShow="addUserActualLocation"/>;
+      return <ListAdress key="0" name="Votre Position" title1="Votre Position" adress={userActualLocation.response.features[0].properties.name} postcode={userActualLocation.response.features[0].properties.postcode} city={userActualLocation.response.features[0].properties.city} id="33" lat={location.coords.latitude} lon={location.coords.longitude} type="contact" action="addParticipantNotFav" screenShow="addUserActualLocation"/>;
     }
   
   }
 
   let infoAdress = <Text></Text>
 
-  if(adress == ""){
+  if(adress.length < 1){
     infoAdress= (
     <View style={{display:"flex",alignItems:"center",marginTop:15}}>
     <AntDesign name="arrowup" size={28} color="#0077c2"  />
     <Text style={{fontFamily:"Sansita-Bold", color:"#0077c2",fontSize:28,marginBottom:20,marginTop:10,alignSelf:"center"}}> Veuillez saisir une adresse </Text>
     </View>
     )
+  }else{
+    infoAdress=listAdressResult.map((item,i)=>{
+      let cityWording =`${item.properties.postcode} - ${item.properties.city} `
+      return <ListType key={i} title1={item.properties.name} title2={cityWording} postcode={item.properties.postcode} city={item.properties.city} type="adress" action="addParticipant" screenShow="addParticipantAdress" lat={item.geometry.coordinates[1]} lon={item.geometry.coordinates[0]} />
+    })
   }
 
   useEffect(()=>{
@@ -117,13 +122,7 @@ let buttonIsValidated = "true"
       setListAdressResult(listAdressBdd)
     }
     recupDonnée()
-    
   },[adress])
-
-  let ListResultSearchAdress = listAdressResult.map((item,i)=>{
-    let cityWording =`${item.properties.postcode} - ${item.properties.city} `
-    return <ListType key={i} title1={item.properties.name} title2={cityWording} postcode={item.properties.postcode} city={item.properties.city} type="adress" action="addParticipant" screenShow="addParticipantAdress" lat={item.geometry.coordinates[1]} lon={item.geometry.coordinates[0]} />
-  })
 
 
 const [contactAdress,setcontactAdress] = useState([])
@@ -146,7 +145,6 @@ useEffect(()=>{
 
 var ListAdressSaved
 let isConnected = props.userInfo.email
-
 
   ListAdressSaved = contactAdress.map(function(item, i) {
     return <ListAdress key={i} name={item.name} adress={item.adress} postcode={item.postcode} city={item.city} id={item.id} lat={item.lat} lon={item.lon} type="contact" action="addParticipant" screenShow="addParticipantAdress"/>;
@@ -180,7 +178,7 @@ let isConnected = props.userInfo.email
           </LinearGradient>
 
           <ScrollView> 
-            {ListResultSearchAdress}
+            {infoAdress}
           </ScrollView>
             
 

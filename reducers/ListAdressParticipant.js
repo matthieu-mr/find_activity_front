@@ -3,14 +3,22 @@ export default function(listAdress = [], action) {
     if(action.type == 'addNewParticipantAdress') {
       let newList = [...listAdress]
       let nbAdress = newList.length +1
+      let titleWording = `Adresse ${nbAdress}`
       let adressWording = action.info.title1
+
+      console.log(adressWording)
       if(adressWording== undefined){
         adressWording=action.info.adress
       }
       
+      if (action.info.screenShow =="addUserActualLocation"){
+        titleWording=action.info.title1
+      }
+
+
       let newAdress ={ 
         id:nbAdress,
-        name:`Adresse ${nbAdress}`,
+        name:titleWording,
         adress:adressWording,
         city:action.info.city,
         postcode:action.info.postcode,

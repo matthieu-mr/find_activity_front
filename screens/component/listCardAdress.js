@@ -50,7 +50,7 @@ switch (fromScreen){
       case "listSavedAdress":
         break
         case 'addUserActualLocation':
-          props.title1=props.adress
+          props.title1=props.name
           firstAction =(
             <View> 
             <TouchableOpacity onPress={() =>{props.addNewParticipant(props); navigation.navigate("ParticipantListAdress")}}>

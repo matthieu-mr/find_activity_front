@@ -19,8 +19,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 
 function  PlaceDetail(props) {
-
- // props.navigation.setOptions({ title:"Détails du site" })
   const [infoPlace,setInfoPlace] = useState()
 
   let iconHeader = 'ios-star-outline'
@@ -34,7 +32,6 @@ function  PlaceDetail(props) {
 
 
 let saveActivity = async()=>{
-  console.log(props.userInfo)
 // check if user is connected
   if(props.userInfo.email==false){
     Alert.alert(
@@ -80,29 +77,24 @@ let saveActivity = async()=>{
 
 } 
 
-// recuperation des POI 
+console.log("recup props", props.item.place_id)
+
 useEffect(()=>{
 
   let lat =  props.item.lat
   let lon = props.item.lon
   let name =  props.item.name
   let placeid = false
-  /*
-  lat= 48.7937035,
-  lon= 2.5143257,
-  name= "Café de Paris",
-  placeid="ChIJra2v7EEM5kcR1d3z8DpMdAc"
-*/
 
   if (props.item.place_id){
     placeid = props.item.place_id
 }
 
   async function recupDonnée(){
-    var requestBDD = await fetch(`${ip}pointinformation`,{
+    var requestBDD = await fetch(`${ip}googleinfo/pointinformation`,{
       method:"POST",
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body:`lat=${lat}&long=${lon}&name=${name}&place_id=${placeid}`
+      body:`lat=${lat}&lon=${lon}&name=${name}&place_id=${placeid}`
     })
     var placeRaw = await requestBDD.json()
   setInfoPlace(placeRaw.responseDetail)
@@ -111,21 +103,29 @@ useEffect(()=>{
   
 },[])
 
+
+
+
 // function share & other 
 let webSite = async()=>{
-  let result = await WebBrowser.openBrowserAsync(websitePlace);
-  setNavWeb(result)
+  console.log(infoPlace.website)
+  if(infoPlace.website){
+    let result = await WebBrowser.openBrowserAsync(infoPlace.website);
+  }else{
+    let name = props.item.name
+    let natureJoin = name.replace(/ /g, "+")
+    let natureActivite = encodeURI(natureJoin);
+  
+    let result = await WebBrowser.openBrowserAsync(`https://www.google.com/search?q=${natureActivite}`);
+  }
+
 }
 
 let mapItineraire = async()=>{
-let lat =  props.item.lat
-let lon = props.item.long
-let encodedName = encodeURI(namePlace)
-  
-let url =`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${encodedName}&destination_place_id=${idPlace}8&travelmode=walking`
 
-let result = await WebBrowser.openBrowserAsync(url);
-setNavWeb(result)
+  let url =`https://www.google.com/maps/dir/?api=1&destination=${infoPlace.name} ${props.item.adress}&destination_place_id=${props.item.place_id}8&travelmode=walking`
+  let result = await WebBrowser.openBrowserAsync(url);
+  //setNavWeb(result)
 
 }
 
@@ -134,7 +134,7 @@ const share = async () => {
     try {
       const result = await Share.share({
         message:
-          `${namePlace} situé à l'adresse : ${adressPlace} `,
+          `${props.item.name} situé à l'adresse : ${props.item.adress} `,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -204,30 +204,6 @@ let comment =[]
         }
 
       
-
-  
-/*
-      let comment= infoPlace.reviews.map((item,i)=>{
-        return (
-          <List key={i}>
-          <ListItem avatar>
-            <Left>
-              <Thumbnail source={{ uri: `${item.profile_photo_url}` }} />
-            </Left>
-            <Body>
-              <Text>{item.author_name}</Text>
-              <Text note>{item.text}</Text>
-              <Text note>{item.relative_time_description}</Text>
-            </Body>
-            <Right>
-              <Text note> note : {item.rating}</Text>
-            </Right>
-          </ListItem>
-        </List>
-      ) 
-      })
-*/
-
       return(
         <View style={styles.allCard}>
 
