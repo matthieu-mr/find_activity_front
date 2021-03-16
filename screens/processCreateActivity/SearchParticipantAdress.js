@@ -81,7 +81,7 @@ useEffect(()=>{
 let InfoUserLocation = ()=>{
 let buttonIsValidated = "true"
 
-    if(!buttonSetLocation){
+  if(!buttonSetLocation || userActualLocation==[] ){
       return (
         <View> 
         <TouchableOpacity onPress={()=>setButtonLocation(!buttonSetLocation)}>
@@ -90,10 +90,20 @@ let buttonIsValidated = "true"
       </View>
       )
     }else{
-      return <ListAdress key="0" name="Votre Position" title1="Votre Position" adress={userActualLocation.response.features[0].properties.name} postcode={userActualLocation.response.features[0].properties.postcode} city={userActualLocation.response.features[0].properties.city} id="33" lat={location.coords.latitude} lon={location.coords.longitude} type="contact" action="addParticipantNotFav" screenShow="addUserActualLocation"/>;
+      return <ListAdress key="0" name="Votre Position" title1={userActualLocation.response.features[0].properties.name} adress={userActualLocation.response.features[0].properties.name} postcode={userActualLocation.response.features[0].properties.postcode} city={userActualLocation.response.features[0].properties.city} id="33" lat={location.coords.latitude} lon={location.coords.longitude} type="contact" action="addParticipantNotFav" screenShow="addUserActualLocation"/>;
     }
-  
+
   }
+
+
+
+
+
+
+
+
+
+
 
   let infoAdress = <Text></Text>
 

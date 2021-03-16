@@ -36,11 +36,13 @@ const [listButton,setListButton] = useState([
   {name:"Sortie" , isSelected : false, icon :<AntDesign name="isv" size={24} color="white" /> },
   {name:"Sport" , isSelected : false,  icon :<MaterialCommunityIcons name="run" size={24} color="white" />},
  
+
 ])
 useEffect(()=>{
   AsyncStorage.getItem("userInformation",
   function(err, data) { 
     var userData = JSON.parse(data); 
+    console.log("home user data",userData)
     props.addInformationUser(userData)
   } 
 )

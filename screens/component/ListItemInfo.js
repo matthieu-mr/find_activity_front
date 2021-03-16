@@ -19,12 +19,8 @@ let icon= <Ionicons style={{flex:1}} name="ios-add-circle-outline" size={24} col
 // add the switch to props
 
 let Wording
-
-let actionOnClick =()=>{
-  envoiPropsInformation(props)
-}
-
 let badge
+let actionOnClick
 
 switch(props.action){
 
@@ -39,13 +35,12 @@ switch(props.action){
       )
       }
 
+      
       actionOnClick =()=>{
         props.addParticipantList(props)
         navigation.navigate("Accueil")
-      }
-      
-
-
+           }
+  
   break
 
   case 'addSport':
@@ -73,6 +68,7 @@ switch(props.action){
     }
 
     break
+    
     case 'goPlaceDetail':
       color=props.color
       icon =<AntDesign name="rightcircleo" size={24} color="#42a5f5" />
@@ -129,19 +125,6 @@ switch(props.action){
 } 
 
 
-/*
-
-let envoiPropsInformation =()=>{
-  switch(props.action){
-    case 'addSport':
-      sizeTitle1 = 12
-      props.sportName(props.title1)
-    break
-      default : 
-      props.addParticipantList(props)
-  } 
-}
-*/
   return (
       <ListItem key={props.i}   
             onPress={() =>actionOnClick()}>

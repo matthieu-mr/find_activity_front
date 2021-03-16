@@ -12,9 +12,8 @@ export default function(listAdress = [], action) {
       }
       
       if (action.info.screenShow =="addUserActualLocation"){
-        titleWording=action.info.title1
+        titleWording=action.info.name
       }
-
 
       let newAdress ={ 
         id:nbAdress,

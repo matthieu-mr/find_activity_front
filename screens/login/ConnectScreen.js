@@ -20,9 +20,10 @@ function ConnectScreen(props) {
     let gradient = ["#80d6ff","#42a5f5","#0077c2","#42a5f5","#80d6ff"]
 
 
-let sendToAsync=(email,pseudo) =>{
-  var userData = {email:email,pseudo:pseudo}
-  AsyncStorage.setItem('userInformation',JSON.stringify(userData))
+let sendToAsync=(email,pseudo,id) =>{
+  var userData = {email:email,pseudo:pseudo,id:id}
+  console.log(userData)
+   AsyncStorage.setItem('userInformation',JSON.stringify(userData))
   props.navigation.navigate("ParticipantListAdress")
 }
 
@@ -129,7 +130,7 @@ let sendRequest =async ()=>{
       var result = retourCreatAccount.login
 
       if( result ){
-        sendToAsync(retourCreatAccount.user.email,retourCreatAccount.user.pseudo)
+        sendToAsync(retourCreatAccount.user.email,retourCreatAccount.user.pseudo,retourCreatAccount.user.id)
     }
      else {
          let wording = retourCreatAccount.retour

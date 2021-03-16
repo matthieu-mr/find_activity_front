@@ -25,7 +25,7 @@ function AccordionComponent(props) {
 
 
 let changeInfo = ()=> {
-
+  console.log("change info")
   props.goToFormAdress(props)
   navigation.navigate("formChangeAdressInfo")
 }
@@ -50,7 +50,6 @@ switch (fromScreen){
       case "listSavedAdress":
         break
         case 'addUserActualLocation':
-          props.title1=props.name
           firstAction =(
             <View> 
             <TouchableOpacity onPress={() =>{props.addNewParticipant(props); navigation.navigate("ParticipantListAdress")}}>
@@ -73,6 +72,9 @@ switch (fromScreen){
         break;
 
     case 'listParticipantAdress':
+
+      console.log("list add new ",props.userInfo.email)
+
       let createButtonAlert = () =>
       Alert.alert(
         "Vous n'etes pas connecté",
@@ -173,6 +175,7 @@ switch (fromScreen){
   
   );
 }
+
 
 // STYLES
 const styles = StyleSheet.create({
